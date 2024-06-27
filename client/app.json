@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "IBDS-App",
+    "slug": "IBDS-App",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "permissions": {
+      "notifications": {
+        "icon": "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/icon.png",
+        "sound": true,
+        "vibrate": true
+      }
+    },
+
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.yourapp",
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.IBDSApp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3e5311ee-8405-43a0-b572-fbb1e9fe418b"
+      }
+    }
+  }
+}
