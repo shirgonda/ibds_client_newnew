@@ -20,6 +20,7 @@ import PublishQuestion from "./pages/PublishQuestion";
 import MyDocuments from "./pages/MyDocuments";
 import FolderPage from "./pages/FolderPage";
 import MyFriends from "./pages/MyFriends";
+import IntoChat from "./pages/IntoChat";
 import PrivacyAndTerms from "./pages/PrivacyAndTerms";
 import Mail from "./pages/Mail";
 import { NavigationContainer } from "@react-navigation/native";
@@ -33,6 +34,7 @@ import PushNotifications from "./pages/PushNotifications";
 import * as Notifications from "expo-notifications";
 import RegisterForPushNotificationsAsync from "./pages/PushNotifications";
 const Stack = createStackNavigator();
+
 
 Notifications.setNotificationHandler({ 
   handleNotification: async () => ({ shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: false, }), 
@@ -141,6 +143,7 @@ export default function App({ navigation }) {
             options={{ title: " " }}
           />
           <Stack.Screen name="Chat" component={Chat} options={{ title: " " }} />
+          <Stack.Screen name="IntoChat" component={IntoChat} options={{ title: " " }} />
           <Stack.Screen name="Mail" component={Mail} options={{ title: " " }} />
           <Stack.Screen
             name="Forum1"

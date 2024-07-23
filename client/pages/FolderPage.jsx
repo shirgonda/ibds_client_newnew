@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { StyleSheet, View, Text,Image,Button,Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -9,12 +9,21 @@ import * as Linking from 'expo-linking';
 import { Get,Post,Put,Delete } from '../api';
 import * as FileSystem from 'expo-file-system';
 import { Share } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function FolderPage({navigation}) {
+export default function FolderPage({navigation,route}) {
   const {imagePaths,CurrentUser,currentFolder } = useUser();
+  const { setfileModalVisible,setfolderModalVisible } = route.params;
   const [file, setFile] = useState(null);
   const [filesArr, setfilesArr] = useState([]);
   const [emptyFolder, setemptyFolder] = useState(filesArr.length>0?false:true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setfileModalVisible(false);
+      setfolderModalVisible(false);
+    }, [currentFolder])
+  );
 
   useEffect(()=>{
     if(filesArr.length>0){

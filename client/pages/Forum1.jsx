@@ -12,7 +12,7 @@ import { Get,Post,Put,Delete } from '../api';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
-    const { imagePaths,currentSubject, setcurrentSubject,CurrentUser } = useUser();
+    const { imagePaths,currentSubject, setcurrentSubject,CurrentUser,visitor } = useUser();
     const { subjects } = route.params;
     const [questionOpen, setquestionOpen] = useState(false);
     const [currentQuestion, setcurrentQuestion] = useState({});
@@ -25,18 +25,19 @@ export default function Forum1({ navigation,route }) {
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
     const [questions, setquestions] = useState([]);
     const [answars, setanswars] = useState([]);   
+    const [NumOfAnswers, setNumOfAnswers] = useState(0);  
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
         console.log('currentSubject444',currentSubject);
         LoadQuestions();
-      }, [navigation])
+      }, [navigation,currentSubject])
     );
 
       useEffect(()=>{
         if(!questionOpen){
           setaddAnswer(false);
-          setcurrentAnswerIndex(false);
+          //setcurrentAnswerIndex(false);
         }
         console.log('questionOpen',questionOpen);
         console.log('currentIndex',currentIndex);
@@ -47,6 +48,16 @@ export default function Forum1({ navigation,route }) {
         console.log('currentAnswerIndex',currentAnswerIndex);
       },[addAnswer])
 
+      function countAnswers(question){
+        var count=0;
+        console.log('numOfAnswars',answars);
+        for (let i = 0; i < answars.length; i++) {
+          if(question.questionId==answars.questionId){
+            count+=1;
+          }
+        }
+        return count;
+      }
 
       async function LoadQuestions() {
         let result = await Get(`api/ForumQuestions/topic/${currentSubject.label}`, currentSubject.label);
@@ -178,15 +189,17 @@ export default function Forum1({ navigation,route }) {
     return (
         <View style={styles.container}>
             <AppHeader navigation={navigation} label="פורום" startIcon={true} icon={imagePaths['forumFill']} />
-            <ForumHeader currentSubject={currentSubject} subjects={subjects}/>
-            <Button style={styles.addQBtn} onPress={()=>navigation.navigate('PublishQuestion',{subjects})}>
-                <View style={styles.addQBtnItems} >
+            <ForumHeader navigation={navigation} currentSubject={currentSubject} subjects={subjects}/>
+            {!visitor?<Button style={styles.addQBtn} onPress={()=>navigation.navigate('PublishQuestion',{subjects})}>
+            <View style={styles.addQBtnItems} >
                 <Text style={styles.addQBtnText}> פרסם שאלה</Text>
                 <Image style={styles.addQBtnIcon} source={imagePaths['WhiteEmptyPlus']}/>
                 </View>
-            </Button>
+            </Button>:null}
+            {!visitor&&questions==[]?<Text style={styles.noQ}>עדיין לא פורסמו שאלות בנושא זה</Text>:null}
             <ScrollView style={[styles.QuestionWrapper]} showsVerticalScrollIndicator={false}>
                 <View style={styles.fixHeight}>
+
                 {questions.length>0 && questions.map((question, index) => (
                   <View>
                      <TouchableOpacity key={index} onPress={()=>handleQPress(question,index)}>
@@ -197,7 +210,7 @@ export default function Forum1({ navigation,route }) {
                                 </View>
                                 <Text style={styles.questionDate}>{question.questionDateTime.split('T')[1].split(':')[0]}:{question.questionDateTime.split('T')[1].split(':')[1]}  {question.questionDateTime.split('T')[0]}</Text>
                                 <Text style={styles.questionText}>{question.title}</Text>
-                                <Text style={styles.questionNumOfAnswers}>24 תגובות</Text>
+                                <Text style={styles.questionNumOfAnswers}>{countAnswers(question)} תגובות</Text>
                             <Text style={[styles.questionButtomLine, { marginTop: question.userId== CurrentUser.id ? 60 : 50 }]}>__________________________________________________</Text>
                         </View>
                     </TouchableOpacity>
@@ -209,11 +222,49 @@ export default function Forum1({ navigation,route }) {
                       <View style={styles.twoInRowQBtn}>
                       {CurrentUser.id==question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
                       <Button><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                       </View>
                       </View>:null}
-                      {questionOpen&&currentIndex===index?answars.map((answer, index) => (
-                        <View>
+
+
+
+                      {addAnswer ? <View>   
+                        <View style={styles.singleAnswer}>
+                                <View style={styles.singleQuestionRow1}>
+                                <UserAvatar size={55} source={CurrentUser.profilePicture}/>
+                                <Text style={styles.answerHeader}>{CurrentUser.username}</Text>
+                                </View> 
+                                <View style={styles.addPicBtn}>      
+                                  <AppButton backgroundColor='white' width={140} height={30} plusIconWidth={AnswerPicAdded?20:null}
+                                  plusIconHeight={AnswerPicAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
+                                  plusIcon={AnswerPicAdded?imagePaths['forumRights']:imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='after'/>
+                                </View> 
+                        </View>
+                        <View style={styles.addAnswerContainer}>
+                          <Text style={styles.answerLable}>כותרת</Text>
+                          <TextInput
+                            style={styles.input}
+                            onChangeText={(text) => setAnswerHedear(text)}
+                          />
+                          <Text style={styles.answerLable}>תיאור</Text>
+                          <TextInput
+                            style={styles.inputBox}
+                            onChangeText={(text) => setAnswerDescription(text)}
+                          />
+                          <View style={styles.twoInRowButtons}>
+                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerHedear(''),setAnswerPic('')}} />
+                            <AppButton width={100} label='שמירה' onPressHandler={() => saveAnswer()} />
+                          </View>
+                         </View>
+                        </View>:null}
+
+
+
+
+
+
+                      {answars.length!=0&&questionOpen&&currentIndex===index?answars.map((answer, index) => (
+                       <View>
                           {answer.QID==currentQuestion.id && <View>
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
@@ -227,11 +278,11 @@ export default function Forum1({ navigation,route }) {
                         <Text style={styles.answerDescription}>{answer.description}</Text>
                         <View style={styles.twoInRowQBtn}>
                           <Button><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                          <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true),setcurrentAnswerIndex(index)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                          <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true),setcurrentAnswerIndex(index),console.log('index',index)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                         </View>
                         </View>}
 
-                        {addAnswer &&currentAnswerIndex===index? <View>    
+                        {addAnswer && currentAnswerIndex===index? <View>   
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
                                 <UserAvatar size={55} source={CurrentUser.profilePicture}/>
@@ -261,7 +312,7 @@ export default function Forum1({ navigation,route }) {
                          </View>
                         </View>:null}
                         </View>
-                       )):null}
+                      )):null} 
                     </View>
                     </View>
                  ))}
@@ -279,6 +330,12 @@ const styles = StyleSheet.create({
         position: 'relative',
         backgroundColor: 'white',
     },
+    // noQ:{
+    //   top:200,
+    //   position:'absolute',
+    //   alignItems: 'center',
+    //   justifyContent:'center',
+    // },
     fixHeight:{
       marginBottom:100
     },

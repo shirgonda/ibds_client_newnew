@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-nati
 import UserAvatar from './avatar';
 import { useUser } from '../components/UserContext';
 
-const ForumHeader = ({subjects}) => {
+const ForumHeader = ({navigation,subjects}) => {
     const { imagePaths,currentSubject, setcurrentSubject } = useUser();
     console.log('ForumHeadercurrentSubject',currentSubject)
     console.log('ForumHeadersubjects',subjects)
@@ -12,7 +12,7 @@ const ForumHeader = ({subjects}) => {
             {/* הגדרה של הגלילה לאופקית */}
             <ScrollView horizontal={true}>
             {subjects.map((sub, index) => (
-            <TouchableOpacity onPress={() => console.log('sub',sub)}>
+            <TouchableOpacity onPress={() => {setcurrentSubject(sub)}}>
                 <View style={styles.avatarContainer}>
                     <UserAvatar 
                         size={currentSubject.label===sub.label?85:70} 

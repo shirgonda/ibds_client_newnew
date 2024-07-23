@@ -6,16 +6,36 @@ import { useUser } from '../components/UserContext';
 import Visitor from '../components/visitor';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import UserAvatar from '../components/avatar';
+import { useFocusEffect } from '@react-navigation/native';
+import { Get } from '../api';
 
 export default function MyFriends({navigation}) {
-  const {visitor,imagePaths } = useUser();
-  const [friends, setfriends] = useState([{id:'15',profilePicture:'',userName:'shaa',lastName:'2',firstName:'1'}]);
+  const {visitor,imagePaths,CurrentUser } = useUser();
+  const [friends, setfriends] = useState([]);
   const [pressFriend, setpressFriend] = useState({});
   var pageheight=(friends.length / 3) * 200 +300;
+
+  useFocusEffect( //טעינת ההתראות כאשר חוזרים לדף
+    useCallback(() => {
+      LoadFriends();
+    }, [imagePaths])
+  );
+
+  async function LoadFriends() {
+    let result = await Get(`api/Users?userId=${CurrentUser.id}/Friends`, CurrentUser.id);
+    if (!result) {
+      Alert.alert('טעינת החברים נכשלה');
+    } else {
+      setfriends(result);
+      console.log('GetFriends successful:', result);
+    }
+  }
 
   const separateFriendsRow = useCallback(() => {
     const rows = [];
     let oneRow = [];
+
+    console.log('friends',friends);
 
     for (let i = 0; i < friends.length; i++) {
       if (oneRow.length === 3) {
@@ -26,8 +46,8 @@ export default function MyFriends({navigation}) {
         <View>
           <View key={i} style={styles.FriendsListWrapper}>
             <TouchableOpacity onPress={() => { setpressFriend(friends[i]), navigation.navigate('Chat', { pressFriend }) }}>
-                <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={pressFriend.profilePicture} />        
-                <Text style={styles.friendLabel}>{friends[i].userName}</Text>
+                <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={{uri: friends[i].profilePicture}} />        
+                <Text style={styles.friendLabel}>{friends[i].username}</Text>
             </TouchableOpacity>
           </View>
         </View>

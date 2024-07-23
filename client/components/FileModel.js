@@ -8,6 +8,7 @@ const FileModel = ({
     setdeleteFile,
     file,
     setFile,
+   // LoadFiles
 }) => {
 
     async function deleteCurrentFile(){
@@ -17,6 +18,7 @@ const FileModel = ({
         }
         else {
             setFile('');
+            //LoadFiles;
             console.log('delete successful:', result);
         }
     }
@@ -69,8 +71,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#EEEDF3',
         position:'absolute',
         right:45,
-        top:90,
-        width:'100%',
+        top:75,
+        width:'65%',
         zIndex: 10,
     },
     button: {

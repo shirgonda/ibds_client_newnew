@@ -68,7 +68,9 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
     folderPlus:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/folderPlus.png"},
     documentPlus:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/documentPlus.png"},
     deleteFile:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/deleteFile.png"},
-    shareFile:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"}
+    shareFile:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"},
+    sandMassege:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"},
+    sendPic:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"}
   };
 
 //--------------------- clear local storage ---------------------// הפעלה ידנית לצורך בדיקות בזמן הפיתוח

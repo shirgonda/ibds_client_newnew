@@ -15,7 +15,6 @@ import * as Linking from 'expo-linking';
 import { Get,Post,Put } from '../api';
 import * as FileSystem from 'expo-file-system';
 
-
 export default function MyDocuments({ navigation }) {
   const { visitor, imagePaths,CurrentUser,currentFolder, setcurrentFolder } = useUser();
   const [folders, setFolders] = useState([]);
@@ -24,50 +23,58 @@ export default function MyDocuments({ navigation }) {
   const [newFolderSaved, setnewFolderSaved] = useState(false);
   const [FilesExist, setFilesExist] = useState(false);
   const [folderName, setfolderName] = useState('שם התיקייה');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [currentIndex, setcurrentIndex] = useState(-1);
+  const [OldFolderName, setOldFolderName] = useState('');
+  const [folderModalVisible, setfolderModalVisible] = useState(false);
+  const [fileModalVisible, setfileModalVisible] = useState(false);
+  const [fileCurrentIndex, setfileCurrentIndex] = useState(-1);
+  const [folderCurrentIndex, setfolderCurrentIndex] = useState(-1);
   const [changeFolderName, setchangeFolderName] = useState(false);
   const [deleteFolder, setdeleteFolder] = useState(false);
   const [file, setFile] = useState(null);
   const [filesArr, setfilesArr] = useState([]);
   const [deleteFile, setdeleteFile] = useState(false);
-  //const [pageheight, setpageheight] = useState(((folders.length + filesArr.length) / 3) * 200 +300);
   var pageheight=((folders.length + filesArr.length) / 3) * 200 +300;
 
-  
   useEffect(()=>{
     LoadFolders();
-   // LoadFiles();
   },[currentFolder])
 
   useEffect(()=>{
     LoadFiles();
   },[file])
 
+  useEffect(()=>{
+  },[filesArr])
 
+  
   async function LoadFiles() {
     let result = await Get(`api/Documents?userId=${CurrentUser.id}`, CurrentUser.id);
     if (!result) {
       Alert.alert('טעינת קבצים נכשלה');
     } else {
-      setfilesArr(result);
-      console.log('GetFiles successful:', result);
+      var NotInFolder=[];
+      for (let i = 0; i < result.length; i++) {
+        if(result[i].fileId== null){
+          NotInFolder.push(result[i]);     
+        }
+      }   
+        setfilesArr(NotInFolder);       
+        console.log('Get Files successful:', result); 
     }
   }
 
   async function PostFile(newFile){
-    console.log('newFile',newFile);
     let result= await Post(`api/Documents`, newFile);
     if(!result){
         Alert.alert('הוספת קובץ נכשלה');
         console.log('result',result);
     } 
     else{
-      LoadFiles();
       console.log('Add folder successful:', result);
+      setFile(result);
+      LoadFiles();
   }
 }
-
 
   async function LoadFolders() {
     let result = await Get(`api/Files?userId=${CurrentUser.id}`, CurrentUser.id);
@@ -102,17 +109,10 @@ export default function MyDocuments({ navigation }) {
     }
   }
 
-
-  useEffect(() => {
-    console.log('filesArr', filesArr);
-  }, [filesArr]);
-
   const pickPdf = async () => {
     const result = await DocumentPicker.getDocumentAsync({
       type: 'application/pdf'
     });
-  
-    console.log('result', result);
   
     if (result.type !== 'cancel' && result.assets && result.assets.length > 0) {
       setFilesExist(true);
@@ -162,7 +162,10 @@ export default function MyDocuments({ navigation }) {
 
   function spliceNewFolder(arr) {
     setnewFolderAdded(false);
-    setfolderName('שם התיקייה');
+    setfolderName(OldFolderName);
+    console.log('folderName',folderName);
+    console.log('OldFolderName',OldFolderName);
+    setchangeFolderName(false);
     setnewFolderSaved(true);
   }
 
@@ -172,7 +175,6 @@ export default function MyDocuments({ navigation }) {
     var updateFoldersArr = [...folders, newFolder];
     spliceNewFolder(updateFoldersArr);
     PostFolder(newFolder);
-    
   }
 
   function updateFolder() {
@@ -193,12 +195,16 @@ export default function MyDocuments({ navigation }) {
   function handleLongPress(i,file,folder) {
     if(file==0){
       setcurrentFolder(folder);
+      setfolderModalVisible(true);
+      setfileModalVisible(false);
+      setfolderCurrentIndex(i);
     }
     else{
       setFile(file);
+      setfolderModalVisible(false);
+      setfileModalVisible(true);
+      setfileCurrentIndex(i);
     }
-    setModalVisible(true);
-    setcurrentIndex(i);
   }
 
   useFocusEffect(
@@ -225,13 +231,13 @@ export default function MyDocuments({ navigation }) {
       oneRow.push(
         <View>
           <View key={i} style={styles.folderWrapper}>
-            <TouchableOpacity onPress={() => { setcurrentFolder(folders[i]), console.log('currentFolder1', currentFolder), navigation.navigate('FolderPage') }} onLongPress={() => handleLongPress(i,0,folders[i])}>
+            <TouchableOpacity onPress={() => { setcurrentFolder(folders[i]), console.log('currentFolder1', currentFolder), navigation.navigate('FolderPage',{setfileModalVisible,setfolderModalVisible}) }} onLongPress={() => handleLongPress(i,0,folders[i])}>
               <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={imagePaths['folder']} />
-              {(newFolderAdded && i === folders.length - 1) || (changeFolderName && i === currentIndex) ? (
+              {(newFolderAdded && i === folders.length - 1) || (changeFolderName && i === folderCurrentIndex) ? (
                 <TextInput
                   placeholder={folderName}
                   placeholderTextColor={'#50436E'}
-                  onChangeText={(text) => setfolderName(text)}
+                  onChangeText={(text) => {setfolderName(text)}}
                   style={folderName === 'שם התיקייה' ? styles.inputText : styles.FilledinputText}
                   autoFocus={true}
                 />
@@ -240,7 +246,7 @@ export default function MyDocuments({ navigation }) {
               )}
             </TouchableOpacity>
           </View>
-          {modalVisible && currentIndex == i && <EditFolderModel setModalVisible={setModalVisible} setchangeFolderName={setchangeFolderName} setdeleteFolder={setdeleteFolder} currentFolder={currentFolder} setcurrentFolder={setcurrentFolder} file={file} setFile={setFile} />}
+          {folderModalVisible && folderCurrentIndex == i && <EditFolderModel setModalVisible={setfolderModalVisible} setchangeFolderName={setchangeFolderName} setdeleteFolder={setdeleteFolder} currentFolder={currentFolder} setcurrentFolder={setcurrentFolder} />}
         </View>
       );
     }
@@ -258,7 +264,7 @@ export default function MyDocuments({ navigation }) {
               <Text style={styles.fileLabel}>{filesArr[i].documentName}</Text>
             </TouchableOpacity>
           </View>
-          {modalVisible && currentIndex == i && <FileModel setModalVisible={setModalVisible} setdeleteFile={setdeleteFile} file={file} setFile={setFile} />}
+          {fileModalVisible && fileCurrentIndex == i && <FileModel setModalVisible={setfileModalVisible} setdeleteFile={setdeleteFile} file={file} setFile={setFile} />}
         </View>
       );
     }
@@ -272,7 +278,7 @@ export default function MyDocuments({ navigation }) {
         {row}
       </View>
     ));
-  }, [folders, imagePaths, folderName, newFolderAdded, modalVisible, currentIndex]);
+  }, [folders, imagePaths, folderName, newFolderAdded, fileModalVisible,folderModalVisible, fileCurrentIndex,folderCurrentIndex]);
 
   return (
     <View style={styles.container}>
@@ -290,7 +296,6 @@ export default function MyDocuments({ navigation }) {
       />
       {visitor &&<Visitor navigation={navigation}/>}
       {!visitor&&<ScrollView contentContainerStyle={[styles.scrollViewContent,{height:pageheight}]}>
-      
         {(folders.length == 0 && filesArr.length == 0) ? (
           <View style={styles.centerContent}>
             <Text style={styles.label}>עדיין לא נפתחו תיקיות או הועלו מסמכים</Text>
@@ -314,8 +319,8 @@ export default function MyDocuments({ navigation }) {
         )}
       </ScrollView>}
       {((FolderExist && folders.length>0 && !newFolderSaved) ||changeFolderName) &&<View style={styles.twoInRowButtons}>
-        <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => spliceNewFolder(folders)} />
-        <AppButton width={100} label='שמירה' onPressHandler={() => [changeFolderName ? updateFolder() : saveFolder(),setfolderName('שם התיקייה')]} />
+        <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => [spliceNewFolder(folders),setfolderName('שם התיקייה'),LoadFolders()]} />
+        <AppButton width={100} label='שמירה' onPressHandler={() => [changeFolderName ? updateFolder() : saveFolder(),setOldFolderName(folderName),setfolderName('שם התיקייה')]} />
       </View>}
       <AppFooter navigation={navigation} />
     </View>
@@ -371,10 +376,12 @@ const styles = StyleSheet.create({
   },
   addLabel0: {
     marginTop: 10,
+    marginRight:35,
     color: '#50436E',
   },
   addLabel1: {
     marginTop: 10,
+    marginLeft:45,
     color: '#50436E',
   },
   twoInRowLabels: {
@@ -396,6 +403,7 @@ const styles = StyleSheet.create({
   folderWrapper: {
     alignItems: 'center',
     marginLeft: 30,
+    marginTop:10,
   },
   filesWrapperContainer: {
     alignItems: 'flex-end',
@@ -407,9 +415,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#50436E',
   },
-  singlefile: {
+  singlefile: { 
     marginLeft: 20,
-    marginTop: 50,
+    marginTop: 55,
   },
   centerContent: {
     alignItems: 'center',

@@ -9,7 +9,6 @@ import Visitor from '../components/visitor';
 
 export default function ForumSubjects({ navigation }) {
   const { visitor,imagePaths,currentSubject, setcurrentSubject } = useUser();
-  //const [currentSubject, setcurrentSubject] = useState({});
 
 const subjects=[
         {label:'שאל את הכירורג',img:['forumAsk','ForumAskWhite'],height:50,width:40,SmallHeight:45,SmallWidth:35},

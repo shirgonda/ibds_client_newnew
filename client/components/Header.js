@@ -16,7 +16,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
    override=false, // מציין האם אפשר לעקוף את מיקום הקומפוננטה ולהגדיר מיקום מותאם אישית
    fromDocumentPage=false,
    showNewFolder,
-   addFile,
+   addFile
 })=>{
   const { imagePaths } = useUser(); //UserContext מספק גישה לנתיבי התמונות שבקומפוננטה
 
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     },
       headerText: {
         textAlign: 'right',
-        fontSize: 30,
+        fontSize: 27,
         fontWeight: 'bold',
         color:'#50436E',
       },

@@ -97,6 +97,7 @@ export default function PublishQuestion({ navigation,route }) {
             setAttachmentAdded(true);
             setAttachmentToShow({ uri: result.assets[0].uri});
             setAttachment(result.assets[0].base64);
+            console.log('AttachmentToShow',AttachmentToShow);
         }
     }
 
@@ -128,13 +129,13 @@ export default function PublishQuestion({ navigation,route }) {
                             style={styles.inputBox}
                             onChangeText={(text) => setContent(text)}
                           />
-                           {AttachmentToShow==''?<View style={styles.addPicBtn}>      
+                           {!AttachmentAdded?<View style={styles.addPicBtn}>      
                                   <AppButton backgroundColor='white' width={140} height={35} plusIconWidth={AttachmentAdded?20:null}
                                   plusIconHeight={AttachmentAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
                                   plusIcon={imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='before'/>
                             </View> :null}
-                            {AttachmentToShow!=''?<Image style={styles.pic} source={AttachmentToShow}></Image>:null}
-                            {AttachmentToShow!=''?<TouchableOpacity onPress={[setAttachment(''),setAttachmentToShow('')]}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
+                            {AttachmentAdded?<Image style={styles.pic} source={AttachmentToShow}></Image>:null}
+                            {AttachmentAdded?<TouchableOpacity onPress={()=>[setAttachmentAdded(false),setAttachment(''),setAttachmentToShow('')]}><Text style={styles.deletBtnText}>מחיקת תמונה</Text></TouchableOpacity>:null}
                           <View style={styles.twoInRowButtons}>
                             <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setAttachment(''),setAttachmentAdded(false),navigation.navigate('Forum1',{subjects})}} />
                             <AppButton width={100} label='שמירה' onPressHandler={() => saveQuestion()} />
