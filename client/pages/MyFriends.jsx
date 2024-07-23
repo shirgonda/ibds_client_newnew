@@ -45,7 +45,7 @@ export default function MyFriends({navigation}) {
       oneRow.push(
         <View>
           <View key={i} style={styles.FriendsListWrapper}>
-            <TouchableOpacity onPress={() => { setpressFriend(friends[i]), navigation.navigate('Chat', { pressFriend }) }}>
+            <TouchableOpacity onPress={() => { setpressFriend(friends[i]), navigation.navigate('IntoChat', { pressFriend }) }}>
                 <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={{uri: friends[i].profilePicture}} />        
                 <Text style={styles.friendLabel}>{friends[i].username}</Text>
             </TouchableOpacity>

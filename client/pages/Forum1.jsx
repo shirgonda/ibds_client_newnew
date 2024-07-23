@@ -26,6 +26,7 @@ export default function Forum1({ navigation,route }) {
     const [questions, setquestions] = useState([]);
     const [answars, setanswars] = useState([]);   
     const [NumOfAnswers, setNumOfAnswers] = useState(0);  
+    const [pressFriend, setpressFriend] = useState({});  
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
@@ -221,8 +222,8 @@ export default function Forum1({ navigation,route }) {
                       {question.attachment?<Image style={styles.pic} source={{uri:question.attachment}}></Image>:null}
                       <View style={styles.twoInRowQBtn}>
                       {CurrentUser.id==question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
-                      <Button><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                      {visitor&&<Button onPress={()=>{setpressFriend(question.userId),navigation.navigate('IntoChat', { pressFriend })}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>}
+                      {visitor&&<Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>}
                       </View>
                       </View>:null}
 
@@ -277,8 +278,8 @@ export default function Forum1({ navigation,route }) {
                         <Text style={styles.answerHeaderText}>{answer.AnswerHedear}</Text>
                         <Text style={styles.answerDescription}>{answer.description}</Text>
                         <View style={styles.twoInRowQBtn}>
-                          <Button><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                          <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true),setcurrentAnswerIndex(index),console.log('index',index)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                          <Button onPress={()=>{setpressFriend(answer.user.userId),navigation.navigate('IntoChat', { pressFriend })}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
+                          <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true),setcurrentAnswerIndex(index)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                         </View>
                         </View>}
 
@@ -330,12 +331,12 @@ const styles = StyleSheet.create({
         position: 'relative',
         backgroundColor: 'white',
     },
-    // noQ:{
-    //   top:200,
-    //   position:'absolute',
-    //   alignItems: 'center',
-    //   justifyContent:'center',
-    // },
+    noQ:{
+      top:200,
+      position:'absolute',
+      alignItems: 'center',
+      justifyContent:'center',
+    },
     fixHeight:{
       marginBottom:100
     },

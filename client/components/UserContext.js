@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
   const [visitor, setvisitor] = useState(false);
   const [currentSubject, setcurrentSubject] = useState({});
   const [currentFolder, setcurrentFolderState] = useState({});
+  const [lastMasseges, setlastMassegesState] = useState([]);
   const path="https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images"
 
   const imagePaths={ //נתיבי התמונות שבשרת
@@ -69,8 +70,8 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
     documentPlus:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/documentPlus.png"},
     deleteFile:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/deleteFile.png"},
     shareFile:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"},
-    sandMassege:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"},
-    sendPic:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/shareFile.png"}
+    sendMassege:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/SendBtn.png"},
+    sendPic:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/Camera.png"}
   };
 
 //--------------------- clear local storage ---------------------// הפעלה ידנית לצורך בדיקות בזמן הפיתוח
@@ -106,6 +107,17 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
         if (currentFolderData) {
           setcurrentFolder(JSON.parse(currentFolderData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }
+
+
+
+        const lastMassegesData = await AsyncStorage.getItem('lastMasseges'); //שליפת נתוני התיקייה הנוכחי מהאחסון המקומי
+        console.log('get lastMasseges:', lastMassegesData);
+        if (lastMassegesData) {
+          setlastMasseges(JSON.parse(lastMassegesData)); //המרה למבנה אובייקט במידה וקיימים נתונים
+        }
+
+       
+        
       } catch (error) {
         console.error('Error retrieving data from AsyncStorage:', error);
       }
@@ -149,6 +161,16 @@ const setcurrentFolder = async (FolderData) => {
   }
 };
 
+const setlastMasseges = async (LmData) => {
+  try {
+    await AsyncStorage.setItem('lastMasseges', JSON.stringify(LmData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
+    setlastMassegesState(LmData);
+    console.log('set lastMasseges:', JSON.stringify(LmData));
+  } catch (error) {
+    console.error('Error saving lastMasseges to AsyncStorage:', error);
+  }
+};
+
   return (
     <UserContext.Provider value={{ //הערכים המסופקים לילדים
       CurrentUser, setCurrentUser,
@@ -156,7 +178,8 @@ const setcurrentFolder = async (FolderData) => {
       currentSubject, setcurrentSubject,
       currentFolder, setcurrentFolder,
       visitor,
-      imagePaths
+      imagePaths,
+      lastMasseges,setlastMasseges
        }}>
       {children} 
     </UserContext.Provider>

@@ -25,7 +25,12 @@ const UserAvatar=({
     ]}>
         <Image 
         source={source}
-        style={{ height: iconHeight?iconHeight:imgSize, width: iconWidth?iconWidth:imgSize, borderRadius: borderRad / 2, marginTop:marginTopImg }}
+        // style={{ height: iconHeight?iconHeight:imgSize, width: iconWidth?iconWidth:imgSize, borderRadius: borderRad / 2, marginTop:marginTopImg,
+        style={{ height: iconHeight?iconHeight:size, width: iconWidth?iconWidth:size, borderRadius: borderRad / 2, marginTop:marginTopImg,
+                overflow: 'hidden',
+                alignItems: 'center',
+                position: 'relative',
+        }}
         resizeMode="cover" //מוודא שהתמונה תכסה את הקונטיינר מבלי לעוות את היחס גובה-רוחב שלה
         />
     </View>
@@ -37,7 +42,8 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        //backgroundColor: '#E6E4EF',
         overflow: 'hidden',
+
+        //flex: 1,
       },
 })

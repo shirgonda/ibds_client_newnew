@@ -9,7 +9,7 @@ import Visitor from '../components/visitor';
 import { Get } from '../api';
 
 export default function Chat({ navigation }) {
-  const { visitor, imagePaths, CurrentUser } = useUser();
+  const { visitor, imagePaths, CurrentUser,lastMasseges } = useUser();
   const [chatList, setchatList] = useState([]);
   var pageheight=(chatList.length)*130;
 
@@ -32,7 +32,7 @@ export default function Chat({ navigation }) {
       console.log('Get chats successful:', result);
     }
   }
-
+ 
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} label="צאט" startIcon={true} icon={imagePaths['chatFill']} />
@@ -40,16 +40,16 @@ export default function Chat({ navigation }) {
       {!visitor&&
       <ScrollView contentContainerStyle={[styles.chatsList,{height:pageheight}]}>
         {chatList && chatList.map((chat, index) => (
-          <TouchableOpacity key={index} onPress={() => navigation.navigate('IntoChat', { chat })}>
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('IntoChat', { chat,chatList })}>
             <View style={styles.singleChat}>
               <View style={styles.singleChatRow1}>
                 <UserAvatar size={55} source={chat.user2ProfilePicture} />
                 <View style={styles.towInRow}>
-                  <Text style={styles.ChatHeader}>{chat.user2Username}</Text>
-                  <Text style={styles.ChatDate}>{chat.sendDate.split('T')[1].split(':')[0]}:{chat.sendDate.split('T')[1].split(':')[1]}  {chat.sendDate.split('T')[0]}</Text>
+                  <Text style={[styles.ChatHeader, lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.user2Username}</Text>
+                  <Text style={[styles.ChatDate,lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.sendDate.split('T')[1].split(':')[0]}:{chat.sendDate.split('T')[1].split(':')[1]}  {chat.sendDate.split('T')[0]}</Text>
                 </View>
               </View>
-              <Text style={styles.ChatText} numberOfLines={1} ellipsizeMode="tail">{chat.contenct}</Text>
+              <Text style={[styles.ChatText, lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{chat.contenct}</Text>
               <Text style={styles.ChatButtomLine}>__________________________________________________</Text>
             </View>
           </TouchableOpacity>
