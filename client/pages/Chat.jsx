@@ -33,6 +33,15 @@ export default function Chat({ navigation }) {
     }
   }
  
+  function checkIfInArr(id){
+    for (let i = 0; i < lastMasseges.length; i++) {
+      if(lastMasseges[i].chatId==id){
+        return true;
+      }
+    }
+    return false;
+  }
+
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} label="צאט" startIcon={true} icon={imagePaths['chatFill']} />
@@ -45,11 +54,14 @@ export default function Chat({ navigation }) {
               <View style={styles.singleChatRow1}>
                 <UserAvatar size={55} source={chat.user2ProfilePicture} />
                 <View style={styles.towInRow}>
-                  <Text style={[styles.ChatHeader, lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.user2Username}</Text>
-                  <Text style={[styles.ChatDate,lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.sendDate.split('T')[1].split(':')[0]}:{chat.sendDate.split('T')[1].split(':')[1]}  {chat.sendDate.split('T')[0]}</Text>
+                  <Text style={[styles.ChatHeader,lastMasseges!=[]&&checkIfInArr(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.user2Username}</Text>
+                  <Text style={[styles.ChatDate,lastMasseges!=[]&&checkIfInArr(chat.chatId)?{fontWeight:'bold'}:null]}>{chat.sendDate.split('T')[1].split(':')[0]}:{chat.sendDate.split('T')[1].split(':')[1]}  {chat.sendDate.split('T')[0]}</Text>
+                 {/* <Text style={[styles.ChatHeader]}>{chat.user2Username}</Text>
+                 <Text style={[styles.ChatDate]}>{chat.sendDate.split('T')[1].split(':')[0]}:{chat.sendDate.split('T')[1].split(':')[1]}  {chat.sendDate.split('T')[0]}</Text> */}
                 </View>
               </View>
-              <Text style={[styles.ChatText, lastMasseges.includes(chat.chatId)?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{chat.contenct}</Text>
+              <Text style={[styles.ChatText, lastMasseges!=[]&&checkIfInArr(chat.chatId)?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{chat.contenct}</Text>
+              {/* <Text style={[styles.ChatText]} numberOfLines={1} ellipsizeMode="tail">{chat.contenct}</Text> */}
               <Text style={styles.ChatButtomLine}>__________________________________________________</Text>
             </View>
           </TouchableOpacity>

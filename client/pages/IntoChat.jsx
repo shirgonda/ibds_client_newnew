@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert,KeyboardAvoidingView,Platform,Keyboard } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -7,23 +7,27 @@ import { Button } from 'react-native-paper';
 import UserAvatar from '../components/avatar';
 import { TextInput } from 'react-native-gesture-handler';
 import { Get, Post } from '../api';
+import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Chat({ navigation, route }) {
   const { visitor, imagePaths, CurrentUser,lastMasseges,setlastMasseges } = useUser();
-  const { chat,chatList,pressFriend } = route.params;
+  const { chat,chatList,demoMassegge } = route.params;
+  console.log('demoMassegge',demoMassegge)
   const [headerLabel, setheaderLabel] = useState(chat ? chat.user2Username : null);
   const [newMessage, setnewMessage] = useState('');
   const [sendTime, setsendTime] = useState('');
   const [OtherUserPic, setOtherUserPic] = useState('');
   const [oldMasseges, setoldMasseges] = useState([]);
   const [attachedFile, setattachedFile] = useState(false);
-  const [recipientId, setrecipientId] = useState(0);
+  var id2 = demoMassegge!=undefined?demoMassegge.recipientId:chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
+  const [recipientId, setrecipientId] = useState(id2);
   var pageheight=(oldMasseges.length)*135;
   const [inputHeight, setInputHeight] = useState(70);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [uploadImage, setuploadImage] = useState('');
   const [ShowUploadedImage, setShowUploadedImage] = useState('');
-  var id2 = pressFriend?pressFriend.id:chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
+  
 
   useEffect(() => {
     LoadOldChats();
@@ -44,10 +48,20 @@ export default function Chat({ navigation, route }) {
     LoadOldChats();
   }, [newMessage]);
 
-  useFocusEffect(
-    useCallback(() => {
-        setlastMasseges({...chatList});
 
+  useFocusEffect(
+    useCallback(async() => {
+        setlastMasseges({...chatList});
+        LoadOldChats();
+        if(demoMassegge!=undefined){
+          let result = await Post(`api/Chat`, message);
+          if (!result) {
+            Alert.alert('הוספת הודעה נכשלה');
+            console.log('result', result);
+          } else {
+            console.log('Add message successful:', result);
+          }
+        }
        return () => {
            // This cleanup function runs when the screen is unfocused (i.e., when you leave the page)
            console.log('Leaving the IntoChat page');
@@ -83,20 +97,21 @@ export default function Chat({ navigation, route }) {
   async function PostMessage() {
     const current = new Date();
     const formattedDate = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}T${String(current.getHours()).padStart(2, '0')}:${String(current.getMinutes()).padStart(2, '0')}:10.061Z`;
-
+    console.log('uploadImage',uploadImage);
+    console.log('attachedFile',attachedFile);
     const message = {
       chatId: 0,
       senderId: CurrentUser.id,
       recipientId: recipientId,
-      contenct: newMessage,
+      contenct: uploadImage!=''?uploadImage:newMessage,
       sendDate: formattedDate,
-      attachedFile: uploadImage,
+      attachedFile: attachedFile,
       user2ProfilePicture: "string",
       areFriends: true,
       user2Username: "string"
     };
 
-    console.log('message', message);
+    console.log('messagggggggggge', message);
     let result = await Post(`api/Chat`, message);
     if (!result) {
       Alert.alert('הוספת הודעה נכשלה');
@@ -107,11 +122,13 @@ export default function Chat({ navigation, route }) {
       setnewMessage('');
       setInputHeight(70);
       setShowUploadedImage('');
+      setattachedFile(false);
+      setuploadImage('');
     }
   }
 
   function printOldMesseges() {
-    return oldMasseges.map((message, index) => {
+    return oldMasseges.length!=0&&oldMasseges.map((message, index) => {
       const isCurrentUser = message.senderId === CurrentUser.id;
       const userAvatar = isCurrentUser ? {uri:CurrentUser.profilePicture} : OtherUserPic;
       const backgroundColor = isCurrentUser ? '#CDC7EF' : '#DAD8E5';
@@ -119,7 +136,8 @@ export default function Chat({ navigation, route }) {
         <View key={index} style={isCurrentUser ? styles.Lmassege : styles.Rmassege}>
           <UserAvatar size={60} source={userAvatar} />
           <View style={[styles.ChatTextBox, { backgroundColor }]}>
-            <Text style={isCurrentUser ?styles.ChatTextR:styles.ChatTextL}>{message.contenct}</Text>
+          {!message.attachedFile?<Text style={isCurrentUser ?styles.ChatTextR:styles.ChatTextL}>{message.contenct}</Text>:null}
+            {message.attachedFile? <Image style={styles.uploadedImg} source={message.contenct}></Image>:null}
             <Text style={styles.ChatDate}>
               {message.sendDate.split('T')[1].split(':')[0]}:{message.sendDate.split('T')[1].split(':')[1]}
             </Text>
@@ -138,7 +156,8 @@ export default function Chat({ navigation, route }) {
     } 
     else{
       console.log('Add friend successful:', result);
-      setareFriends(true);
+      LoadOldChats();
+      //setareFriends(true);
     }
   }
 
@@ -191,20 +210,23 @@ const pickImage = async (type) => {
     if (!result.cancelled) {
         setShowUploadedImage({ uri: result.assets[0].uri});
         setuploadImage(result.assets[0].base64);
+        setattachedFile(true);
+        await PostMessage();
+        LoadOldChats();
     }
 }
 
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} label={headerLabel} startIcon={true} icon={imagePaths['chatFill']} />
-      {!chat.areFriends?<View style={[styles.addToFriendsBtns, styles.shadow]}>
+      {(chat!=undefined&&!chat.areFriends)||(demoMassegge!=undefined&&!demoMassegge.areFriends)?<View style={[styles.addToFriendsBtns, styles.shadow]}>
         <Button onPress={() => addToFriends()}>הוספה לחברים שלי</Button> 
         <TouchableOpacity>
           <Image style={styles.PlusIcon} source={imagePaths['emptyPlus']} />
         </TouchableOpacity>
       </View>:null}
 
-      {chat.areFriends?<View style={[styles.addToFriendsBtns, styles.shadow]}>
+      {(chat!=undefined&&chat.areFriends)||(demoMassegge!=undefined&&demoMassegge.areFriends)?<View style={[styles.addToFriendsBtns, styles.shadow]}>
         <Button>התווסף לחברים שלי</Button>
         <TouchableOpacity>
           <Image style={styles.VIcon} source={imagePaths['forumRights']} />
@@ -224,14 +246,14 @@ const pickImage = async (type) => {
           </TouchableOpacity>
           <TextInput
             style={[styles.Input, { height: inputHeight }]}
-            value={ShowUploadedImage!=''?ShowUploadedImage:newMessage}
+            value={newMessage}
             onChangeText={setnewMessage}
             multiline
             onContentSizeChange={(event) => {
               setInputHeight(event.nativeEvent.contentSize.height + 20); 
             }}
           />
-          <TouchableOpacity onPress={() =>handleImagePick()}>
+          <TouchableOpacity onPress={handleImagePick}>
             <Image style={styles.cameraIcon} source={imagePaths['sendPic']} />
           </TouchableOpacity>
         </View>
@@ -277,6 +299,10 @@ const styles = StyleSheet.create({
   },
   messages: {
     width: '93%',
+  },
+  uploadedImg:{
+    height:50,
+    width:50,
   },
   Rmassege: {
     justifyContent: 'right',

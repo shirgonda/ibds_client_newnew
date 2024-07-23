@@ -103,7 +103,7 @@ export default function PublishQuestion({ navigation,route }) {
 
     return (
         <View style={styles.container}>
-            <AppHeader navigation={navigation} label="פרסם שאלה" startIcon={true} icon={imagePaths['forumFill']} backArrow={false}/>
+            <AppHeader navigation={navigation} label="פרסם שאלה" startIcon={true} icon={imagePaths['forumFill']}/>
             <View style={styles.avatarContainer}>
                     <UserAvatar 
                         size={85} 

@@ -24,9 +24,14 @@ export default function Forum1({ navigation,route }) {
     const [AnswerPic, setAnswerPic] = useState('');
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
     const [questions, setquestions] = useState([]);
-    const [answars, setanswars] = useState([]);   
+    const [answers, setanswers] = useState([]);   
     const [NumOfAnswers, setNumOfAnswers] = useState(0);  
-    const [pressFriend, setpressFriend] = useState({});  
+    const [pressFriend, setpressFriend] = useState({}); 
+    const [demoMassegge, setdemoMassegge] = useState({}); 
+    
+    // useEffect(()=>{
+    //   LoadQuestions();
+    // },[])
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
@@ -45,15 +50,19 @@ export default function Forum1({ navigation,route }) {
       },[questionOpen])
 
       useEffect(()=>{
+        LoadAnswers();
+      },[currentQuestion])
+
+      useEffect(()=>{
         console.log('addAnswer',addAnswer);
         console.log('currentAnswerIndex',currentAnswerIndex);
       },[addAnswer])
 
       function countAnswers(question){
         var count=0;
-        console.log('numOfAnswars',answars);
-        for (let i = 0; i < answars.length; i++) {
-          if(question.questionId==answars.questionId){
+        console.log('numOfanswers',answers);
+        for (let i = 0; i < answers.length; i++) {
+          if(question.questionId==answers.questionId){
             count+=1;
           }
         }
@@ -67,6 +76,18 @@ export default function Forum1({ navigation,route }) {
         } else {
           setquestions(result);
           console.log('GetQuestions successful:', result);
+        }
+      }
+
+      async function LoadAnswers(question) {
+
+        console.log('questionnnnnnn',question);
+        let result = await Get(`api/ForumAnswers/${question.questionId}`, question.questionId);
+        if (!result) {
+          Alert.alert('טעינת תגובות נכשלה');
+        } else {
+          setanswers(result);
+          console.log('Get Answers successful:', result);
         }
       }
 
@@ -114,14 +135,16 @@ export default function Forum1({ navigation,route }) {
 
       const handleQPress=(question,index)=>{   
         setquestionOpen(!questionOpen);
+        console.log(`question`,question);
         setcurrentQuestion(question);
         setcurrentIndex(index);
+        LoadAnswers(question);
       }
 
       function saveAnswer(){
         var userId=CurrentUser.id;
         var answerId=0;
-        var questionId=currentQuestion.id
+        var questionId=currentQuestion.questionId
         var content=AnswerDescription;
         var attachment=AnswerPic;
         var answerDateTime=new Date();
@@ -202,6 +225,7 @@ export default function Forum1({ navigation,route }) {
                 <View style={styles.fixHeight}>
 
                 {questions.length>0 && questions.map((question, index) => (
+                  
                   <View>
                      <TouchableOpacity key={index} onPress={()=>handleQPress(question,index)}>
                         <View style={styles.singleQuestion}>
@@ -222,8 +246,10 @@ export default function Forum1({ navigation,route }) {
                       {question.attachment?<Image style={styles.pic} source={{uri:question.attachment}}></Image>:null}
                       <View style={styles.twoInRowQBtn}>
                       {CurrentUser.id==question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
-                      {visitor&&<Button onPress={()=>{setpressFriend(question.userId),navigation.navigate('IntoChat', { pressFriend })}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>}
-                      {visitor&&<Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>}
+                      <Button onPress={()=>{setpressFriend(question.userId),
+                        setdemoMassegge({chatId: 0,senderId: CurrentUser.id,recipientId: pressFriend,contenct: "",sendDate: "2024-07-23T10:02:49.827Z",attachedFile: false,user2ProfilePicture: "string",areFriends: false,user2Username: "string"}),
+                        console.log('demoMassegge111',demoMassegge),navigation.navigate('IntoChat',  {demoMassegge} )}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
+                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                       </View>
                       </View>:null}
 
@@ -263,10 +289,9 @@ export default function Forum1({ navigation,route }) {
 
 
 
-
-                      {answars.length!=0&&questionOpen&&currentIndex===index?answars.map((answer, index) => (
+                      {answers.length!=0&&questionOpen&&currentIndex===index?answers.map((answer, index) => (
                        <View>
-                          {answer.QID==currentQuestion.id && <View>
+                          {answer.QID==currentQuestion.questionId && <View>
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
                                 <UserAvatar size={55} source={answer.user.profilePicture}/>
