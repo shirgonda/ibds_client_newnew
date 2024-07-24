@@ -21,6 +21,21 @@ export default function MyFriends({navigation}) {
     }, [imagePaths])
   );
 
+  function goIntoChat(friend){
+    var chat={
+      areFriends: false, 
+      attachedFile: false, 
+      chatId: 0, 
+      contenct: "", 
+      recipientId: friend.id, 
+      sendDate: "2024-07-24T14:53:10.06", 
+      senderId: CurrentUser.id, 
+      user2ProfilePicture: friend.profilePicture, 
+      user2Username: friend.username
+    }
+    navigation.navigate('IntoChat',  {chat} );
+  }
+
   async function LoadFriends() {
     let result = await Get(`api/Users?userId=${CurrentUser.id}/Friends`, CurrentUser.id);
     if (!result) {
@@ -45,8 +60,8 @@ export default function MyFriends({navigation}) {
       oneRow.push(
         <View>
           <View key={i} style={styles.FriendsListWrapper}>
-            <TouchableOpacity onPress={() => { setpressFriend(friends[i]), navigation.navigate('IntoChat', { pressFriend }) }}>
-                <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={{uri: friends[i].profilePicture}} />        
+            <TouchableOpacity onPress={() => { goIntoChat(friends[i]) }}>
+                <UserAvatar marginTop={30} size={100} borderRad={0} source={{uri: friends[i].profilePicture}} />        
                 <Text style={styles.friendLabel}>{friends[i].username}</Text>
             </TouchableOpacity>
           </View>

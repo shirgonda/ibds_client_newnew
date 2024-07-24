@@ -22,11 +22,12 @@ export default function Chat({ navigation, route }) {
   const [attachedFile, setattachedFile] = useState(false);
   var id2 = demoMassegge!=undefined?demoMassegge.recipientId:chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
   const [recipientId, setrecipientId] = useState(id2);
-  var pageheight=(oldMasseges.length)*135;
+  var pageheight=(oldMasseges.length)*160;
   const [inputHeight, setInputHeight] = useState(70);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [uploadImage, setuploadImage] = useState('');
   const [ShowUploadedImage, setShowUploadedImage] = useState('');
+  const [areFriends, setareFriends] = useState(false);
   
 
   useEffect(() => {
@@ -43,6 +44,8 @@ export default function Chat({ navigation, route }) {
         keyboardDidShowListener.remove();
       };
   }, [imagePaths]);
+
+  
 
   useEffect(() => {
     LoadOldChats();
@@ -81,16 +84,14 @@ export default function Chat({ navigation, route }) {
   }
 
   async function LoadOldChats() {
-    //id2 = chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
     setrecipientId(id2);
     let result = await Get(`api/Chat/getChats?user1Id=${CurrentUser.id}&user2Id=${id2}`, CurrentUser.id, id2);
     if (!result) {
       Alert.alert('טעינת שיחות נכשלה');
     } else {
       setoldMasseges(result);
-      printOldMesseges();
+        printOldMesseges();
       console.log('Get old chats successful:', result);
-      console.log('oldMasseges', oldMasseges);
     }
   }
 
@@ -103,7 +104,7 @@ export default function Chat({ navigation, route }) {
       chatId: 0,
       senderId: CurrentUser.id,
       recipientId: recipientId,
-      contenct: uploadImage!=''?uploadImage:newMessage,
+      contenct: attachedFile?uploadImage:newMessage,
       sendDate: formattedDate,
       attachedFile: attachedFile,
       user2ProfilePicture: "string",
@@ -119,36 +120,58 @@ export default function Chat({ navigation, route }) {
     } else {
       console.log('Add message successful:', result);
       setoldMasseges([...oldMasseges, message]);
+      LoadOldChats();
       setnewMessage('');
       setInputHeight(70);
       setShowUploadedImage('');
       setattachedFile(false);
-      setuploadImage('');
+      setuploadImage('');   
     }
   }
 
+  useEffect(() => {  
+    if(attachedFile){
+        PostMessage();
+    }
+    console.log('attachedFile000000202',attachedFile);
+    console.log('uploadImage000000202',uploadImage);
+  }, [attachedFile]);
+
+  function checkDate(i){
+    if(oldMasseges.length>i+1){
+        var date=oldMasseges[i].sendDate.split('T')[0];
+        var nextDate=oldMasseges[i+1].sendDate.split('T')[0];
+        if(date!=nextDate){
+            return true;
+        }
+    }
+    return false;
+  }
+
   function printOldMesseges() {
-    return oldMasseges.length!=0&&oldMasseges.map((message, index) => {
+    console.log('printttttt')
+    return oldMasseges.length>0&&oldMasseges.map((message, index) => {
       const isCurrentUser = message.senderId === CurrentUser.id;
       const userAvatar = isCurrentUser ? {uri:CurrentUser.profilePicture} : OtherUserPic;
       const backgroundColor = isCurrentUser ? '#CDC7EF' : '#DAD8E5';
-      return (
+      return (      
         <View key={index} style={isCurrentUser ? styles.Lmassege : styles.Rmassege}>
           <UserAvatar size={60} source={userAvatar} />
           <View style={[styles.ChatTextBox, { backgroundColor }]}>
           {!message.attachedFile?<Text style={isCurrentUser ?styles.ChatTextR:styles.ChatTextL}>{message.contenct}</Text>:null}
-            {message.attachedFile? <Image style={styles.uploadedImg} source={message.contenct}></Image>:null}
+            {message.attachedFile? <Image style={styles.uploadedImg} source={{uri: message.contenct}}></Image>:null}
             <Text style={styles.ChatDate}>
               {message.sendDate.split('T')[1].split(':')[0]}:{message.sendDate.split('T')[1].split(':')[1]}
             </Text>
           </View>
+          {checkDate(index)?<Text style={styles.dateBetween}>{oldMasseges[index+1].sendDate.split('T')[0]}</Text>:null}
         </View>
       );
     });
   }
 
   async function addToFriends(){
-    console.log('id2',id2);
+    console.log('chat',chat);
     let result= await Post(`api/Users/${CurrentUser.id}/AddFriend/${id2}`,CurrentUser.id,id2);
     if(!result){
         Alert.alert('הוספת חבר נכשלה');
@@ -157,7 +180,7 @@ export default function Chat({ navigation, route }) {
     else{
       console.log('Add friend successful:', result);
       LoadOldChats();
-      //setareFriends(true);
+      setareFriends(true);
     }
   }
 
@@ -208,25 +231,26 @@ const pickImage = async (type) => {
         });
     }   
     if (!result.cancelled) {
-        setShowUploadedImage({ uri: result.assets[0].uri});
-        setuploadImage(result.assets[0].base64);
         setattachedFile(true);
-        await PostMessage();
-        LoadOldChats();
+        setuploadImage(result.assets[0].base64);
+        setShowUploadedImage({ uri: result.assets[0].uri});
+       
     }
 }
+
+
 
   return (
     <View style={styles.container}>
       <AppHeader navigation={navigation} label={headerLabel} startIcon={true} icon={imagePaths['chatFill']} />
-      {(chat!=undefined&&!chat.areFriends)||(demoMassegge!=undefined&&!demoMassegge.areFriends)?<View style={[styles.addToFriendsBtns, styles.shadow]}>
+      {oldMasseges.length>0&&!oldMasseges[0].areFriends?<View style={[styles.addToFriendsBtns, styles.shadow]}>
         <Button onPress={() => addToFriends()}>הוספה לחברים שלי</Button> 
         <TouchableOpacity>
           <Image style={styles.PlusIcon} source={imagePaths['emptyPlus']} />
         </TouchableOpacity>
       </View>:null}
 
-      {(chat!=undefined&&chat.areFriends)||(demoMassegge!=undefined&&demoMassegge.areFriends)?<View style={[styles.addToFriendsBtns, styles.shadow]}>
+      {oldMasseges.length>0&&oldMasseges[0].areFriends?<View style={[styles.addToFriendsBtns, styles.shadow]}>
         <Button>התווסף לחברים שלי</Button>
         <TouchableOpacity>
           <Image style={styles.VIcon} source={imagePaths['forumRights']} />
@@ -238,6 +262,7 @@ const pickImage = async (type) => {
         >
       <View style={styles.chatContainer}>
         <ScrollView contentContainerStyle={[styles.messages,{height:pageheight}]}>
+        {oldMasseges.length>0?<Text style={styles.firstDate}>{oldMasseges[0].sendDate.split('T')[0]}</Text>:null}
           {printOldMesseges()}
         </ScrollView>
         <View style={[styles.InputRow, { height: inputHeight+7},isKeyboardVisible?{bottom:5}:{bottom:85}]}>
@@ -297,12 +322,25 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
   },
+  firstDate:{
+    fontSize:16,
+    color:'#50436E',
+    fontWeight:'bold',
+    marginTop:30,
+    textAlign:'center',
+  },
+  dateBetween:{
+    fontSize:16,
+    color:'#50436E',
+    fontWeight:'bold',
+    marginTop:100,
+  },
   messages: {
     width: '93%',
   },
   uploadedImg:{
-    height:50,
-    width:50,
+    height:110,
+    width:110,
   },
   Rmassege: {
     justifyContent: 'right',

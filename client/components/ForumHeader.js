@@ -5,8 +5,6 @@ import { useUser } from '../components/UserContext';
 
 const ForumHeader = ({navigation,subjects}) => {
     const { imagePaths,currentSubject, setcurrentSubject } = useUser();
-    console.log('ForumHeadercurrentSubject',currentSubject)
-    console.log('ForumHeadersubjects',subjects)
     return (
         <View style={styles.icon} >
             {/* הגדרה של הגלילה לאופקית */}

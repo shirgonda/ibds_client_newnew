@@ -31,6 +31,7 @@ export default function PublishQuestion({ navigation,route }) {
     }
 
     async function saveQuestion(){
+      if(validations()){
         var QuestionId=0;
         var username=CurrentUser.username;
         //var numOfAnswers=0
@@ -43,8 +44,11 @@ export default function PublishQuestion({ navigation,route }) {
         var QuestionDateTime = new Date();
         var question={username,QuestionId,userId,Title,Content,QuestionDateTime,Attachment,Topic}
         console.log('question',question);
-       await PostQuestion(question);
-       navigation.navigate('Forum1',{currentSubject,subjects});
+
+            
+        await PostQuestion(question);
+        navigation.navigate('Forum1',{currentSubject,subjects});
+        }
       }
 
     const handleImagePick = async () => {
@@ -99,6 +103,14 @@ export default function PublishQuestion({ navigation,route }) {
             setAttachment(result.assets[0].base64);
             console.log('AttachmentToShow',AttachmentToShow);
         }
+    }
+    
+    function validations(){
+        if(Content=="" || Title==""){
+          Alert.alert('נדרש להוסיף כותרת ותיאור לשאלה');
+          return false;
+      }
+      return true;
     }
 
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useCallback } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert,Linking  } from 'react-native';
 import { Button } from 'react-native-paper';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -9,29 +9,25 @@ import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
 import { Get,Post,Put,Delete } from '../api';
-import { useFocusEffect } from '@react-navigation/native';
+import { Link, useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
     const { imagePaths,currentSubject, setcurrentSubject,CurrentUser,visitor } = useUser();
     const { subjects } = route.params;
     const [questionOpen, setquestionOpen] = useState(false);
     const [currentQuestion, setcurrentQuestion] = useState({});
-    const [currentAnswerIndex, setcurrentAnswerIndex] = useState(-1);
     const [addAnswer, setaddAnswer] = useState(false);
     const [currentIndex, setcurrentIndex] = useState(-1);
-    const [AnswerHedear, setAnswerHedear] = useState('');
     const [AnswerDescription, setAnswerDescription] = useState('');
     const [AnswerPic, setAnswerPic] = useState('');
+    const [AnswerPicToShow, setAnswerPicToShow] = useState('');
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
     const [questions, setquestions] = useState([]);
     const [answers, setanswers] = useState([]);   
     const [NumOfAnswers, setNumOfAnswers] = useState(0);  
     const [pressFriend, setpressFriend] = useState({}); 
-    const [demoMassegge, setdemoMassegge] = useState({}); 
-    
-    // useEffect(()=>{
-    //   LoadQuestions();
-    // },[])
+    const [modalVisible, setModalVisible] = useState(false); // Modal state
+    const [imageToView, setImageToView] = useState(null); // Image to view
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
@@ -43,30 +39,43 @@ export default function Forum1({ navigation,route }) {
       useEffect(()=>{
         if(!questionOpen){
           setaddAnswer(false);
-          //setcurrentAnswerIndex(false);
         }
         console.log('questionOpen',questionOpen);
         console.log('currentIndex',currentIndex);
       },[questionOpen])
 
       useEffect(()=>{
-        LoadAnswers();
+       if(AnswerPicToShow!=''){
+        setAnswerPicAdded(true);
+       }
+       else{setAnswerPicAdded(false)}
+
+        console.log('AnswerPicAdded',AnswerPicAdded);
+      },[AnswerPicToShow])
+
+      useEffect(()=>{
+        LoadAnswers(currentQuestion);
       },[currentQuestion])
 
       useEffect(()=>{
+        LoadAnswers(currentQuestion);
         console.log('addAnswer',addAnswer);
-        console.log('currentAnswerIndex',currentAnswerIndex);
       },[addAnswer])
 
       function countAnswers(question){
-        var count=0;
-        console.log('numOfanswers',answers);
-        for (let i = 0; i < answers.length; i++) {
-          if(question.questionId==answers.questionId){
-            count+=1;
-          }
-        }
-        return count;
+        console.log('question',question);
+        //var count=0;
+        
+        //LoadAnswers(question); קורססססס
+        console.log('answers333',answers);
+        //var count=answers.length+1
+        // for (let i = 0; i < answers.length; i++) {
+        //   if(question.questionId==answers.questionId){
+        //     count+=1;
+        //   }
+        // }
+        //console.log('count',count);
+        return answers.length+1;
       }
 
       async function LoadQuestions() {
@@ -80,7 +89,6 @@ export default function Forum1({ navigation,route }) {
       }
 
       async function LoadAnswers(question) {
-
         console.log('questionnnnnnn',question);
         let result = await Get(`api/ForumAnswers/${question.questionId}`, question.questionId);
         if (!result) {
@@ -104,6 +112,18 @@ export default function Forum1({ navigation,route }) {
         }
       }
 
+      async function deleteAnswer(answer){////לבדוקקקק
+        let result= await Delete(`api/ForumAnswers/${answer.answerId}`, answer.answerId);
+        if(!result){
+            Alert.alert('מחיקה נכשלה');
+        }
+        else {
+            LoadAnswers(currentQuestion);
+            console.log('delete successful:', result);
+        }
+      }
+
+      
       function deleteQ(){
         Alert.alert( 
                   "את/ה בטוח שברצונך למחוק את השאלה?",
@@ -122,6 +142,24 @@ export default function Forum1({ navigation,route }) {
         );
       }
 
+      function  deleteA(answer){
+        Alert.alert( 
+                  "את/ה בטוח שברצונך למחוק את התגובה?",
+                  "בחר אופציה",
+                  [
+                      {
+                          text: "מחיקה",
+                          onPress: () => deleteAnswer(answer),
+                      },
+                      {
+                          text: "ביטול",
+                          style: "cancel",
+                      },
+                  ],
+          { cancelable: true }
+        );
+      }
+     
       async function PostAnswer(newA){
         let result= await Post(`api/ForumAnswers`, newA);
         if(!result){
@@ -130,6 +168,7 @@ export default function Forum1({ navigation,route }) {
         } 
         else{
           console.log('Add Answer successful:', result);
+          LoadAnswers(currentQuestion);
       }
     }
 
@@ -141,7 +180,10 @@ export default function Forum1({ navigation,route }) {
         LoadAnswers(question);
       }
 
-      function saveAnswer(){
+      async function saveAnswer(){
+        if(validations()){
+          
+        
         var userId=CurrentUser.id;
         var answerId=0;
         var questionId=currentQuestion.questionId
@@ -154,8 +196,12 @@ export default function Forum1({ navigation,route }) {
         //const Ctime = `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
         //var date=`${Cdate} ${Ctime}`;
         var answer={userId,answerId,questionId,content,attachment,answerDateTime,username}
-        console.log('answer',answer);
-        PostAnswer(answer);
+        await PostAnswer(answer);
+        setaddAnswer(false);
+        setAnswerPicAdded(false);
+        setAnswerPic('');
+        setAnswerPicToShow('');
+        }
       }
 
       const handleImagePick = async () => {
@@ -206,31 +252,49 @@ export default function Forum1({ navigation,route }) {
         }   
         if (!result.cancelled) {
             setAnswerPicAdded(true);
+            setAnswerPicToShow({uri:result.assets[0].uri});
             setAnswerPic(result.assets[0].base64);
         }
     }
+
+    function goIntoChat(question){
+      var demoMassegge={chatId: 0,senderId: CurrentUser.id,recipientId: question.userId,contenct: "",sendDate: "2024-07-23T10:02:49.827Z",attachedFile: false,user2ProfilePicture: "string",areFriends: false,user2Username: "string"};
+      navigation.navigate('IntoChat',  {demoMassegge} );
+    }
+
+function validations(){
+    if(AnswerDescription==""){
+      Alert.alert('נדרש להוסיף תיאור לתגובה');
+      return false;
+    }
+    return true;
+}
+
+const openURL = (url) => {
+  Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+};
 
     return (
         <View style={styles.container}>
             <AppHeader navigation={navigation} label="פורום" startIcon={true} icon={imagePaths['forumFill']} />
             <ForumHeader navigation={navigation} currentSubject={currentSubject} subjects={subjects}/>
-            {!visitor?<Button style={styles.addQBtn} onPress={()=>navigation.navigate('PublishQuestion',{subjects})}>
+            <Button style={styles.addQBtn} onPress={()=> visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם שאלה'):navigation.navigate('PublishQuestion',{subjects})}>
             <View style={styles.addQBtnItems} >
                 <Text style={styles.addQBtnText}> פרסם שאלה</Text>
                 <Image style={styles.addQBtnIcon} source={imagePaths['WhiteEmptyPlus']}/>
                 </View>
-            </Button>:null}
-            {!visitor&&questions==[]?<Text style={styles.noQ}>עדיין לא פורסמו שאלות בנושא זה</Text>:null}
+            </Button>
+            {questions.length==0&&<Text style={styles.noQ}>עדיין לא פורסמו שאלות בנושא זה</Text>}
             <ScrollView style={[styles.QuestionWrapper]} showsVerticalScrollIndicator={false}>
                 <View style={styles.fixHeight}>
 
-                {questions.length>0 && questions.map((question, index) => (
+                {questions.length>0 && questions.slice().reverse().map((question, index) => (
                   
                   <View>
                      <TouchableOpacity key={index} onPress={()=>handleQPress(question,index)}>
                         <View style={styles.singleQuestion}>
                                 <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={CurrentUser.profilePicture}/>
+                                <UserAvatar size={55} source={{uri:CurrentUser.profilePicture}}/>
                                 <Text style={styles.questionHeader}>{question.username}</Text>
                                 </View>
                                 <Text style={styles.questionDate}>{question.questionDateTime.split('T')[1].split(':')[0]}:{question.questionDateTime.split('T')[1].split(':')[1]}  {question.questionDateTime.split('T')[0]}</Text>
@@ -243,13 +307,13 @@ export default function Forum1({ navigation,route }) {
                     {questionOpen&&currentIndex===index?<View>
                       <Text style={styles.openQHedear}>{question.title}</Text>
                       <Text style={styles.openQText}>{question.content}</Text>
+                      <TouchableOpacity onPress={() => openURL(question.attachment)}>
                       {question.attachment?<Image style={styles.pic} source={{uri:question.attachment}}></Image>:null}
+                      </TouchableOpacity>
                       <View style={styles.twoInRowQBtn}>
-                      {CurrentUser.id==question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
-                      <Button onPress={()=>{setpressFriend(question.userId),
-                        setdemoMassegge({chatId: 0,senderId: CurrentUser.id,recipientId: pressFriend,contenct: "",sendDate: "2024-07-23T10:02:49.827Z",attachedFile: false,user2ProfilePicture: "string",areFriends: false,user2Username: "string"}),
-                        console.log('demoMassegge111',demoMassegge),navigation.navigate('IntoChat',  {demoMassegge} )}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                      {CurrentUser.id===question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
+                      {CurrentUser.id!==question.userId?<Button onPress={()=>{goIntoChat(question)}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>:null}
+                      <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם תגובה'):setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                       </View>
                       </View>:null}
 
@@ -258,85 +322,51 @@ export default function Forum1({ navigation,route }) {
                       {addAnswer ? <View>   
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={CurrentUser.profilePicture}/>
+                                <UserAvatar size={55} source={{uri:CurrentUser.profilePicture}}/>
                                 <Text style={styles.answerHeader}>{CurrentUser.username}</Text>
                                 </View> 
                                 <View style={styles.addPicBtn}>      
-                                  <AppButton backgroundColor='white' width={140} height={30} plusIconWidth={AnswerPicAdded?20:null}
+                                {!AnswerPicAdded&&<AppButton backgroundColor='white' width={140} height={30} plusIconWidth={AnswerPicAdded?20:null}
                                   plusIconHeight={AnswerPicAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
-                                  plusIcon={AnswerPicAdded?imagePaths['forumRights']:imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='after'/>
+                                  plusIcon={AnswerPicAdded?imagePaths['forumRights']:imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='after'/>}
+                                  {AnswerPicAdded?<TouchableOpacity onPress={()=>[setAnswerPicAdded(false),setAnswerPic(''),setAnswerPicToShow('')]}><Text style={styles.deletePicBtnText}>מחיקת תמונה</Text></TouchableOpacity>:null}
+                                    {AnswerPicAdded&&<Image style={styles.answerPic} source={AnswerPicToShow}></Image>}            
                                 </View> 
                         </View>
-                        <View style={styles.addAnswerContainer}>
-                          <Text style={styles.answerLable}>כותרת</Text>
-                          <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => setAnswerHedear(text)}
-                          />
+                        <View style={styles.addAnswerContainer}>                      
                           <Text style={styles.answerLable}>תיאור</Text>
                           <TextInput
                             style={styles.inputBox}
                             onChangeText={(text) => setAnswerDescription(text)}
                           />
                           <View style={styles.twoInRowButtons}>
-                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerHedear(''),setAnswerPic('')}} />
+                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerPic(''),setAnswerPicAdded(false),setAnswerPicToShow('')}} />
                             <AppButton width={100} label='שמירה' onPressHandler={() => saveAnswer()} />
                           </View>
                          </View>
                         </View>:null}
 
-
-
-
-
-                      {answers.length!=0&&questionOpen&&currentIndex===index?answers.map((answer, index) => (
+                      {answers.length>0&&questionOpen&&currentIndex===index?answers.slice().reverse().map((answer, index) => (
                        <View>
-                          {answer.QID==currentQuestion.questionId && <View>
+                          <View>
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={answer.user.profilePicture}/>
-                                <Text style={styles.answerHeader}>{answer.user.username}</Text>
+                                <UserAvatar size={55} source={{uri:CurrentUser.profilePicture}}/>
+                                <Text style={styles.answerHeader}>{answer.username}</Text>
                                 </View>       
-                                <Text style={styles.answerDate}>{answer.date}</Text>
-                            
-                        </View>
-                        <Text style={styles.answerHeaderText}>{answer.AnswerHedear}</Text>
-                        <Text style={styles.answerDescription}>{answer.description}</Text>
+                                <Text style={styles.answerDate}>{answer.answerDateTime.split('T')[1].split(':')[0]}:{answer.answerDateTime.split('T')[1].split(':')[1]}  {answer.answerDateTime.split('T')[0]}</Text>
+                                
+                        </View>                  
+                        <Text style={styles.answerDescription}>{answer.content}</Text>
+                        <TouchableOpacity onPress={() => openURL(answer.attachment)}>
+                          {answer.attachment!=""&&<Image style={styles.showAnswerPic} source={{uri:answer.attachment}}></Image>}
+                         </TouchableOpacity>
+                       
                         <View style={styles.twoInRowQBtn}>
-                          <Button onPress={()=>{setpressFriend(answer.user.userId),navigation.navigate('IntoChat', { pressFriend })}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>
-                          <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{setaddAnswer(true),setcurrentAnswerIndex(index)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
+                        {CurrentUser.id==answer.userId?<TouchableOpacity onPress={()=>deleteA(answer)}><Text style={styles.deletAnswerBtnText}>מחיקת תגובה</Text></TouchableOpacity>:null}
+                        {CurrentUser.id!==answer.userId?<Button onPress={()=>{setpressFriend(answer.user.userId),navigation.navigate('IntoChat', { pressFriend })}}><Text style={styles.openQBtn}>הודעה פרטית                      </Text></Button>:null}
                         </View>
-                        </View>}
-
-                        {addAnswer && currentAnswerIndex===index? <View>   
-                        <View style={styles.singleAnswer}>
-                                <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={CurrentUser.profilePicture}/>
-                                <Text style={styles.answerHeader}>{CurrentUser.username}</Text>
-                                </View> 
-                                <View style={styles.addPicBtn}>      
-                                  <AppButton backgroundColor='white' width={140} height={30} plusIconWidth={AnswerPicAdded?20:null}
-                                  plusIconHeight={AnswerPicAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
-                                  plusIcon={AnswerPicAdded?imagePaths['forumRights']:imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='after'/>
-                                </View> 
-                        </View>
-                        <View style={styles.addAnswerContainer}>
-                          <Text style={styles.answerLable}>כותרת</Text>
-                          <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => setAnswerHedear(text)}
-                          />
-                          <Text style={styles.answerLable}>תיאור</Text>
-                          <TextInput
-                            style={styles.inputBox}
-                            onChangeText={(text) => setAnswerDescription(text)}
-                          />
-                          <View style={styles.twoInRowButtons}>
-                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerHedear(''),setAnswerPic('')}} />
-                            <AppButton width={100} label='שמירה' onPressHandler={() => saveAnswer()} />
-                          </View>
-                         </View>
-                        </View>:null}
+                        </View>           
                         </View>
                       )):null} 
                     </View>
@@ -357,10 +387,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     noQ:{
-      top:200,
-      position:'absolute',
-      alignItems: 'center',
-      justifyContent:'center',
+      top: 200,
+      textAlign: 'center',
+      fontSize: 16,
+      color: '#50436E',
     },
     fixHeight:{
       marginBottom:100
@@ -473,6 +503,16 @@ const styles = StyleSheet.create({
       openQBtn:{
         fontSize:12,
       },
+
+
+
+      imageContainer: { 
+        alignSelf: 'center', 
+        marginVertical: 10 
+      },
+
+
+
       singleAnswer:{
         height: 46,
         marginTop: 15,
@@ -509,6 +549,18 @@ const styles = StyleSheet.create({
       addPicBtn:{
         marginTop:-40,
         direction:'ltr',
+      },
+      answerPic:{
+        height:100,
+        width:100,
+        marginLeft:15,
+        marginTop:-15,
+      },
+      showAnswerPic:{
+        height:100,
+        width:100,
+        marginLeft:265,
+        marginTop:20,
       },
       answerLable:{
         fontSize:13,
@@ -554,6 +606,20 @@ const styles = StyleSheet.create({
         fontSize:12,
         marginTop:11,
         marginRight:40,
+      },
+      deletAnswerBtnText:{
+        color: '#9F0405',
+        textAlign:'right',
+        fontSize:12,
+        marginTop:11,
+        marginBottom:10,
+      },
+      deletePicBtnText:{
+        color: '#9F0405',
+        textAlign:'left',
+        fontSize:12,
+        marginLeft:28,
+        top:-20,
       },
       pic:{
         height:150,

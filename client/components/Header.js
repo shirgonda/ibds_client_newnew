@@ -16,7 +16,10 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
    override=false, // מציין האם אפשר לעקוף את מיקום הקומפוננטה ולהגדיר מיקום מותאם אישית
    fromDocumentPage=false,
    showNewFolder,
-   addFile
+   addFile,
+   fromChatPage,
+   openFriendsModel,
+   setModalVisible
 })=>{
   const { imagePaths } = useUser(); //UserContext מספק גישה לנתיבי התמונות שבקומפוננטה
 
@@ -51,6 +54,17 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
               />  
              </TouchableOpacity>
           </View>}
+
+          {fromChatPage && 
+          <View style={styles.twoInRow}>
+            <TouchableOpacity onPress={openFriendsModel}>
+              <Image style={styles.chatHeaderIcon} 
+                source={imagePaths['emptyPlus']} 
+              />
+            </TouchableOpacity>  
+          </View>}
+
+
 
             <View style={styles.headerContent}>
                 <Text style={[styles.headerText,marginRight?{marginRight:marginRight}:{marginRight:15}]}>{label}</Text>    
@@ -110,6 +124,12 @@ const styles = StyleSheet.create({
         height:25,
         width:38,
         marginRight:10,
+      },
+      chatHeaderIcon:{
+        height:20,
+        width:20,
+        marginLeft:20,
+        marginTop:5,
       },
       headerButtomLine:{
         fontSize:15,
