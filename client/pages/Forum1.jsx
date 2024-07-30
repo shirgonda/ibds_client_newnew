@@ -24,10 +24,7 @@ export default function Forum1({ navigation,route }) {
     const [AnswerPicToShow, setAnswerPicToShow] = useState('');
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
     const [answers, setanswers] = useState([]);   
-    const [NumOfAnswers, setNumOfAnswers] = useState(0);  
     const [pressFriend, setpressFriend] = useState({}); 
-    const [modalVisible, setModalVisible] = useState(false); // Modal state
-    const [imageToView, setImageToView] = useState(null); // Image to view
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
@@ -84,7 +81,6 @@ export default function Forum1({ navigation,route }) {
       },[addAnswer])
 
       async function LoadQuestions() {
-        console.log('LoadQuestions');
         let result = await Get(`api/ForumQuestions/topic/${currentSubject.label}`, currentSubject.label);
         if (!result) {
           Alert.alert('טעינת שאלות נכשלה');
@@ -95,6 +91,7 @@ export default function Forum1({ navigation,route }) {
       }
 
       async function LoadAnswers(question) {
+        console.log('currentQuestionxxxxxxx',question)
         let result = await Get(`api/ForumAnswers/${question.questionId}`, question.questionId);
         if (!result) {
           Alert.alert('טעינת תגובות נכשלה');
@@ -175,9 +172,10 @@ export default function Forum1({ navigation,route }) {
         } 
         else{
           console.log('Add Answer successful:', result);
+          
           LoadAnswers(currentQuestion);
           LoadQuestions();
-          PostMail(newA);
+          //PostMail(newA);
       }
     }
 
@@ -211,6 +209,7 @@ export default function Forum1({ navigation,route }) {
         setquestionOpen(!questionOpen);
         setcurrentIndex(index);
         setcurrentQuestion(question);
+        console.log('question99999',question)
         LoadAnswers(question);
       }
 

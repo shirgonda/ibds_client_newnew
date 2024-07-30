@@ -9,8 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { Get,Post,Put } from '../api';
 
 export default function PublishQuestion({ navigation,route }) {
-    const { imagePaths,currentSubject,CurrentUser } = useUser();
-    const { subjects } = route.params;
+    const { imagePaths,currentSubject,CurrentUser,subjects } = useUser();
+    // const { subjects } = route.params;
     const [Title, setTitle] = useState('');
     const [Content, setContent] = useState('');
     const [Attachment, setAttachment] = useState('');
@@ -32,14 +32,16 @@ export default function PublishQuestion({ navigation,route }) {
 
     async function saveQuestion(){
       if(validations()){
-        var QuestionId=0;
+        var questionId=0;
         var username=CurrentUser.username;
-        var Topic=currentSubject.label
+        var topic=currentSubject.label
         var userId=CurrentUser.id
         var answerCount=0;
         var profilePicture='';
-        var QuestionDateTime = new Date();
-        var question={username,QuestionId,answerCount,userId,Title,Content,QuestionDateTime,Attachment,Topic,profilePicture}
+        var title=Title;
+        var questionDateTime = new Date();
+        var question={username,questionId,answerCount,userId,title,Content,questionDateTime,Attachment,topic,profilePicture}
+        console.log('question21121212',question)
         await PostQuestion(question);
         navigation.navigate('Forum1',{currentSubject,subjects});
         }
