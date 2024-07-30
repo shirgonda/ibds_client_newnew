@@ -12,6 +12,9 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
   const [currentSubject, setcurrentSubject] = useState({});
   const [currentFolder, setcurrentFolderState] = useState({});
   const [lastMasseges, setlastMassegesState] = useState([]);
+  const [numOfNotesChat, setnumOfNotesChat] = useState(0);
+  const [numOfNotesMail, setnumOfNotesMail] = useState(0);
+  const [lastMails,setlastMailsState] = useState(0);
   const path="https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images"
 
   const imagePaths={ //נתיבי התמונות שבשרת
@@ -74,6 +77,18 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
     sendPic:{uri: "https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/Camera.png"}
   };
 
+  const subjects=[
+    {label:'שאל את הכירורג',img:['forumAsk','ForumAskWhite'],height:50,width:40,SmallHeight:45,SmallWidth:35},
+    {label:'מחלת קרוהן',img:['forumIBD','ForumIBDWhite'],height:55,width:50,SmallHeight:45,SmallWidth:42},
+    {label:'מיצוי זכויות המטופל',img:['forumRights','ForumRightsWhite'],height:23,width:45,SmallHeight:20,SmallWidth:40},
+    {label:'רפואה משלימה',img:['forumCompleteHealth','ForumCompleteHealthWhite'],height:45,width:50,SmallHeight:40,SmallWidth:45},
+    {label:'אתגרים רגשיים',img:['forumFeelings','ForumFeelingsWhite'],height:50,width:45,SmallHeight:45,SmallWidth:40},
+    {label:'תזונה',img:['forumFood','ForumFoodWhite'],height:45,width:37,SmallHeight:40,SmallWidth:32},
+    {label:'פעילות גופנית',img:['forumSport','ForumSportWhite'],height:46,width:43,SmallHeight:41,SmallWidth:38},
+    {label:'צעירים מדברים',img:['forumYoung','ForumYoungWhite'],height:48,width:51,SmallHeight:43,SmallWidth:46},
+    {label:'מחלות מעי דלקתיות',img:['forumDeases','ForumDeasesWhite'],height:55,width:42,SmallHeight:50,SmallWidth:37}
+  ];
+
 //--------------------- clear local storage ---------------------// הפעלה ידנית לצורך בדיקות בזמן הפיתוח
   // const clearLocalStorage = async () => {
   //   try {
@@ -107,24 +122,22 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
         if (currentFolderData) {
           setcurrentFolder(JSON.parse(currentFolderData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }
-
-
-
         const lastMassegesData = await AsyncStorage.getItem('lastMasseges'); //שליפת נתוני התיקייה הנוכחי מהאחסון המקומי
-        console.log('get lastMasseges:', lastMassegesData);
+        //console.log('get lastMasseges:', lastMassegesData);
         if (lastMassegesData) {
           setlastMasseges(JSON.parse(lastMassegesData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }
-
-       
-        
+        const lastMailsData = await AsyncStorage.getItem('lastMails'); //שליפת נתוני התיקייה הנוכחי מהאחסון המקומי
+        //console.log('get lastMails:', lastMailsData);
+        if (lastMailsData) {
+          setlastMails(JSON.parse(lastMailsData)); //המרה למבנה אובייקט במידה וקיימים נתונים
+        }
       } catch (error) {
         console.error('Error retrieving data from AsyncStorage:', error);
       }
     };
     fetchData();
   }, []);
-
 
 const setCurrentUser = async (userData) => {
   try {
@@ -139,7 +152,6 @@ const setCurrentUser = async (userData) => {
     console.error('Error saving CurrentUser to AsyncStorage:', error);
   }
 };
-
 
 const setNumOfVisitors = async (NumOfVisitorsData) => { //שמירה באחסון המקומי מספר רץ באמצעותו נוכל לדעת מהו מספר האורחים שנכנסו למערכת
   try {
@@ -165,9 +177,19 @@ const setlastMasseges = async (LmData) => {
   try {
     await AsyncStorage.setItem('lastMasseges', JSON.stringify(LmData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
     setlastMassegesState(LmData);
-    console.log('set lastMasseges:', JSON.stringify(LmData));
+    //console.log('set lastMasseges:', JSON.stringify(LmData));
   } catch (error) {
-    console.error('Error saving lastMasseges to AsyncStorage:', error);
+    //console.error('Error saving lastMasseges to AsyncStorage:', error);
+  }
+};
+
+const setlastMails = async (LmailData) => {
+  try {
+    await AsyncStorage.setItem('lastMails', JSON.stringify(LmailData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
+    setlastMailsState(LmailData);
+    //console.log('set lastMails:', JSON.stringify(LmailData));
+  } catch (error) {
+    //console.error('Error saving lastMails to AsyncStorage:', error);
   }
 };
 
@@ -179,7 +201,11 @@ const setlastMasseges = async (LmData) => {
       currentFolder, setcurrentFolder,
       visitor,
       imagePaths,
-      lastMasseges,setlastMasseges
+      lastMasseges,setlastMasseges,
+      lastMails,setlastMails,
+      numOfNotesChat, setnumOfNotesChat,
+      numOfNotesMail, setnumOfNotesMail,
+      subjects
        }}>
       {children} 
     </UserContext.Provider>

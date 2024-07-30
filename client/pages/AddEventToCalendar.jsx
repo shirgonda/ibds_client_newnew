@@ -120,9 +120,35 @@ export default function AddEventToCalendar({navigation, route}) {
           updateEvent(updatedEvent);
         }
         PostAlerts(result);
+        PostMail(event);
         console.log('Add event successful:', result);   
       } 
     }
+
+    async function PostMail(event){
+      var mail={
+        userId:15,
+        mailId:0,
+        picture:{uri:imagePaths['icon']},
+        sendDate:new Date(),
+        username:'',
+        forumSubject:'',
+        forumContent:'',
+        forumQustionId:0,
+        calendarEventId:event.eventId,
+        calendaerEventName:event.name,
+        calenderEventStartTime:event.startTime,
+        calendarEventLocation:event.location
+      }
+      let result= await Post(`api/ForumAnswers`, mail);////לעדכןןןן
+      if(!result){
+          Alert.alert('הוספת אימייל נכשלה');
+          console.log('result',result);
+      } 
+      else{
+        console.log('Add mail successful:', result);
+    }
+  }
     
     function createDaysArr(){
       const DayData = [];

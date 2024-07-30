@@ -12,17 +12,17 @@ import { Get,Post,Put,Delete } from '../api';
 import { Link, useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
-    const { imagePaths,currentSubject, setcurrentSubject,CurrentUser,visitor } = useUser();
-    const { subjects } = route.params;
+    const { imagePaths,currentSubject, setcurrentSubject,CurrentUser,visitor,subjects } = useUser();
+    const { forumQustionId } = route.params;
     const [questionOpen, setquestionOpen] = useState(false);
-    const [currentQuestion, setcurrentQuestion] = useState({});
+    const [questions, setquestions] = useState([]);
     const [addAnswer, setaddAnswer] = useState(false);
     const [currentIndex, setcurrentIndex] = useState(-1);
+    const [currentQuestion, setcurrentQuestion] = useState({});
     const [AnswerDescription, setAnswerDescription] = useState('');
     const [AnswerPic, setAnswerPic] = useState('');
     const [AnswerPicToShow, setAnswerPicToShow] = useState('');
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
-    const [questions, setquestions] = useState([]);
     const [answers, setanswers] = useState([]);   
     const [NumOfAnswers, setNumOfAnswers] = useState(0);  
     const [pressFriend, setpressFriend] = useState({}); 
@@ -31,17 +31,37 @@ export default function Forum1({ navigation,route }) {
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
-        console.log('currentSubject444',currentSubject);
         LoadQuestions();
+        setquestionOpen(false);
+        setcurrentIndex(-1);
+        setcurrentQuestion({});
       }, [navigation,currentSubject])
     );
+
+    function findQIndex(){
+      if(forumQustionId!=0&&questions!=[]){
+        for (let i = 0; i < questions.length; i++) {
+          if(questions[i].questionId==forumQustionId){
+            var index=questions.length-i-1;
+            handleQPress(questions[index],index);
+        }
+      }
+    }
+    }
+
+    useEffect(()=>{
+      findQIndex()
+    },[questions])
+
+    useEffect(()=>{
+      setcurrentQuestion(questions[currentIndex]);
+    },[currentIndex])
 
       useEffect(()=>{
         if(!questionOpen){
           setaddAnswer(false);
         }
-        console.log('questionOpen',questionOpen);
-        console.log('currentIndex',currentIndex);
+        console.log('questionOpen22222',questionOpen);
       },[questionOpen])
 
       useEffect(()=>{
@@ -54,6 +74,7 @@ export default function Forum1({ navigation,route }) {
       },[AnswerPicToShow])
 
       useEffect(()=>{
+        console.log('currentQuestion2222',currentQuestion)
         LoadAnswers(currentQuestion);
       },[currentQuestion])
 
@@ -62,23 +83,8 @@ export default function Forum1({ navigation,route }) {
         console.log('addAnswer',addAnswer);
       },[addAnswer])
 
-      function countAnswers(question){
-        console.log('question',question);
-        //var count=0;
-        
-        //LoadAnswers(question); קורססססס
-        console.log('answers333',answers);
-        //var count=answers.length+1
-        // for (let i = 0; i < answers.length; i++) {
-        //   if(question.questionId==answers.questionId){
-        //     count+=1;
-        //   }
-        // }
-        //console.log('count',count);
-        return answers.length+1;
-      }
-
       async function LoadQuestions() {
+        console.log('LoadQuestions');
         let result = await Get(`api/ForumQuestions/topic/${currentSubject.label}`, currentSubject.label);
         if (!result) {
           Alert.alert('טעינת שאלות נכשלה');
@@ -89,7 +95,6 @@ export default function Forum1({ navigation,route }) {
       }
 
       async function LoadAnswers(question) {
-        console.log('questionnnnnnn',question);
         let result = await Get(`api/ForumAnswers/${question.questionId}`, question.questionId);
         if (!result) {
           Alert.alert('טעינת תגובות נכשלה');
@@ -112,13 +117,14 @@ export default function Forum1({ navigation,route }) {
         }
       }
 
-      async function deleteAnswer(answer){////לבדוקקקק
+      async function deleteAnswer(answer){
         let result= await Delete(`api/ForumAnswers/${answer.answerId}`, answer.answerId);
         if(!result){
             Alert.alert('מחיקה נכשלה');
         }
         else {
             LoadAnswers(currentQuestion);
+            LoadQuestions();
             console.log('delete successful:', result);
         }
       }
@@ -161,6 +167,7 @@ export default function Forum1({ navigation,route }) {
       }
      
       async function PostAnswer(newA){
+        console.log('newA',newA);
         let result= await Post(`api/ForumAnswers`, newA);
         if(!result){
             Alert.alert('הוספת תגובה נכשלה');
@@ -169,21 +176,46 @@ export default function Forum1({ navigation,route }) {
         else{
           console.log('Add Answer successful:', result);
           LoadAnswers(currentQuestion);
+          LoadQuestions();
+          PostMail(newA);
       }
     }
 
+    async function PostMail(newA){
+      var mail={
+        userId:15,
+        mailId:0,
+        picture:newA.profilePicture,
+        sendDate:newA.answerDateTime,
+        username:newA.username,
+        forumSubject:currentSubject,
+        forumContent:newA.content,
+        forumQustionId:newA.questionId,
+        calendarEventId:0,
+        calendaerEventName:'',
+        calenderEventStartTime:'',
+        calendarEventLocation:''
+      }
+      let result= await Post(`api/ForumAnswers`, mail);////לעדכןןןן
+      if(!result){
+          Alert.alert('הוספת אימייל נכשלה');
+          console.log('result',result);
+      } 
+      else{
+        console.log('Add mail successful:', result);
+    }
+  }
+
+
       const handleQPress=(question,index)=>{   
         setquestionOpen(!questionOpen);
-        console.log(`question`,question);
-        setcurrentQuestion(question);
         setcurrentIndex(index);
+        setcurrentQuestion(question);
         LoadAnswers(question);
       }
 
       async function saveAnswer(){
         if(validations()){
-          
-        
         var userId=CurrentUser.id;
         var answerId=0;
         var questionId=currentQuestion.questionId
@@ -191,11 +223,8 @@ export default function Forum1({ navigation,route }) {
         var attachment=AnswerPic;
         var answerDateTime=new Date();
         var username=CurrentUser.username;
-        //const current = new Date();
-        //const Cdate = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-        //const Ctime = `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-        //var date=`${Cdate} ${Ctime}`;
-        var answer={userId,answerId,questionId,content,attachment,answerDateTime,username}
+        var profilePicture=CurrentUser.profilePicture;
+        var answer={userId,answerId,questionId,content,attachment,answerDateTime,username,profilePicture}
         await PostAnswer(answer);
         setaddAnswer(false);
         setAnswerPicAdded(false);
@@ -294,12 +323,12 @@ const openURL = (url) => {
                      <TouchableOpacity key={index} onPress={()=>handleQPress(question,index)}>
                         <View style={styles.singleQuestion}>
                                 <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={{uri:CurrentUser.profilePicture}}/>
+                                <UserAvatar size={55} source={{uri:question.profilePicture}}/>
                                 <Text style={styles.questionHeader}>{question.username}</Text>
                                 </View>
                                 <Text style={styles.questionDate}>{question.questionDateTime.split('T')[1].split(':')[0]}:{question.questionDateTime.split('T')[1].split(':')[1]}  {question.questionDateTime.split('T')[0]}</Text>
                                 <Text style={styles.questionText}>{question.title}</Text>
-                                <Text style={styles.questionNumOfAnswers}>{countAnswers(question)} תגובות</Text>
+                                <Text style={styles.questionNumOfAnswers}>{question.answerCount} תגובות</Text>
                             <Text style={[styles.questionButtomLine, { marginTop: question.userId== CurrentUser.id ? 60 : 50 }]}>__________________________________________________</Text>
                         </View>
                     </TouchableOpacity>
@@ -346,12 +375,12 @@ const openURL = (url) => {
                          </View>
                         </View>:null}
 
-                      {answers.length>0&&questionOpen&&currentIndex===index?answers.slice().reverse().map((answer, index) => (
+                      {answers.length>0&&questionOpen&&currentIndex===index?answers.map((answer, index) => (
                        <View>
                           <View>
                         <View style={styles.singleAnswer}>
                                 <View style={styles.singleQuestionRow1}>
-                                <UserAvatar size={55} source={{uri:CurrentUser.profilePicture}}/>
+                                <UserAvatar size={55} source={{uri:answer.profilePicture}}/>
                                 <Text style={styles.answerHeader}>{answer.username}</Text>
                                 </View>       
                                 <Text style={styles.answerDate}>{answer.answerDateTime.split('T')[1].split(':')[0]}:{answer.answerDateTime.split('T')[1].split(':')[1]}  {answer.answerDateTime.split('T')[0]}</Text>

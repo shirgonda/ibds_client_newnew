@@ -9,17 +9,18 @@ const AppFooter = ({
   forumFillIcon = false,
   homeFillIcon=false,
   calendarFillIcon = false,
-  mailFillIcon = false,
+  mailFillIcon = false
 }) => {
   const [toggleMenu, settoggleMenu] = useState(false);
-  const { imagePaths } = useUser(); 
+  const { imagePaths,numOfNotesChat,numOfNotesMail } = useUser(); 
 
   return (
     <View style={styles.footer}>
       <View style={styles.footerIcons}> 
         <View style={styles.footercard}>
-          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-          <Image style={styles.footerIconChat} source={chatFillIcon?imagePaths['chatFill']:imagePaths['chat']}/>          
+          <TouchableOpacity style={styles.twoInRow} onPress={() => navigation.navigate('Chat')}>  
+          <Image style={styles.footerIconChat} source={chatFillIcon?imagePaths['chatFill']:imagePaths['chat']}/>      
+          {numOfNotesChat?<View style={styles.redNoteChat}><Text style={styles.redNoteText}>{numOfNotesChat}</Text></View>:null}
           </TouchableOpacity>
           <Text style={styles.footerText}>צאט</Text>
         </View>
@@ -44,6 +45,7 @@ const AppFooter = ({
         <View style={styles.footercard}>
           <TouchableOpacity onPress={() => navigation.navigate('Mail')}>
             <Image style={styles.footerIconMail} source={mailFillIcon?imagePaths['mailFill']:imagePaths['mail']}/>
+            {numOfNotesMail?<View style={styles.redNoteMail}><Text style={styles.redNoteText}>{numOfNotesMail}</Text></View>:null}
           </TouchableOpacity>
           <Text style={styles.footerText}>דואר</Text>
         </View>
@@ -108,7 +110,33 @@ const styles = StyleSheet.create({
     width: 38,
   },
   footerIconChat: {
-    height: 29,
-    width: 31,
+    height: 30,
+    width: 32,
+  },
+  twoInRow:{
+    flexDirection:'row',
+  },
+  redNoteChat:{
+    backgroundColor:'#D12C2C',
+    height:11,
+    width:11,
+    borderRadius:5,
+    position:'absolute',
+    right:-6,
+    top:-3,
+  },
+  redNoteMail:{
+    backgroundColor:'#D12C2C',
+    height:11,
+    width:11,
+    borderRadius:5,
+    position:'absolute',
+    right:-6,
+    top:-6,
+  },
+  redNoteText:{
+    color:'white',
+    textAlign:'center',
+    fontSize:8.5,
   }
 })

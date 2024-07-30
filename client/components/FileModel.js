@@ -8,7 +8,6 @@ const FileModel = ({
     setdeleteFile,
     file,
     setFile,
-   // LoadFiles
 }) => {
 
     async function deleteCurrentFile(){
@@ -18,7 +17,6 @@ const FileModel = ({
         }
         else {
             setFile('');
-            //LoadFiles;
             console.log('delete successful:', result);
         }
     }

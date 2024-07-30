@@ -35,18 +35,17 @@ export default function MyDocuments({ navigation }) {
   const [deleteFile, setdeleteFile] = useState(false);
   var pageheight=((folders.length + filesArr.length) / 3) * 200 +300;
 
-  useEffect(()=>{
-    LoadFolders();
-  },[currentFolder])
+  useFocusEffect(
+    useCallback(() => {
+      LoadFolders();
+      LoadFiles();     
+    }, [])
+  );
 
-  useEffect(()=>{
-    LoadFiles();
-  },[file])
+  useEffect(() => {
+    LoadFiles();  
+  }, [file,deleteFile]);
 
-  useEffect(()=>{
-  },[filesArr])
-
-  
   async function LoadFiles() {
     let result = await Get(`api/Documents?userId=${CurrentUser.id}`, CurrentUser.id);
     if (!result) {
@@ -57,9 +56,9 @@ export default function MyDocuments({ navigation }) {
         if(result[i].fileId== null){
           NotInFolder.push(result[i]);     
         }
-      }   
-        setfilesArr(NotInFolder);       
-        console.log('Get Files successful:', result); 
+      }    
+      setfilesArr(NotInFolder); 
+      console.log('Get Files successful:', result); 
     }
   }
 
@@ -70,9 +69,9 @@ export default function MyDocuments({ navigation }) {
         console.log('result',result);
     } 
     else{
-      console.log('Add folder successful:', result);
+      console.log('Add file successful:', result);
       setFile(result);
-      LoadFiles();
+      setfilesArr((prev)=>[...prev,result]); 
   }
 }
 
@@ -150,9 +149,8 @@ export default function MyDocuments({ navigation }) {
   };
 
   const openPDF = async (fileUri) => {
-    const url = fileUri;
+    const url = `${fileUri}?t=${new Date().getTime()}`;
     const supported = await Linking.canOpenURL(url);
-
     if (supported) {
       await Linking.openURL(url);
     } else {
@@ -163,8 +161,6 @@ export default function MyDocuments({ navigation }) {
   function spliceNewFolder(arr) {
     setnewFolderAdded(false);
     setfolderName(OldFolderName);
-    console.log('folderName',folderName);
-    console.log('OldFolderName',OldFolderName);
     setchangeFolderName(false);
     setnewFolderSaved(true);
   }
@@ -278,7 +274,7 @@ export default function MyDocuments({ navigation }) {
         {row}
       </View>
     ));
-  }, [folders, imagePaths, folderName, newFolderAdded, fileModalVisible,folderModalVisible, fileCurrentIndex,folderCurrentIndex]);
+  }, [folders, imagePaths, folderName, newFolderAdded, fileModalVisible,folderModalVisible, fileCurrentIndex,folderCurrentIndex,filesArr,file]);
 
   return (
     <View style={styles.container}>

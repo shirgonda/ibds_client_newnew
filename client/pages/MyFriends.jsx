@@ -37,7 +37,7 @@ export default function MyFriends({navigation}) {
   }
 
   async function LoadFriends() {
-    let result = await Get(`api/Users?userId=${CurrentUser.id}/Friends`, CurrentUser.id);
+    let result = await Get(`api/Users/${CurrentUser.id}/Friends`, CurrentUser.id);
     if (!result) {
       Alert.alert('טעינת החברים נכשלה');
     } else {

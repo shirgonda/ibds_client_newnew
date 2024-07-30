@@ -34,18 +34,12 @@ export default function PublishQuestion({ navigation,route }) {
       if(validations()){
         var QuestionId=0;
         var username=CurrentUser.username;
-        //var numOfAnswers=0
         var Topic=currentSubject.label
         var userId=CurrentUser.id
-        //const current = new Date();
-        //const Cdate = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-        //const Ctime = `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
-        //var QuestionDateTime=`${Cdate}T${Ctime}`;
+        var answerCount=0;
+        var profilePicture='';
         var QuestionDateTime = new Date();
-        var question={username,QuestionId,userId,Title,Content,QuestionDateTime,Attachment,Topic}
-        console.log('question',question);
-
-            
+        var question={username,QuestionId,answerCount,userId,Title,Content,QuestionDateTime,Attachment,Topic,profilePicture}
         await PostQuestion(question);
         navigation.navigate('Forum1',{currentSubject,subjects});
         }
