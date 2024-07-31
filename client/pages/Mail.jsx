@@ -9,34 +9,45 @@ import { Get } from '../api';
 
 export default function Mail({ navigation }) {
   const { imagePaths, CurrentUser,subjects,numOfNotesMail,setnumOfNotesMail,currentSubject,setcurrentSubject,lastMails,setlastMails } = useUser();
-  const [mailsList, setmailsList] = useState([
-    {userId:15,mailId:1,picture:"https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/לירוש.jpg",sendDate:"2024-07-28T16:57:10.06",username:'לירוש',forumSubject:'רפואה משלימה',forumContent:'היי לכולם, אני רוצה להמליץ על רפואה משלימה לטיפול בקרוהן, לי עזר מאוד מאוד!',forumQustionId:4,calendarEventId:0,calendaerEventName:'',calenderEventStartTime:'',calendarEventLocation:''},
-    {userId:15,mailId:2,picture:"https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images/icon.png",sendDate:"2024-07-28T16:57:10.06",username:'',forumSubject:'',forumContent:'',forumQustionId:0,calendarEventId:3488,calendaerEventName:'קבלת זריקה',calenderEventStartTime:'12:00',calendarEventLocation:'רמבם'}
-  ]);
+  const [mailsList, setmailsList] = useState([]);
   const [currentMail, setcurrentMail] = useState({});
-  var event= {"day": 23, "endTime": "2024-07-23T18:01:00", "eventId": 3521, "location": "בזום", "month": 7, "name": "לעדכן את יוסי הרופא איך אני מרגישה אחרי הטיפול", "parentEvent": 0, "repeat": "אף פעם", "startTime": "2024-07-23T18:00:00", "userId": 15, "year": 2024};
+  //const [event, setevent] = useState({});
+  //var event= {"day": 23, "endTime": "2024-07-23T18:01:00", "eventId": 3521, "location": "בזום", "month": 7, "name": "לעדכן את יוסי הרופא איך אני מרגישה אחרי הטיפול", "parentEvent": 0, "repeat": "אף פעם", "startTime": "2024-07-23T18:00:00", "userId": 15, "year": 2024};
   var pageheight=(mailsList.length)*85;
+  var event={};
 
   useFocusEffect(
     useCallback(() => {
-      //LoadMails();
+      LoadMails();
     }, [CurrentUser])
   );
 
-  useEffect(() => {
-    //LoadMails();
-  }, [imagePaths]);
+  // useEffect(() => {
+  //   //LoadMails();
+  // }, [imagePaths]);
 
-  // async function LoadMails() {/////////לעדכן
-  //   let result = await Get(`api/Chat/getLatestChats?userId=${CurrentUser.id}`, CurrentUser.id);
-  //   if (!result) {
-  //     Alert.alert('טעינת אימיילים נכשלה');
-  //   } else {
-  //     setmailsList(result);
-  //     LoadReadMail(result);
-  //     console.log('Get mails successful:', result);
-  //   }
-  // }
+  async function LoadMails() {
+    let result = await Get(`api/Mail/getMailForUser?userId=${CurrentUser.id}`, CurrentUser.id);
+    if (!result) {
+      Alert.alert('טעינת אימיילים נכשלה');
+    } else {
+      setmailsList(result);
+      LoadReadMail(result);
+      console.log('Get mails successful:', result);
+    }
+  }
+
+  async function LoadEvent(EventId) {
+    console.log('EventId',EventId)
+    let result = await Get(`api/CalendarEvents/event/${EventId}`, EventId);
+    if (!result) {
+      Alert.alert('טעינת אירוע נכשלה');
+    } else {
+      //setevent(result);
+      event=result;
+      console.log('Get event successful:', result);
+    }
+  }
 
   function getSubjectIndex(mail){
     for (let i = 0; i < subjects.length; i++) {
@@ -46,8 +57,9 @@ export default function Mail({ navigation }) {
     }
   }
 
-  function goToPage(mail){
+  async function goToPage(mail){
     if(mail.forumSubject===''){
+      await LoadEvent(mail.calendarEventId);
       navigation.navigate('EditEvent',{event});
     }
     else{

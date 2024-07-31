@@ -119,28 +119,31 @@ export default function AddEventToCalendar({navigation, route}) {
           var updatedEvent={...result,parentEvent:patentEvent};
           updateEvent(updatedEvent);
         }
+        PostMail(result);
         PostAlerts(result);
-        PostMail(event);
         console.log('Add event successful:', result);   
       } 
     }
 
     async function PostMail(event){
+      const convertedDate=new Date(event.year,event.month-1,event.day+1)
+       var startTime=event.startTime.split('T')[1].split(':');
       var mail={
         userId:15,
         mailId:0,
-        picture:{uri:imagePaths['icon']},
-        sendDate:new Date(),
+        picture:'',
+        sendDate:convertedDate,
         username:'',
         forumSubject:'',
         forumContent:'',
         forumQustionId:0,
         calendarEventId:event.eventId,
         calendaerEventName:event.name,
-        calenderEventStartTime:event.startTime,
+        calenderEventStartTime:`${startTime[0]}:${startTime[1]}`,
         calendarEventLocation:event.location
       }
-      let result= await Post(`api/ForumAnswers`, mail);////לעדכןןןן
+      console.log('mail',mail)
+      let result= await Post(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
           console.log('result',result);

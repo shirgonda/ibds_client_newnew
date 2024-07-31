@@ -12,6 +12,7 @@ import { Put, Delete, Get, PostCalendarItem } from '../api';
 
 export default function EditEvent({navigation,route}) {
   const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,event,chosenDate} = route.params;
+  console.log('event',event)
   const {imagePaths,CurrentUser} = useUser();
   const [events, setEvents] = useState([]);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -39,6 +40,7 @@ export default function EditEvent({navigation,route}) {
   useFocusEffect(
     useCallback(() => {
       LoadAlerts();
+      console.log('alerts',alerts)
     }, [CurrentDayShow, CurrentMonthShow, CurrentYearShow])
   );
 

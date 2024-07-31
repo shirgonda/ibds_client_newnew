@@ -51,6 +51,8 @@ export default function Forum1({ navigation,route }) {
     },[questions])
 
     useEffect(()=>{
+      console.log('questions[currentIndex]',questions[currentIndex])
+      console.log('currentIndex',currentIndex)
       setcurrentQuestion(questions[currentIndex]);
     },[currentIndex])
 
@@ -171,20 +173,20 @@ export default function Forum1({ navigation,route }) {
             console.log('result',result);
         } 
         else{
-          console.log('Add Answer successful:', result);
-          
+          console.log('Add Answer successful:', result);  
           LoadAnswers(currentQuestion);
           LoadQuestions();
-          //PostMail(newA);
+          PostMail(newA);
       }
     }
 
     async function PostMail(newA){
+      const convertedDate=new Date(newA.answerDateTime)
       var mail={
         userId:15,
         mailId:0,
         picture:newA.profilePicture,
-        sendDate:newA.answerDateTime,
+        sendDate:convertedDate,
         username:newA.username,
         forumSubject:currentSubject,
         forumContent:newA.content,
@@ -194,7 +196,7 @@ export default function Forum1({ navigation,route }) {
         calenderEventStartTime:'',
         calendarEventLocation:''
       }
-      let result= await Post(`api/ForumAnswers`, mail);////לעדכןןןן
+      let result= await Post(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
           console.log('result',result);
@@ -209,7 +211,7 @@ export default function Forum1({ navigation,route }) {
         setquestionOpen(!questionOpen);
         setcurrentIndex(index);
         setcurrentQuestion(question);
-        console.log('question99999',question)
+        console.log('question9999999999999',question)
         LoadAnswers(question);
       }
 

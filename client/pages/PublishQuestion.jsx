@@ -10,12 +10,11 @@ import { Get,Post,Put } from '../api';
 
 export default function PublishQuestion({ navigation,route }) {
     const { imagePaths,currentSubject,CurrentUser,subjects } = useUser();
-    // const { subjects } = route.params;
     const [Title, setTitle] = useState('');
     const [Content, setContent] = useState('');
-    const [Attachment, setAttachment] = useState('');
-    const [AttachmentToShow, setAttachmentToShow] = useState('');
-    const [AttachmentAdded, setAttachmentAdded] = useState(false);
+    const [attachment, setattachment] = useState('');
+    const [attachmentToShow, setattachmentToShow] = useState('');
+    const [attachmentAdded, setattachmentAdded] = useState(false);
     const [currentQuestion, setcurrentQuestion] = useState({});
 
 
@@ -40,8 +39,8 @@ export default function PublishQuestion({ navigation,route }) {
         var profilePicture='';
         var title=Title;
         var questionDateTime = new Date();
-        var question={username,questionId,answerCount,userId,title,Content,questionDateTime,Attachment,topic,profilePicture}
-        console.log('question21121212',question)
+        var question={username,questionId,answerCount,userId,title,Content,questionDateTime,attachment,topic,profilePicture}
+        console.log('question',question)
         await PostQuestion(question);
         navigation.navigate('Forum1',{currentSubject,subjects});
         }
@@ -94,10 +93,10 @@ export default function PublishQuestion({ navigation,route }) {
             });
         }   
         if (!result.cancelled) {
-            setAttachmentAdded(true);
-            setAttachmentToShow({ uri: result.assets[0].uri});
-            setAttachment(result.assets[0].base64);
-            console.log('AttachmentToShow',AttachmentToShow);
+            setattachmentAdded(true);
+            setattachmentToShow({ uri: result.assets[0].uri});
+            setattachment(result.assets[0].base64);
+            console.log('attachmentToShow',attachmentToShow);
         }
     }
     
@@ -137,15 +136,15 @@ export default function PublishQuestion({ navigation,route }) {
                             style={styles.inputBox}
                             onChangeText={(text) => setContent(text)}
                           />
-                           {!AttachmentAdded?<View style={styles.addPicBtn}>      
-                                  <AppButton backgroundColor='white' width={140} height={35} plusIconWidth={AttachmentAdded?20:null}
-                                  plusIconHeight={AttachmentAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
+                           {!attachmentAdded?<View style={styles.addPicBtn}>      
+                                  <AppButton backgroundColor='white' width={140} height={35} plusIconWidth={attachmentAdded?20:null}
+                                  plusIconHeight={attachmentAdded?10:null} fontSize={13} label='הוספת תמונה' labelColor='#50436E' borderColor='#50436E' 
                                   plusIcon={imagePaths['emptyPlus']} onPressHandler={handleImagePick} plusIconPlace='before'/>
                             </View> :null}
-                            {AttachmentAdded?<Image style={styles.pic} source={AttachmentToShow}></Image>:null}
-                            {AttachmentAdded?<TouchableOpacity onPress={()=>[setAttachmentAdded(false),setAttachment(''),setAttachmentToShow('')]}><Text style={styles.deletBtnText}>מחיקת תמונה</Text></TouchableOpacity>:null}
+                            {attachmentAdded?<Image style={styles.pic} source={attachmentToShow}></Image>:null}
+                            {attachmentAdded?<TouchableOpacity onPress={()=>[setattachmentAdded(false),setattachment(''),setattachmentToShow('')]}><Text style={styles.deletBtnText}>מחיקת תמונה</Text></TouchableOpacity>:null}
                           <View style={styles.twoInRowButtons}>
-                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setAttachment(''),setAttachmentAdded(false),navigation.navigate('Forum1',{subjects})}} />
+                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setattachment(''),setattachmentAdded(false),navigation.navigate('Forum1',{subjects})}} />
                             <AppButton width={100} label='שמירה' onPressHandler={() => saveQuestion()} />
                           </View>
                     </View>
