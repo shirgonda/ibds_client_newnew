@@ -7,7 +7,7 @@ import AppHeader from '../components/Header';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { useUser } from '../components/UserContext';
 import TimePicker from '../components/selectTime';
-import { Put, PostCalendarItem, Get } from '../api';
+import { Put, PostCalendarItem,PostOneValue, Get } from '../api';
 import * as Notifications from 'expo-notifications';
 
 export default function AddEventToCalendar({navigation, route}) {  
@@ -129,8 +129,9 @@ export default function AddEventToCalendar({navigation, route}) {
       const convertedDate=new Date(event.year,event.month-1,event.day+1)
        var startTime=event.startTime.split('T')[1].split(':');
       var mail={
-        userId:15,
+        userId:CurrentUser.id,
         mailId:0,
+        mailFromCalander:true,
         picture:'',
         sendDate:convertedDate,
         username:'',
@@ -143,7 +144,7 @@ export default function AddEventToCalendar({navigation, route}) {
         calendarEventLocation:event.location
       }
       console.log('mail',mail)
-      let result= await Post(`api/Mail`, mail);
+      let result= await PostOneValue(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
           console.log('result',result);

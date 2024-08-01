@@ -26,6 +26,21 @@ export async function Post(url, data,picture) {
         return await res.json();
 }
 
+export async function PostOneValue(url, data) {
+      let res = await fetch(`${baseURL}/${url}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      });
+      console.log('res',res);
+      if(res.status===400 || res.status===500){
+        return false;
+      }
+      return await res.json();
+}
+
 export async function PostCalendarItem(url, data) {
     try {
         let res = await fetch(`${baseURL}/${url}`, {

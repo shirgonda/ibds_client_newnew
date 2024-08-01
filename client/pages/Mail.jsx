@@ -10,21 +10,37 @@ import { Get } from '../api';
 export default function Mail({ navigation }) {
   const { imagePaths, CurrentUser,subjects,numOfNotesMail,setnumOfNotesMail,currentSubject,setcurrentSubject,lastMails,setlastMails } = useUser();
   const [mailsList, setmailsList] = useState([]);
-  const [currentMail, setcurrentMail] = useState({});
-  //const [event, setevent] = useState({});
-  //var event= {"day": 23, "endTime": "2024-07-23T18:01:00", "eventId": 3521, "location": "בזום", "month": 7, "name": "לעדכן את יוסי הרופא איך אני מרגישה אחרי הטיפול", "parentEvent": 0, "repeat": "אף פעם", "startTime": "2024-07-23T18:00:00", "userId": 15, "year": 2024};
   var pageheight=(mailsList.length)*85;
   var event={};
+  var currentMail={mailid:-1};
+  let mailInterval= null;
+
+  useEffect(() => {
+    mailInterval=setInterval(()=>{LoadMails()},1000*10)
+    return ()=>{
+        clearInterval(mailInterval);
+    }
+  }, []);
 
   useFocusEffect(
-    useCallback(() => {
-      LoadMails();
+    useCallback(async() => {
+      await LoadMails();
     }, [CurrentUser])
   );
 
   // useEffect(() => {
-  //   //LoadMails();
-  // }, [imagePaths]);
+  //   updateNewMailsCount();
+  // }, [mailsList, lastMails]);
+
+  // function updateNewMailsCount() {
+  //   let newMailsCount = 0;
+  //   mailsList.forEach(mail => {
+  //     if (checkIfInArr(mail.mailid)) {
+  //       newMailsCount += 1;
+  //     }
+  //   });
+  //   setnumOfNotesMail(newMailsCount);
+  // }
 
   async function LoadMails() {
     let result = await Get(`api/Mail/getMailForUser?userId=${CurrentUser.id}`, CurrentUser.id);
@@ -43,7 +59,6 @@ export default function Mail({ navigation }) {
     if (!result) {
       Alert.alert('טעינת אירוע נכשלה');
     } else {
-      //setevent(result);
       event=result;
       console.log('Get event successful:', result);
     }
@@ -58,42 +73,48 @@ export default function Mail({ navigation }) {
   }
 
   async function goToPage(mail){
-    if(mail.forumSubject===''){
+    currentMail=mail;
+    LoadReadMail(mailsList);
+    if(mail.forumSubject==''){
       await LoadEvent(mail.calendarEventId);
-      navigation.navigate('EditEvent',{event});
+       navigation.navigate('EditEvent',{event});
     }
     else{
       setcurrentSubject(subjects[getSubjectIndex(mail)]);
-      navigation.navigate('Forum1',{forumQustionId:mail.forumQustionId});
+       navigation.navigate('Forum1',{forumQustionId:mail.forumQustionId});
     }
   }
 
   function LoadReadMail(mails){
-    var lastRead=[...lastMails];
-    if(lastMails.length==0){
-         lastRead.push(mails[mails.length-1].mailId);
-     }
-    else{
-        for (let i = 0; i < lastMails.length; i++) {
-            if(lastMails[i].mailId==currentMail.mailId){
-                lastRead.splice(i, 1);
-            }   
-            lastRead.push(mails[mails.length-1].mailId);
+    //var lastRead=[...lastMails];
+    // if(lastMails.length==0){
+    //      lastRead.push(mails[mails.length-1].mailid);
+    //  }
+    // else{
+        let result=false;
+        for (let i = 0; i <= lastMails.length; i++) {
+          //console.log('lastMails[i]',lastMails[i]);
+          //console.log('currentMail.mailid',currentMail.mailid);
+            if(lastMails[i]==currentMail.mailid){
+              result=true;      
+            }    
         } 
-    }
-    setlastMails(lastRead);
+        //console.log('result',result);
+        if(!result){
+          //lastRead.push(currentMail.mailid);  
+          setlastMails([...lastMails,currentMail.mailid]);
+        }
+      //}
+    //setlastMails([...lastMails,currentMail.mailid]);
   }
 
   function checkIfInArr(id){
-    for (let i = 0; i < lastMails.length; i++) {
-      if(lastMails[i].mailId==id){
-        return false;
+      for (let i = 0; i < lastMails.length; i++) {
+        if(lastMails[i]==id){
+          return false;
+        }
       }
-    }
-    setnumOfNotesMail(numOfNotesMail+1);
-    console.log('lastMails',lastMails);
-    console.log('numOfNotesMail',numOfNotesMail);
-    return true;
+      return true;
   }
 
   return (
@@ -107,21 +128,25 @@ export default function Mail({ navigation }) {
       />
        <View style={styles.scrollViewWrapper}>
       <ScrollView contentContainerStyle={[styles.mailsList,{height:pageheight}]} showsVerticalScrollIndicator={false}>
-        {mailsList.length!=0 && mailsList.slice().reverse().map((mail, index) => (
-          <TouchableOpacity key={index} onPress={() => goToPage(mail)}>
+        {mailsList.length!=0 && mailsList.map((mail, index) => {
+          var isNewMail = lastMails.length !== 0 && checkIfInArr(mail.mailid);
+          console.log('lastMails',lastMails)
+          return(
+          <TouchableOpacity key={index} onPress={() => {goToPage(mail)}}>
             <View style={styles.singleMail}>
               <View style={styles.singleMailRow1}>
                 <UserAvatar size={55} source={{uri:mail.picture}} />
                 <View style={styles.towInRow}>
-                  <Text style={[styles.MailHeader, lastMails!=[]&&checkIfInArr(mail.mailId)?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{mail.forumQustionId!=0?`${mail.username} הגיב/ה על ${mail.forumSubject}`:'תזכורת'}</Text>
-                  <Text style={[styles.MailDate, lastMails!=[]&&checkIfInArr(mail.mailId)?{fontWeight:'bold'}:null]}>{mail.sendDate.split('T')[0].split('-')[2]}/{mail.sendDate.split('T')[0].split('-')[1]}/{mail.sendDate.split('T')[0].split('-')[0]}</Text>       
+                  <Text style={[styles.MailHeader, isNewMail?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{mail.forumQustionId!=0?`${mail.username} הגיב/ה על ${mail.forumSubject}`:'תזכורת'}</Text>
+                  <Text style={[styles.MailDate, isNewMail?{fontWeight:'bold'}:null]}>{mail.sendDate.split('T')[0].split('-')[2]}/{mail.sendDate.split('T')[0].split('-')[1]}/{mail.sendDate.split('T')[0].split('-')[0]}</Text>       
                 </View>
               </View>
-              <Text style={[styles.MailText, lastMails!=[]&&checkIfInArr(mail.mailId)?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{mail.forumQustionId!=0?mail.forumContent:`היום בשעה ${mail.calenderEventStartTime} ${mail.calendaerEventName} ב${mail.calendarEventLocation}`}</Text>
+              <Text style={[styles.MailText, isNewMail?{fontWeight:'bold'}:null]} numberOfLines={1} ellipsizeMode="tail">{mail.forumQustionId!=0?mail.forumContent:`היום בשעה ${mail.calenderEventStartTime} ${mail.calendaerEventName} ב${mail.calendarEventLocation}`}</Text>
               <Text style={styles.MailButtomLine}>__________________________________________________</Text>
             </View>
           </TouchableOpacity>
-        ))}
+        )
+        })}
       </ScrollView>
       </View>
       <AppFooter navigation={navigation} mailFillIcon={true}/>

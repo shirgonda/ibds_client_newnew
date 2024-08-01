@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
-import ResatPassword from "./pages/ResatPassword";
+//import ResatPassword from "./pages/ResatPassword";
 import Register from "./pages/Register";
 import Calendar from "./pages/Calendar";
 import RightsCalculator from "./pages/RightsCalculator";
@@ -36,15 +36,12 @@ import * as Notifications from "expo-notifications";
 import RegisterForPushNotificationsAsync from "./pages/PushNotifications";
 const Stack = createStackNavigator();
 
-
 Notifications.setNotificationHandler({ 
   handleNotification: async () => ({ shouldShowAlert: true, shouldPlaySound: true, shouldSetBadge: false, }), 
 });
 
 export default function App({ navigation }) {
-  // useEffect(async() => {
     useEffect(() => {
-    // Register for push notifications
     RegisterForPushNotificationsAsync()
       .then((token) => {
         console.log("Token received:", token);
@@ -53,7 +50,6 @@ export default function App({ navigation }) {
         console.error("Error getting token:", error);
       });
 
-    // Notification handlers
     Notifications.addNotificationReceivedListener((notification) => {
       console.log("Notification received:", notification);
     });
@@ -82,11 +78,11 @@ export default function App({ navigation }) {
             component={LogIn}
             options={{ title: " " }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ResatPassword"
             component={ResatPassword}
             options={{ title: " " }}
-          />
+          /> */}
           <Stack.Screen
             name="register"
             component={Register}

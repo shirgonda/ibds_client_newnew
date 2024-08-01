@@ -14,14 +14,22 @@ export default function Chat({ navigation }) {
   const [friends, setfriends] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   var pageheight = (chatList.length) * 130;
+  let chatInterval= null;
+
+  useEffect(() => {
+    chatInterval=setInterval(()=>{LoadChats()},1000*5)
+    return ()=>{
+        clearInterval(chatInterval);
+    }
+  }, []);
 
   useEffect(() => {
     LoadChats();
   }, [imagePaths]);
 
-  useEffect(() => {
-    updateNewMessagesCount();
-  }, [chatList, lastMasseges]);
+  // useEffect(() => {
+  //   updateNewMessagesCount();
+  // }, [chatList, lastMasseges]);
 
   async function LoadChats() {
     let result = await Get(`api/Chat/getLatestChats?userId=${CurrentUser.id}`, CurrentUser.id);
@@ -29,19 +37,19 @@ export default function Chat({ navigation }) {
       Alert.alert('טעינת שיחות נכשלה');
     } else {
       setchatList(result);
-      //console.log('Get chats successful:', result);
+      console.log('Get chats successful:', result);
     }
   }
 
-  function updateNewMessagesCount() {
-    let newMessagesCount = 0;
-    chatList.forEach(chat => {
-      if (checkIfInArr(chat.chatId)) {
-        newMessagesCount += 1;
-      }
-    });
-    setnumOfNotesChat(newMessagesCount);
-  }
+  // function updateNewMessagesCount() {
+  //   let newMessagesCount = 0;
+  //   chatList.forEach(chat => {
+  //     if (checkIfInArr(chat.chatId)) {
+  //       newMessagesCount += 1;
+  //     }
+  //   });
+  //   setnumOfNotesChat(newMessagesCount);
+  // }
 
   function checkIfInArr(id) {
     for (let i = 0; i < lastMasseges.length; i++) {

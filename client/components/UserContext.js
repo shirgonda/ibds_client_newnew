@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
   const [lastMasseges, setlastMassegesState] = useState([]);
   const [numOfNotesChat, setnumOfNotesChat] = useState(0);
   const [numOfNotesMail, setnumOfNotesMail] = useState(0);
-  const [lastMails,setlastMailsState] = useState(0);
+  const [lastMails,setlastMailsState] = useState([]);
   const path="https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images"
 
   const imagePaths={ //נתיבי התמונות שבשרת
@@ -177,9 +177,9 @@ const setlastMasseges = async (LmData) => {
   try {
     await AsyncStorage.setItem('lastMasseges', JSON.stringify(LmData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
     setlastMassegesState(LmData);
-    //console.log('set lastMasseges:', JSON.stringify(LmData));
+    console.log('set lastMasseges:', JSON.stringify(LmData));
   } catch (error) {
-    //console.error('Error saving lastMasseges to AsyncStorage:', error);
+    console.error('Error saving lastMasseges to AsyncStorage:', error);
   }
 };
 
@@ -187,15 +187,17 @@ const setlastMails = async (LmailData) => {
   try {
     await AsyncStorage.setItem('lastMails', JSON.stringify(LmailData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
     setlastMailsState(LmailData);
-    //console.log('set lastMails:', JSON.stringify(LmailData));
+    console.log('set lastMails:', JSON.stringify(LmailData));
   } catch (error) {
-    //console.error('Error saving lastMails to AsyncStorage:', error);
+    console.error('Error saving lastMails to AsyncStorage:', error);
   }
 };
 
   return (
     <UserContext.Provider value={{ //הערכים המסופקים לילדים
       CurrentUser, setCurrentUser,
+      numOfNotesChat, setnumOfNotesChat,
+      numOfNotesMail, setnumOfNotesMail,
       NumOfVisitors, setNumOfVisitors,
       currentSubject, setcurrentSubject,
       currentFolder, setcurrentFolder,
@@ -203,8 +205,6 @@ const setlastMails = async (LmailData) => {
       imagePaths,
       lastMasseges,setlastMasseges,
       lastMails,setlastMails,
-      numOfNotesChat, setnumOfNotesChat,
-      numOfNotesMail, setnumOfNotesMail,
       subjects
        }}>
       {children} 

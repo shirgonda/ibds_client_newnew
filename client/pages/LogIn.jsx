@@ -80,12 +80,12 @@ export default function Login({navigation}) {
                 />
                 {touched.password && errors.password && <Text>{errors.password}</Text>}
 
-                <AppButton label="התחבר" onPressHandler={handleSubmit} />
+                <AppButton marginTop={17} label="התחבר" onPressHandler={handleSubmit} />
                 </>
             )}
         </Formik>
 
-        <Button onPress={()=>navigation.navigate('ResatPassword')} textColor='black' marginTop={10}>שכחתי סיסמא</Button>
+        {/* <Button onPress={()=>navigation.navigate('ResatPassword')} textColor='black' marginTop={10}>שכחתי סיסמא</Button> */}
 
         <View style={styles.OrLine}>
           <Text style={styles.Line}>_________________________  </Text>

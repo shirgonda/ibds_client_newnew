@@ -6,12 +6,12 @@ import { useUser } from '../components/UserContext';
 import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
-import { Get,Post,Put } from '../api';
+import { Get,PostOneValue,Put } from '../api';
 
 export default function PublishQuestion({ navigation,route }) {
     const { imagePaths,currentSubject,CurrentUser,subjects } = useUser();
     const [Title, setTitle] = useState('');
-    const [Content, setContent] = useState('');
+    const [content, setcontent] = useState('');
     const [attachment, setattachment] = useState('');
     const [attachmentToShow, setattachmentToShow] = useState('');
     const [attachmentAdded, setattachmentAdded] = useState(false);
@@ -19,7 +19,8 @@ export default function PublishQuestion({ navigation,route }) {
 
 
     async function PostQuestion(newQ){
-        let result= await Post(`api/ForumQuestions`, newQ);
+       console.log('newQ',newQ)
+        let result= await PostOneValue(`api/ForumQuestions`, newQ);
         if(!result){
             Alert.alert('הוספת שאלה נכשלה');
             console.log('result',result);
@@ -38,9 +39,8 @@ export default function PublishQuestion({ navigation,route }) {
         var answerCount=0;
         var profilePicture='';
         var title=Title;
-        var questionDateTime = new Date();
-        var question={username,questionId,answerCount,userId,title,Content,questionDateTime,attachment,topic,profilePicture}
-        console.log('question',question)
+        var questionDateTime = new Date().toISOString();
+        var question={username,questionId,answerCount,userId,title,content,questionDateTime,attachment,topic,profilePicture}
         await PostQuestion(question);
         navigation.navigate('Forum1',{currentSubject,subjects});
         }
@@ -101,7 +101,7 @@ export default function PublishQuestion({ navigation,route }) {
     }
     
     function validations(){
-        if(Content=="" || Title==""){
+        if(content=="" || Title==""){
           Alert.alert('נדרש להוסיף כותרת ותיאור לשאלה');
           return false;
       }
@@ -134,7 +134,7 @@ export default function PublishQuestion({ navigation,route }) {
                           <Text style={styles.answerLable}>תיאור</Text>
                           <TextInput
                             style={styles.inputBox}
-                            onChangeText={(text) => setContent(text)}
+                            onChangeText={(text) => setcontent(text)}
                           />
                            {!attachmentAdded?<View style={styles.addPicBtn}>      
                                   <AppButton backgroundColor='white' width={140} height={35} plusIconWidth={attachmentAdded?20:null}

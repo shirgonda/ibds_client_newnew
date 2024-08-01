@@ -8,7 +8,7 @@ import ForumHeader from '../components/ForumHeader';
 import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
-import { Get,Post,Put,Delete } from '../api';
+import { Get,PostOneValue,Post,Put,Delete } from '../api';
 import { Link, useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
@@ -103,8 +103,9 @@ export default function Forum1({ navigation,route }) {
         }
       }
 
-      async function deleteQuestion(){
-        let result= await Delete(`api/ForumQuestions/${currentQuestion.questionId}`, currentQuestion.questionId);
+      async function deleteQuestion(id){
+        console.log('id',id)
+        let result= await Delete(`api/ForumQuestions/${id}`, id);
         if(!result){
             Alert.alert('מחיקה נכשלה');
         }
@@ -112,6 +113,7 @@ export default function Forum1({ navigation,route }) {
             setcurrentQuestion('');
             LoadQuestions();
             setquestionOpen(false);
+            deleteMail(id);
             console.log('delete successful:', result);
         }
       }
@@ -129,14 +131,14 @@ export default function Forum1({ navigation,route }) {
       }
 
       
-      function deleteQ(){
+      function deleteQ(id){
         Alert.alert( 
                   "את/ה בטוח שברצונך למחוק את השאלה?",
                   "בחר אופציה",
                   [
                       {
                           text: "מחיקה",
-                          onPress: () => deleteQuestion(),
+                          onPress: () => deleteQuestion(id),
                       },
                       {
                           text: "ביטול",
@@ -167,7 +169,7 @@ export default function Forum1({ navigation,route }) {
      
       async function PostAnswer(newA){
         console.log('newA',newA);
-        let result= await Post(`api/ForumAnswers`, newA);
+        let result= await PostOneValue(`api/ForumAnswers`, newA);
         if(!result){
             Alert.alert('הוספת תגובה נכשלה');
             console.log('result',result);
@@ -181,14 +183,16 @@ export default function Forum1({ navigation,route }) {
     }
 
     async function PostMail(newA){
-      const convertedDate=new Date(newA.answerDateTime)
       var mail={
-        userId:15,
+        userId:CurrentUser.id,
+        senderUserId:15,
+        mailFromCalander:false,
         mailId:0,
         picture:newA.profilePicture,
-        sendDate:convertedDate,
+        picture:'',
+        sendDate:new Date().toISOString(),
         username:newA.username,
-        forumSubject:currentSubject,
+        forumSubject:currentSubject.label,
         forumContent:newA.content,
         forumQustionId:newA.questionId,
         calendarEventId:0,
@@ -196,13 +200,22 @@ export default function Forum1({ navigation,route }) {
         calenderEventStartTime:'',
         calendarEventLocation:''
       }
-      let result= await Post(`api/Mail`, mail);
+      console.log('mail',mail)
+      let result= await PostOneValue(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
-          console.log('result',result);
+          console.log('postMailResult',result);
       } 
       else{
         console.log('Add mail successful:', result);
+    }
+  }
+
+
+  async function deleteMail(id){
+    let result= await Delete(`api/Mail/Question/${id}`, id);
+    if(result){
+      console.log('delete successful:', result);
     }
   }
 
@@ -222,7 +235,7 @@ export default function Forum1({ navigation,route }) {
         var questionId=currentQuestion.questionId
         var content=AnswerDescription;
         var attachment=AnswerPic;
-        var answerDateTime=new Date();
+        var answerDateTime=new Date().toISOString();
         var username=CurrentUser.username;
         var profilePicture=CurrentUser.profilePicture;
         var answer={userId,answerId,questionId,content,attachment,answerDateTime,username,profilePicture}
@@ -341,7 +354,7 @@ const openURL = (url) => {
                       {question.attachment?<Image style={styles.pic} source={{uri:question.attachment}}></Image>:null}
                       </TouchableOpacity>
                       <View style={styles.twoInRowQBtn}>
-                      {CurrentUser.id===question.userId?<TouchableOpacity onPress={deleteQ}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
+                      {CurrentUser.id===question.userId?<TouchableOpacity onPress={()=>deleteQ(question.questionId)}><Text style={styles.deletBtnText}>מחיקת שאלה</Text></TouchableOpacity>:null}
                       {CurrentUser.id!==question.userId?<Button onPress={()=>{goIntoChat(question)}}><Text style={styles.openQBtn}>הודעה פרטית</Text></Button>:null}
                       <Button style={{ marginLeft: question.userId== CurrentUser.id ? 30 : 70 }} onPress={()=>{visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם תגובה'):setaddAnswer(!addAnswer)}}><Text style={styles.openQBtn}>תגובה</Text></Button>
                       </View>

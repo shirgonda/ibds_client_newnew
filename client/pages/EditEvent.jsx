@@ -220,9 +220,17 @@ else{
         Alert.alert('מחיקה נכשלה');
     }
     else {
+        deleteMail();
         setcurrentEvent('');
         console.log('delete successful:', result);
         navigation.navigate('Calendar');
+    }
+  }
+
+  async function deleteMail(){
+    let result= await Delete(`api/Mail/delete/${currentEvent.eventId}`, currentEvent.eventId);
+    if(result){
+      console.log('delete successful:', result);
     }
   }
 
@@ -232,6 +240,7 @@ else{
         Alert.alert('מחיקה נכשלה');
     }
     else {
+      deleteMail();
         console.log('delete successful:', result);
         navigation.navigate('Calendar');
     }
@@ -618,7 +627,7 @@ const handlePress = (repeat) => {
           ))}
         
           <View style={styles.alertsList}>
-                  {alerts && alerts.map((alert) => (
+                  {alerts.length!=0 && alerts.map((alert) => (
                     <TouchableOpacity onPress={()=>navigation.navigate('EditAlert',{CurrentDayShow, CurrentMonthShow, CurrentYearShow,alert,currentEvent,events,previousRouteName: 'EditEvent'})}>
                       <View style={styles.singlealert}>
                       <View style={styles.singlealertRow1}>

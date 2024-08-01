@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image,Alert } from 'react-native';
 import AppMenu from './Menu';
 import { useUser } from '../components/UserContext';
+import { Get } from '../api';
 
 const AppFooter = ({
   navigation,
@@ -12,7 +13,73 @@ const AppFooter = ({
   mailFillIcon = false
 }) => {
   const [toggleMenu, settoggleMenu] = useState(false);
-  const { imagePaths,numOfNotesChat,numOfNotesMail } = useUser(); 
+  const { imagePaths,numOfNotesChat,setnumOfNotesChat,numOfNotesMail,setnumOfNotesMail,CurrentUser,lastMails,lastMasseges } = useUser(); 
+  let Interval= null;
+
+  useEffect(() => {
+    Interval=setInterval(()=>{LoadChats(),LoadMails()},1000*600)/// לשנות ל3 שניות במקום 60
+    return ()=>{
+        clearInterval(Interval);
+    }
+  }, [lastMasseges,lastMails]);
+ 
+  async function LoadMails() {
+    let result = await Get(`api/Mail/getMailForUser?userId=${CurrentUser.id}`, CurrentUser.id);
+    if (!result) {
+      Alert.alert('טעינת אימיילים נכשלה');
+    } else {
+      updateNewMailsCount(result);
+      console.log('Get mails successful:', result);
+    }
+  }
+
+  function updateNewMailsCount(result) {
+    let newMailsCount = 0;
+    result.forEach(mail => {
+      if (checkIfMailInArr(mail.mailid)) {
+        newMailsCount += 1;
+      }
+    });
+    setnumOfNotesMail(newMailsCount);
+  }
+
+  function checkIfMailInArr(id){
+    for (let i = 0; i < lastMails.length; i++) {
+      if(lastMails[i]==id){
+        return false;
+      }
+    }
+    return true;
+}
+
+async function LoadChats() {
+  let result = await Get(`api/Chat/getLatestChats?userId=${CurrentUser.id}`, CurrentUser.id);
+  if (!result) {
+    Alert.alert('טעינת שיחות נכשלה');
+  } else {
+    updateNewMessagesCount(result);
+    console.log('Get chats successful:', result);
+  }
+}
+
+function updateNewMessagesCount(result) {
+  let newMessagesCount = 0;
+  result.forEach(chat => {
+    if (checkIfInArr(chat.chatId)) {
+      newMessagesCount += 1;
+    }
+  });
+  setnumOfNotesChat(newMessagesCount);
+}
+
+function checkIfInArr(id) {
+  for (let i = 0; i < lastMasseges.length; i++) {
+    if (lastMasseges[i].chatId === id) {
+      return false;
+    }
+  }
+  return true;
+}
 
   return (
     <View style={styles.footer}>
@@ -118,18 +185,18 @@ const styles = StyleSheet.create({
   },
   redNoteChat:{
     backgroundColor:'#D12C2C',
-    height:11,
-    width:11,
-    borderRadius:5,
+    height:12,
+    width:12,
+    borderRadius:20,
     position:'absolute',
     right:-6,
     top:-3,
   },
   redNoteMail:{
     backgroundColor:'#D12C2C',
-    height:11,
-    width:11,
-    borderRadius:5,
+    height:12,
+    width:12,
+    borderRadius:20,
     position:'absolute',
     right:-6,
     top:-6,
@@ -137,6 +204,8 @@ const styles = StyleSheet.create({
   redNoteText:{
     color:'white',
     textAlign:'center',
-    fontSize:8.5,
+    justifyContent:'center',
+    alignItems:'center',
+    fontSize:9,
   }
 })
