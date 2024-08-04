@@ -21,7 +21,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
    openFriendsModel,
    setModalVisible
 })=>{
-  const { imagePaths } = useUser(); //UserContext מספק גישה לנתיבי התמונות שבקומפוננטה
+  const { visitor, imagePaths } = useUser(); //UserContext מספק גישה לנתיבי התמונות שבקומפוננטה
 
     return(
       //קובע את סדר הערימה של האלמטים, האלמנט בעל ערך גבוה יותר יוצג מעל השאר zIndex
@@ -40,7 +40,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
               source={imagePaths['icon']} 
             />}
 
-        {fromDocumentPage && 
+        {!visitor && fromDocumentPage && 
           <View style={styles.twoInRow}>
             <TouchableOpacity onPress={showNewFolder}>
               <Image style={styles.folderHeaderIcon} 
@@ -55,7 +55,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
              </TouchableOpacity>
           </View>}
 
-          {fromChatPage && 
+          {!visitor && fromChatPage && 
           <View style={styles.twoInRow}>
             <TouchableOpacity onPress={openFriendsModel}>
               <Image style={styles.chatHeaderIcon} 
@@ -63,8 +63,6 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
               />
             </TouchableOpacity>  
           </View>}
-
-
 
             <View style={styles.headerContent}>
                 <Text style={[styles.headerText,marginRight?{marginRight:marginRight}:{marginRight:15}]}>{label}</Text>    

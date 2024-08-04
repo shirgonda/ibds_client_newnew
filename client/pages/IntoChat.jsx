@@ -13,23 +13,20 @@ import {useFocusEffect } from '@react-navigation/native';
 //לשלוח לשרת את השעה של ההודעה האחרונה שהתקבלה והיא תחזיר את ההודעות שאחרי
 export default function Chat({ navigation, route }) {
     const scrollViewRef = useRef();
-  const { visitor, imagePaths, CurrentUser,lastMasseges,setlastMasseges } = useUser();
-  const { chat,chatList,demoMassegge } = route.params;
-  const [headerLabel, setheaderLabel] = useState(chat ? chat.user2Username : null);
+  const { imagePaths, CurrentUser,lastMasseges,setlastMasseges } = useUser();
+  const { chat } = route.params;
+  const [headerLabel, setheaderLabel] = useState(chat ? chat.user2Username : demoMassegge.user2Username);
   const [newMessage, setnewMessage] = useState('');
-  const [sendTime, setsendTime] = useState('');
-  const [OtherUserPic, setOtherUserPic] = useState('');
   const [oldMasseges, setoldMasseges] = useState([]);
   const [attachedFile, setattachedFile] = useState(false);
-  var id2 = demoMassegge!=undefined?demoMassegge.recipientId:chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
+  var id2 = chat.senderId === CurrentUser.id ? chat.recipientId : chat.senderId;
   const [recipientId, setrecipientId] = useState(id2);
   const [pageheight, setpageheight] = useState(0);
   const [inputHeight, setInputHeight] = useState(70);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [uploadImage, setuploadImage] = useState('');
   const [ShowUploadedImage, setShowUploadedImage] = useState('');
-  //const [areFriends, setareFriends] = useState(false);
-    let chatInterval= null;
+  let chatInterval= null;
 
   useEffect(() => {
     chatInterval=setInterval(()=>{LoadOldChats()},1000*3)
@@ -37,7 +34,6 @@ export default function Chat({ navigation, route }) {
         clearInterval(chatInterval);
     }
   }, []);
-
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: true });
@@ -61,27 +57,11 @@ export default function Chat({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
         if(attachedFile){
-           PostMessage();    
+           PostMessage();
+           setattachedFile(false);    
         }
         LoadOldChats();
     }, [uploadImage,attachedFile])
-  );
-async function postChat(){
-    let result = await Post(`api/Chat`, message);
-    if (!result) {
-      Alert.alert('הוספת הודעה נכשלה');
-      console.log('result', result);
-    } else {
-      console.log('Add message successful:', result);
-    }
-}
-
-  useFocusEffect(
-    useCallback(() => {
-        if(demoMassegge!=undefined){
-            postChat();
-        }
-    }, [chat])
   );
 
   const openURL = (url) => {
@@ -89,20 +69,15 @@ async function postChat(){
   };
 
   function LoadReadMasegge(chats){
-    var lastRead=[...lastMasseges];
-    if(lastMasseges.length==0){
-         lastRead.push({recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct});
-     }
-    else{
-        for (let i = 0; i < lastMasseges.length; i++) {
-            if(lastMasseges[i].recipientId==id2){
-                lastRead.splice(i, 1);
-            }   
-            lastRead.push({recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct});
+    let result=false;
+        for (let i = 0; i <= lastMasseges.length; i++) {
+            if(lastMasseges[i]==id2){
+              result=true;      
+            }    
         } 
-    }
-    console.log('lastRead',lastRead);
-    setlastMasseges(lastRead);
+        if(!result){ 
+          setlastMasseges([...lastMasseges,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}]);
+        }
   }
 
   async function LoadOldChats() {
@@ -166,8 +141,8 @@ async function postChat(){
       const backgroundColor = isCurrentUser ? '#CDC7EF' : '#DAD8E5';
       return (   
         <View onLayout={(event) => {
-            const { height } = event.nativeEvent.layout; //גובה האובייקט, משתנה כאשר גובה אלמנט משתנה
-            setpageheight(pageheight+height+8);      
+            const { height } = event.nativeEvent.layout; //גובה האובייקט משתנה כאשר גובה אלמנט משתנה
+            setpageheight(pageheight+height+7);      
         }}>
         <View key={index} style={isCurrentUser ? styles.Lmassege : styles.Rmassege}>
           <UserAvatar size={60} source={userAvatar} />
@@ -193,7 +168,6 @@ async function postChat(){
     } 
     else{
       console.log('Add friend successful:', result);
-      //setareFriends(true);
     }
   }
 
@@ -284,7 +258,7 @@ function showDate(date){
           {printOldMesseges()}
         </ScrollView>
         <View style={[styles.InputRow, { height: inputHeight+7},isKeyboardVisible?{bottom:5}:{bottom:85}]}>
-          <TouchableOpacity onPress={() => {PostMessage(),LoadOldChats(),setnewMessage('')}}>
+          <TouchableOpacity onPress={() => {!attachedFile&&PostMessage(),setnewMessage('')}}>
             <Image style={styles.ArrowIcon} source={imagePaths['sendMassege']} />
           </TouchableOpacity>
           <TextInput

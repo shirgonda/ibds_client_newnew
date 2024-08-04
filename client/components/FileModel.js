@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Delete } from '../api';
@@ -8,6 +8,7 @@ const FileModel = ({
     setdeleteFile,
     file,
     setFile,
+    width
 }) => {
 
     async function deleteCurrentFile(){
@@ -43,7 +44,7 @@ const FileModel = ({
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,width?{ width:'25%',}:{ width:'65%',}]}>
             <Button
                 onPress={() => {deleteFile()}}
                 style={styles.button}
@@ -70,7 +71,6 @@ const styles = StyleSheet.create({
         position:'absolute',
         right:45,
         top:75,
-        width:'65%',
         zIndex: 10,
     },
     button: {

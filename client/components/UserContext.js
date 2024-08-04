@@ -123,12 +123,12 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
           setcurrentFolder(JSON.parse(currentFolderData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }
         const lastMassegesData = await AsyncStorage.getItem('lastMasseges'); //שליפת נתוני התיקייה הנוכחי מהאחסון המקומי
-        //console.log('get lastMasseges:', lastMassegesData);
+        console.log('get lastMasseges:', lastMassegesData);
         if (lastMassegesData) {
           setlastMasseges(JSON.parse(lastMassegesData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }
         const lastMailsData = await AsyncStorage.getItem('lastMails'); //שליפת נתוני התיקייה הנוכחי מהאחסון המקומי
-        //console.log('get lastMails:', lastMailsData);
+        console.log('get lastMails:', lastMailsData);
         if (lastMailsData) {
           setlastMails(JSON.parse(lastMailsData)); //המרה למבנה אובייקט במידה וקיימים נתונים
         }

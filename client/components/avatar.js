@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
+import { useUser } from '../components/UserContext';
 
 const UserAvatar=({
     source,
@@ -7,14 +8,14 @@ const UserAvatar=({
     marginTop,
     marginLeft,
     marginRight,
-    imgSize=150, //גובה ורוחב התמונה
     iconHeight,
     iconWidth,
     borderRad=150, //רדיוס הגבול של התמונה
     marginTopImg=0,
     backgroundColor
 })=>{
-
+    const {imagePaths } = useUser();
+      
     return(
     <View style={[styles.container, 
     { height: size, width: size, borderRadius: size / 2 }, 
@@ -25,7 +26,6 @@ const UserAvatar=({
     ]}>
         <Image 
         source={source}
-        // style={{ height: iconHeight?iconHeight:imgSize, width: iconWidth?iconWidth:imgSize, borderRadius: borderRad / 2, marginTop:marginTopImg,
         style={{ height: iconHeight?iconHeight:size, width: iconWidth?iconWidth:size, borderRadius: borderRad / 2, marginTop:marginTopImg,
                 overflow: 'hidden',
                 alignItems: 'center',
@@ -43,7 +43,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-
-        //flex: 1,
       },
 })

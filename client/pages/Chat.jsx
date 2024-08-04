@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, Button, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert, Modal } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import UserAvatar from '../components/avatar';
-import { useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../components/UserContext';
 import Visitor from '../components/visitor';
 import { Get } from '../api';
 
 export default function Chat({ navigation }) {
-  const { visitor, imagePaths, CurrentUser, lastMasseges, numOfNotesChat, setnumOfNotesChat } = useUser();
+  const { visitor, imagePaths, CurrentUser, lastMasseges } = useUser();
   const [chatList, setchatList] = useState([]);
   const [friends, setfriends] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,10 +26,6 @@ export default function Chat({ navigation }) {
     LoadChats();
   }, [imagePaths]);
 
-  // useEffect(() => {
-  //   updateNewMessagesCount();
-  // }, [chatList, lastMasseges]);
-
   async function LoadChats() {
     let result = await Get(`api/Chat/getLatestChats?userId=${CurrentUser.id}`, CurrentUser.id);
     if (!result) {
@@ -40,16 +35,6 @@ export default function Chat({ navigation }) {
       console.log('Get chats successful:', result);
     }
   }
-
-  // function updateNewMessagesCount() {
-  //   let newMessagesCount = 0;
-  //   chatList.forEach(chat => {
-  //     if (checkIfInArr(chat.chatId)) {
-  //       newMessagesCount += 1;
-  //     }
-  //   });
-  //   setnumOfNotesChat(newMessagesCount);
-  // }
 
   function checkIfInArr(id) {
     for (let i = 0; i < lastMasseges.length; i++) {
@@ -104,6 +89,7 @@ export default function Chat({ navigation }) {
         setModalVisible={setModalVisible}
         openFriendsModel={() => openFriendsModel()}
       />
+      {!visitor &&chatList.length==0 && <Text style={styles.label}>אין עדיין שיחות</Text>}
       {visitor && <Visitor navigation={navigation} />}
       {!visitor &&
         <View style={styles.scrollViewWrapper1}>
@@ -140,7 +126,7 @@ export default function Chat({ navigation }) {
                   <View style={styles.modalView}>
                     <View style={styles.scrollViewWrapper}>
                       <ScrollView contentContainerStyle={{ height: friends.length * 100 }} showsVerticalScrollIndicator={false}>
-                        {friends && friends.map((friend, index) => (
+                        {friends.length==0?<Text style={styles.modalLabel}>אין עדיין חברים ברשימת החברים שלך</Text>:friends.map((friend, index) => (
                           <TouchableOpacity key={index} onPress={() => { addChat(friend) }}>
                             <View style={styles.singleRow}>
                               <View style={styles.singleChatRow1}>
@@ -178,6 +164,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     position: 'relative',
     backgroundColor: 'white',
+  },
+  label:{
+    top: 300,
+      textAlign: 'center',
+      fontSize: 16,
+      color: '#50436E',
+  },
+  modalLabel:{
+    height: 100,
+    width: 300,
+    top:100,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E',
   },
   scrollViewWrapper1: {
     height: 750,
@@ -234,9 +234,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
-
   singleRow: {
     height: 100,
     width: 300,
@@ -251,7 +249,6 @@ const styles = StyleSheet.create({
     color: '#E6E4EF',
     width: '102%',
   },
-
   centeredView: {
     flex: 1,
     justifyContent: 'center',

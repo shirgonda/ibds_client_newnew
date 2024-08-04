@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform } from 'react-native';
 import AppButton from '../components/buttons';
 import AppInput from '../components/input';
@@ -23,14 +23,14 @@ export default function Register({navigation}) {
     const [month, setmonth] = useState("");
     const [password, setpassword] = useState("");
     const [username, setusername] = useState("");
-    const { CurrentUser, setCurrentUser, imagePaths } = useUser();
+    const { setCurrentUser, imagePaths } = useUser();
     const [profilePicture, setprofilePicture] = useState(imagePaths['userImage']); 
     const [PictureToServer, setPictureToServer] = useState("");
     var sucessRegister=false;
 
     async function addUser(user){
         let result= await Post('api/Users', user,PictureToServer);
-        if(result==false){
+        if(!result){
             Alert.alert('הרשמה נכשלה');
             sucessRegister=false;
         }

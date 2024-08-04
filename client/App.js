@@ -14,7 +14,6 @@ import AddAlert from "./pages/AddAlert";
 import EditAlert from "./pages/EditAlert";
 import ForumSubjects from "./pages/ForumSubjects";
 import MoreInfo from "./pages/MoreInfo";
-import IntoMoreInfo from "./pages/IntoMoreInfo";
 import Chat from "./pages/Chat";
 import Forum1 from "./pages/Forum1";
 import PublishQuestion from "./pages/PublishQuestion";
@@ -137,11 +136,6 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="MoreInfo"
             component={MoreInfo}
-            options={{ title: " " }}
-          />
-          <Stack.Screen
-            name="IntoMoreInfo"
-            component={IntoMoreInfo}
             options={{ title: " " }}
           />
           <Stack.Screen name="Chat" component={Chat} options={{ title: " " }} />

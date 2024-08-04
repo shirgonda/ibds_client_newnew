@@ -10,7 +10,6 @@ import * as Notifications from 'expo-notifications';
 
 export default function EditAlert({navigation, route}) {
   const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,alert,previousRouteName,currentEvent,handleUpdateAlert} = route.params;
-  const [initialOldAlert, setInitialOldAlert] = useState(alert);
   const {imagePaths,CurrentUser} = useUser();
   const [showRepeatPicker, setshowRepeatPicker] = useState(false);
   const [currentAlert, setcurrentAlert] = useState(alert);
@@ -46,7 +45,6 @@ export default function EditAlert({navigation, route}) {
         console.log('result', result);
     }
     else { 
-        //setcurrentAlert(result);
         console.log('Update successful:', result);
     }
   }

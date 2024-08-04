@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, Alert, ScrollView } from 'react-native';
 import AppButton from '../components/buttons';
 import AppInput from '../components/input';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'react-native-paper';
 import UserAvatar from '../components/avatar';
 import { Formik } from 'formik';

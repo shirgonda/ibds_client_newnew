@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, ScrollView, Image, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, ScrollView, Image, Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
@@ -45,6 +45,10 @@ export default function MyDocuments({ navigation }) {
   useEffect(() => {
     LoadFiles();  
   }, [file,deleteFile]);
+
+  useEffect(() => {
+    LoadFolders();
+  }, [currentFolder,deleteFolder]);
 
   async function LoadFiles() {
     let result = await Get(`api/Documents?userId=${CurrentUser.id}`, CurrentUser.id);
@@ -227,7 +231,7 @@ export default function MyDocuments({ navigation }) {
       oneRow.push(
         <View>
           <View key={i} style={styles.folderWrapper}>
-            <TouchableOpacity onPress={() => { setcurrentFolder(folders[i]), console.log('currentFolder1', currentFolder), navigation.navigate('FolderPage',{setfileModalVisible,setfolderModalVisible}) }} onLongPress={() => handleLongPress(i,0,folders[i])}>
+            <TouchableOpacity onPress={() => { setcurrentFolder(folders[i]), navigation.navigate('FolderPage',{setfileModalVisible,setfolderModalVisible}) }} onLongPress={() => handleLongPress(i,0,folders[i])} disabled={(FolderExist && folders.length>0 && !newFolderSaved) ||changeFolderName?true:false}>
               <UserAvatar marginTop={30} size={100} iconHeight={47} iconWidth={61} borderRad={0} source={imagePaths['folder']} />
               {(newFolderAdded && i === folders.length - 1) || (changeFolderName && i === folderCurrentIndex) ? (
                 <TextInput
@@ -260,7 +264,7 @@ export default function MyDocuments({ navigation }) {
               <Text style={styles.fileLabel}>{filesArr[i].documentName}</Text>
             </TouchableOpacity>
           </View>
-          {fileModalVisible && fileCurrentIndex == i && <FileModel setModalVisible={setfileModalVisible} setdeleteFile={setdeleteFile} file={file} setFile={setFile} />}
+          {fileModalVisible && fileCurrentIndex == i && <FileModel setModalVisible={setfileModalVisible} setdeleteFile={setdeleteFile} file={file} setFile={setFile} width={filesArr.length==1&&folders.length==0?true:false}/>}
         </View>
       );
     }

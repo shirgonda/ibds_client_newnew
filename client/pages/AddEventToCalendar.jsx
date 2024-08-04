@@ -43,7 +43,7 @@ export default function AddEventToCalendar({navigation, route}) {
       }
   }, [alert]);
 
-    async function scheduleAndCancel(title, trigger,alert) {
+    async function scheduleAndCancel(title, trigger,alert,event) {
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
           title: title,
@@ -52,6 +52,7 @@ export default function AddEventToCalendar({navigation, route}) {
       });
       const updatedAlert={...alert,identifier:identifier}
       updatedAlerts(updatedAlert);
+      PostMail(event);
     }
 
     async function PostAlerts(event){
@@ -71,8 +72,8 @@ export default function AddEventToCalendar({navigation, route}) {
         else{
           console.log('Add alert successful:', result);
           const targetDate = new Date(result.alertTime);
-          //await scheduleAndCancel(result.aname,30,alert);
-          await scheduleAndCancel(result.aname,targetDate,result); 
+          //await scheduleAndCancel(result.aname,30,alert,event);
+          await scheduleAndCancel(result.aname,targetDate,result,event); //לבדוק עם האנדרואיד
         }
       }
     }
@@ -119,16 +120,17 @@ export default function AddEventToCalendar({navigation, route}) {
           var updatedEvent={...result,parentEvent:patentEvent};
           updateEvent(updatedEvent);
         }
-        PostMail(result);
+        //PostMail(result);
         PostAlerts(result);
         console.log('Add event successful:', result);   
       } 
     }
 
     async function PostMail(event){
-      const convertedDate=new Date(event.year,event.month-1,event.day+1)
+       const convertedDate=new Date(event.year,event.month-1,event.day+1)
        var startTime=event.startTime.split('T')[1].split(':');
-      var mail={
+       //const triggerTime = new Date(startTime.getTime() - 2 * 60 * 60 * 1000);
+       var mail={
         userId:CurrentUser.id,
         mailId:0,
         mailFromCalander:true,

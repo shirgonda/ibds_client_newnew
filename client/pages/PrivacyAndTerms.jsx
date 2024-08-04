@@ -1,12 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Text,ScrollView } from 'react-native';
 import AppFooter from '../components/Footer';
-import AppHeader from '../components/Header';
 
 export default function Mail({navigation}) {
   return(
     <View style={styles.container}>
-        {/* <AppHeader navigation={navigation} backArrow={false} label='מדיניות פרטיות ותנאי שימוש' startIcon={true} icon={null}/>  */}
         <ScrollView contentContainerStyle={styles.ScrollViewcontainer} showsVerticalScrollIndicator={false}>
         <Text style={styles.header}>IBD's - מדיניות פרטיות ותנאי שימוש {"\n"}{"\n"}</Text>
         <Text style={styles.label}>

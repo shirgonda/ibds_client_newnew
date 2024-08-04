@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput,Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
 import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
-import { Get,PostOneValue,Put } from '../api';
+import { PostOneValue } from '../api';
 
-export default function PublishQuestion({ navigation,route }) {
+export default function PublishQuestion({ navigation }) {
     const { imagePaths,currentSubject,CurrentUser,subjects } = useUser();
     const [Title, setTitle] = useState('');
     const [content, setcontent] = useState('');
     const [attachment, setattachment] = useState('');
     const [attachmentToShow, setattachmentToShow] = useState('');
     const [attachmentAdded, setattachmentAdded] = useState(false);
-    const [currentQuestion, setcurrentQuestion] = useState({});
-
 
     async function PostQuestion(newQ){
        console.log('newQ',newQ)
@@ -42,7 +40,7 @@ export default function PublishQuestion({ navigation,route }) {
         var questionDateTime = new Date().toISOString();
         var question={username,questionId,answerCount,userId,title,content,questionDateTime,attachment,topic,profilePicture}
         await PostQuestion(question);
-        navigation.navigate('Forum1',{currentSubject,subjects});
+        navigation.navigate('Forum1',{currentSubject});
         }
       }
 

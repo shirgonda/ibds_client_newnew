@@ -12,7 +12,6 @@ import { Get } from '../api';
 export default function MyFriends({navigation}) {
   const {visitor,imagePaths,CurrentUser } = useUser();
   const [friends, setfriends] = useState([]);
-  const [pressFriend, setpressFriend] = useState({});
   var pageheight=(friends.length / 3) * 200 +300;
 
   useFocusEffect( //טעינת ההתראות כאשר חוזרים לדף
@@ -50,8 +49,6 @@ export default function MyFriends({navigation}) {
     const rows = [];
     let oneRow = [];
 
-    console.log('friends',friends);
-
     for (let i = 0; i < friends.length; i++) {
       if (oneRow.length === 3) {
         rows.push(oneRow);
@@ -83,6 +80,7 @@ export default function MyFriends({navigation}) {
   return(
         <View style={styles.container}>
         <AppHeader navigation={navigation} backArrow={false} label='החברים שלי' startIcon={true} icon={imagePaths['friendsFill']}/>
+        {!visitor &&friends.length==0 && <Text style={styles.label}>אין עדיין חברים ברשימת החברים שלך</Text>}
         {visitor &&<Visitor navigation={navigation}/>} 
         {!visitor&&<ScrollView contentContainerStyle={[styles.scrollViewContent,{height:pageheight}]}>
           <View style={styles.friendsWrapperContainer}>
@@ -99,6 +97,12 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         position:'relative',
         backgroundColor:'white',
+    },
+    label:{
+      top: 300,
+        textAlign: 'center',
+        fontSize: 16,
+        color: '#50436E',
     },
     scrollViewContent: {
       flexGrow: 1,

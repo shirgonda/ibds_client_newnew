@@ -11,7 +11,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { Put, Delete, Get, PostCalendarItem } from '../api';
 
 export default function EditEvent({navigation,route}) {
-  const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,event,chosenDate} = route.params;
+  const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,event,chosenDate,previousRouteName} = route.params;
   console.log('event',event)
   const {imagePaths,CurrentUser} = useUser();
   const [events, setEvents] = useState([]);
@@ -434,7 +434,7 @@ const handlePress = (repeat) => {
                   (index===4) && handleChange(endTime,index), 
                   (index===5) && handleChange(repeat,index)
                     }}>
-                    {(index===6 ? null:(!isDisabled && currentInputIndex === index  ? 'שמירה' : 'עריכה'))}
+                    {previousRouteName!='Mail'?(index===6 ? null:(!isDisabled && currentInputIndex === index  ? 'שמירה' : 'עריכה')):null}
                   </Button>
               </View>
               {((currentInputIndex === -1 && isDisabled)||
@@ -643,15 +643,15 @@ const handlePress = (repeat) => {
                     </TouchableOpacity>
                   ))} 
           
-            <View style={styles.lowerBtns}>
+          {previousRouteName!='Mail'?<View style={styles.lowerBtns}>
               <View style={styles.addAlertBtns}>
-                  <TouchableOpacity>
+             <TouchableOpacity>
                       <Image style={styles.PlusIcon} source={imagePaths['emptyPlus']} />
                   </TouchableOpacity>
                   <Button onPress={()=>navigation.navigate('AddAlert',{CurrentDayShow, CurrentMonthShow, CurrentYearShow,previousRouteName: 'EditEvent',eventId:currentEvent.eventId,event,events})}>הוספת התראה</Button>
               </View>
               <Button onPress={deleteEvent}><Text style={styles.deletBtn}>מחיקת אירוע</Text></Button>
-            </View>
+            </View>:null}
           </View>
       </View>
       </ScrollView>

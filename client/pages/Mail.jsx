@@ -5,10 +5,11 @@ import AppHeader from '../components/Header';
 import UserAvatar from '../components/avatar';
 import { useFocusEffect } from '@react-navigation/native';
 import { useUser } from '../components/UserContext';
+import Visitor from '../components/visitor';
 import { Get } from '../api';
 
 export default function Mail({ navigation }) {
-  const { imagePaths, CurrentUser,subjects,numOfNotesMail,setnumOfNotesMail,currentSubject,setcurrentSubject,lastMails,setlastMails } = useUser();
+  const { visitor,imagePaths, CurrentUser,subjects,setcurrentSubject,lastMails,setlastMails } = useUser();
   const [mailsList, setmailsList] = useState([]);
   var pageheight=(mailsList.length)*85;
   var event={};
@@ -27,20 +28,6 @@ export default function Mail({ navigation }) {
       await LoadMails();
     }, [CurrentUser])
   );
-
-  // useEffect(() => {
-  //   updateNewMailsCount();
-  // }, [mailsList, lastMails]);
-
-  // function updateNewMailsCount() {
-  //   let newMailsCount = 0;
-  //   mailsList.forEach(mail => {
-  //     if (checkIfInArr(mail.mailid)) {
-  //       newMailsCount += 1;
-  //     }
-  //   });
-  //   setnumOfNotesMail(newMailsCount);
-  // }
 
   async function LoadMails() {
     let result = await Get(`api/Mail/getMailForUser?userId=${CurrentUser.id}`, CurrentUser.id);
@@ -77,7 +64,7 @@ export default function Mail({ navigation }) {
     LoadReadMail(mailsList);
     if(mail.forumSubject==''){
       await LoadEvent(mail.calendarEventId);
-       navigation.navigate('EditEvent',{event});
+       navigation.navigate('EditEvent',{event,previousRouteName:'Mail'});
     }
     else{
       setcurrentSubject(subjects[getSubjectIndex(mail)]);
@@ -86,26 +73,15 @@ export default function Mail({ navigation }) {
   }
 
   function LoadReadMail(mails){
-    //var lastRead=[...lastMails];
-    // if(lastMails.length==0){
-    //      lastRead.push(mails[mails.length-1].mailid);
-    //  }
-    // else{
         let result=false;
         for (let i = 0; i <= lastMails.length; i++) {
-          //console.log('lastMails[i]',lastMails[i]);
-          //console.log('currentMail.mailid',currentMail.mailid);
             if(lastMails[i]==currentMail.mailid){
               result=true;      
             }    
         } 
-        //console.log('result',result);
         if(!result){
-          //lastRead.push(currentMail.mailid);  
           setlastMails([...lastMails,currentMail.mailid]);
         }
-      //}
-    //setlastMails([...lastMails,currentMail.mailid]);
   }
 
   function checkIfInArr(id){
@@ -126,11 +102,13 @@ export default function Mail({ navigation }) {
       icon={imagePaths['mailFill']} 
       backArrow={false} 
       />
+      {!visitor &&mailsList.length==0 && <Text style={styles.label}>תיבת האימיילים ריקה</Text>}
+       {visitor && <Visitor navigation={navigation} />}
+       {!visitor &&
        <View style={styles.scrollViewWrapper}>
       <ScrollView contentContainerStyle={[styles.mailsList,{height:pageheight}]} showsVerticalScrollIndicator={false}>
         {mailsList.length!=0 && mailsList.map((mail, index) => {
           var isNewMail = lastMails.length !== 0 && checkIfInArr(mail.mailid);
-          console.log('lastMails',lastMails)
           return(
           <TouchableOpacity key={index} onPress={() => {goToPage(mail)}}>
             <View style={styles.singleMail}>
@@ -148,7 +126,7 @@ export default function Mail({ navigation }) {
         )
         })}
       </ScrollView>
-      </View>
+      </View>}
       <AppFooter navigation={navigation} mailFillIcon={true}/>
     </View>
   );
@@ -160,6 +138,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     position: 'relative',
     backgroundColor: 'white',
+  },
+  label:{
+    top: 300,
+      textAlign: 'center',
+      fontSize: 16,
+      color: '#50436E',
   },
   scrollViewWrapper: {
     height: 750,
@@ -210,5 +194,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     top:3,
     color: "#776F89",
-  },
+  }
 });

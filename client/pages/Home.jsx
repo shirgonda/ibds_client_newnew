@@ -12,7 +12,6 @@ export default function Home({navigation}) {
     return(
         <View style={styles.container}>
         <AppHeader navigation={navigation} backArrow={false} label='דף הבית' endIcon={true} height={45} width={45}/>
-        {/* //לבדוק למה פעמיים עיצוב */}
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <Card style={styles.card}>
             <Card.Cover style={styles.cardImage} source={imagePaths['rightsHome']} />

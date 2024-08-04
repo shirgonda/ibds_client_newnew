@@ -1,12 +1,12 @@
 import React, { useEffect, useState,useCallback } from 'react';
-import { StyleSheet, View, Text,Image,Button,Alert } from 'react-native';
+import { StyleSheet, View, Text,Image,Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Linking from 'expo-linking';
-import { Get,Post,Put,Delete } from '../api';
+import { Get,Post,Delete } from '../api';
 import * as FileSystem from 'expo-file-system';
 import { Share } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -100,8 +100,6 @@ function deleteFile(file){
     if (result.type !== 'cancel' && result.assets && result.assets.length > 0) {
   
       var today = new Date();
-      //לסדר שעה בתאריך של היום
-  
       var fileName = result.assets[0].name.split('.pdf');
       var convertName = fileName[0];
       var documentId = 0;
@@ -132,20 +130,17 @@ function deleteFile(file){
 
 
   const openPDF = async (fileUri) => {
-    const url = fileUri; // Assuming you have the PDF file uri
+    const url = fileUri; 
     console.log('Attempting to open URI:', fileUri);
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
       await Linking.openURL(url);
     } else {
-      // Handle cases where no app can open PDFs
       Alert.alert('No PDF Viewer Found', 'No app is currently installed to open PDFs.');
     }
   };
   
- 
-
 const shareFile = async (fileUri, fileName) => {
   try {
     const result = await Share.share({
@@ -166,7 +161,6 @@ const shareFile = async (fileUri, fileName) => {
     console.error('Error sharing file:', error);
   }
 };
-
 
   return(
     <View style={styles.container}>

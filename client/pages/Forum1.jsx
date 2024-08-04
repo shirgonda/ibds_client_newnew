@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useCallback } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert,Linking  } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert,Linking,KeyboardAvoidingView,Platform,Keyboard  } from 'react-native';
 import { Button } from 'react-native-paper';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -8,11 +8,11 @@ import ForumHeader from '../components/ForumHeader';
 import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
-import { Get,PostOneValue,Post,Put,Delete } from '../api';
-import { Link, useFocusEffect } from '@react-navigation/native';
+import { Get,PostOneValue,Delete } from '../api';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
-    const { imagePaths,currentSubject, setcurrentSubject,CurrentUser,visitor,subjects } = useUser();
+    const { imagePaths,currentSubject,CurrentUser,visitor,subjects } = useUser();
     const { forumQustionId } = route.params;
     const [questionOpen, setquestionOpen] = useState(false);
     const [questions, setquestions] = useState([]);
@@ -25,6 +25,7 @@ export default function Forum1({ navigation,route }) {
     const [AnswerPicAdded, setAnswerPicAdded] = useState(false);
     const [answers, setanswers] = useState([]);   
     const [pressFriend, setpressFriend] = useState({}); 
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     useFocusEffect( //טעינת השאלות כאשר חוזרים לדף
       useCallback(() => {
@@ -34,6 +35,20 @@ export default function Forum1({ navigation,route }) {
         setcurrentQuestion({});
       }, [navigation,currentSubject])
     );
+
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+          setKeyboardVisible(true);
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+          setKeyboardVisible(false);
+        });
+    
+        return () => {
+          keyboardDidHideListener.remove();
+          keyboardDidShowListener.remove();
+        };
+    }, [imagePaths]);
 
     function findQIndex(){
       if(forumQustionId!=0&&questions!=[]){
@@ -51,8 +66,6 @@ export default function Forum1({ navigation,route }) {
     },[questions])
 
     useEffect(()=>{
-      console.log('questions[currentIndex]',questions[currentIndex])
-      console.log('currentIndex',currentIndex)
       setcurrentQuestion(questions[currentIndex]);
     },[currentIndex])
 
@@ -60,7 +73,6 @@ export default function Forum1({ navigation,route }) {
         if(!questionOpen){
           setaddAnswer(false);
         }
-        console.log('questionOpen22222',questionOpen);
       },[questionOpen])
 
       useEffect(()=>{
@@ -68,18 +80,15 @@ export default function Forum1({ navigation,route }) {
         setAnswerPicAdded(true);
        }
        else{setAnswerPicAdded(false)}
-
-        console.log('AnswerPicAdded',AnswerPicAdded);
       },[AnswerPicToShow])
 
       useEffect(()=>{
-        console.log('currentQuestion2222',currentQuestion)
         LoadAnswers(currentQuestion);
+        console.log('currentQuestion',currentQuestion)
       },[currentQuestion])
 
       useEffect(()=>{
         LoadAnswers(currentQuestion);
-        console.log('addAnswer',addAnswer);
       },[addAnswer])
 
       async function LoadQuestions() {
@@ -93,7 +102,6 @@ export default function Forum1({ navigation,route }) {
       }
 
       async function LoadAnswers(question) {
-        console.log('currentQuestionxxxxxxx',question)
         let result = await Get(`api/ForumAnswers/${question.questionId}`, question.questionId);
         if (!result) {
           Alert.alert('טעינת תגובות נכשלה');
@@ -178,7 +186,10 @@ export default function Forum1({ navigation,route }) {
           console.log('Add Answer successful:', result);  
           LoadAnswers(currentQuestion);
           LoadQuestions();
-          PostMail(newA);
+          if(currentQuestion.userId==CurrentUser.id){
+            PostMail(newA);
+          }
+          
       }
     }
 
@@ -189,7 +200,6 @@ export default function Forum1({ navigation,route }) {
         mailFromCalander:false,
         mailId:0,
         picture:newA.profilePicture,
-        picture:'',
         sendDate:new Date().toISOString(),
         username:newA.username,
         forumSubject:currentSubject.label,
@@ -200,17 +210,14 @@ export default function Forum1({ navigation,route }) {
         calenderEventStartTime:'',
         calendarEventLocation:''
       }
-      console.log('mail',mail)
       let result= await PostOneValue(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
-          console.log('postMailResult',result);
       } 
       else{
         console.log('Add mail successful:', result);
     }
   }
-
 
   async function deleteMail(id){
     let result= await Delete(`api/Mail/Question/${id}`, id);
@@ -219,12 +226,10 @@ export default function Forum1({ navigation,route }) {
     }
   }
 
-
       const handleQPress=(question,index)=>{   
         setquestionOpen(!questionOpen);
         setcurrentIndex(index);
         setcurrentQuestion(question);
-        console.log('question9999999999999',question)
         LoadAnswers(question);
       }
 
@@ -301,8 +306,8 @@ export default function Forum1({ navigation,route }) {
     }
 
     function goIntoChat(question){
-      var demoMassegge={chatId: 0,senderId: CurrentUser.id,recipientId: question.userId,contenct: "",sendDate: "2024-07-23T10:02:49.827Z",attachedFile: false,user2ProfilePicture: "string",areFriends: false,user2Username: "string"};
-      navigation.navigate('IntoChat',  {demoMassegge} );
+      var chat={chatId: 0,senderId: CurrentUser.id,recipientId: question.userId,contenct: "",sendDate: "2024-07-23T10:02:49.827Z",attachedFile: false,user2ProfilePicture: currentQuestion.profilePicture ,areFriends: false,user2Username: currentQuestion.username};
+      navigation.navigate('IntoChat',  {chat} );
     }
 
 function validations(){
@@ -319,20 +324,23 @@ const openURL = (url) => {
 
     return (
         <View style={styles.container}>
+            <KeyboardAvoidingView
+            style={{ flex: 1,width:'100%', alignItems: 'center' }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // התאמת התנהגות המקלדת על בסיס הפלטפורמה
+            >
             <AppHeader navigation={navigation} label="פורום" startIcon={true} icon={imagePaths['forumFill']} />
             <ForumHeader navigation={navigation} currentSubject={currentSubject} subjects={subjects}/>
-            <Button style={styles.addQBtn} onPress={()=> visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם שאלה'):navigation.navigate('PublishQuestion',{subjects})}>
-            <View style={styles.addQBtnItems} >
+            <Button style={styles.addQBtn} onPress={()=> visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם שאלה'):navigation.navigate('PublishQuestion')}>
+            <View style={styles.addQBtnItems}>
                 <Text style={styles.addQBtnText}> פרסם שאלה</Text>
                 <Image style={styles.addQBtnIcon} source={imagePaths['WhiteEmptyPlus']}/>
                 </View>
             </Button>
+            
             {questions.length==0&&<Text style={styles.noQ}>עדיין לא פורסמו שאלות בנושא זה</Text>}
             <ScrollView style={[styles.QuestionWrapper]} showsVerticalScrollIndicator={false}>
                 <View style={styles.fixHeight}>
-
-                {questions.length>0 && questions.slice().reverse().map((question, index) => (
-                  
+                {questions.length>0 && questions.map((question, index) => (
                   <View>
                      <TouchableOpacity key={index} onPress={()=>handleQPress(question,index)}>
                         <View style={styles.singleQuestion}>
@@ -416,9 +424,10 @@ const openURL = (url) => {
                     </View>
                  ))}
                  </View>
-            </ScrollView> 
+            </ScrollView>
             <AppFooter navigation={navigation} forumFillIcon={true} />
-        </View>
+            </KeyboardAvoidingView> 
+        </View>   
     );
 }
 
@@ -546,16 +555,10 @@ const styles = StyleSheet.create({
       openQBtn:{
         fontSize:12,
       },
-
-
-
       imageContainer: { 
         alignSelf: 'center', 
         marginVertical: 10 
       },
-
-
-
       singleAnswer:{
         height: 46,
         marginTop: 15,
@@ -670,5 +673,5 @@ const styles = StyleSheet.create({
         marginTop:30,
         marginLeft:230,
         marginBottom:30,
-      },
+      }
 });
