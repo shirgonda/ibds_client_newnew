@@ -7,7 +7,7 @@ import AppHeader from '../components/Header';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { useUser } from '../components/UserContext';
 import TimePicker from '../components/selectTime';
-import { Put, PostCalendarItem,PostOneValue, Get } from '../api';
+import { Put, PostCalendarItem,PostOneValue } from '../api';
 import * as Notifications from 'expo-notifications';
 
 export default function AddEventToCalendar({navigation, route}) {  

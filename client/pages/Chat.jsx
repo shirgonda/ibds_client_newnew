@@ -15,16 +15,16 @@ export default function Chat({ navigation }) {
   var pageheight = (chatList.length) * 130;
   let chatInterval= null;
 
-  useEffect(() => {
-    chatInterval=setInterval(()=>{LoadChats()},1000*5)
-    return ()=>{
-        clearInterval(chatInterval);
-    }
-  }, []);
+  // useEffect(() => {
+  //   chatInterval=setInterval(()=>{LoadChats()},1000*100)
+  //   return ()=>{
+  //       clearInterval(chatInterval);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    LoadChats();
-  }, [imagePaths]);
+  // useEffect(() => {
+  //   LoadChats();
+  // }, [imagePaths]);
 
   async function LoadChats() {
     let result = await Get(`api/Chat/getLatestChats?userId=${CurrentUser.id}`, CurrentUser.id);
