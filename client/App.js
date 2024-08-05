@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
-import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet,Alert } from "react-native";
+//import { useUser } from './components/UserContext';
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 //import ResatPassword from "./pages/ResatPassword";
@@ -33,6 +34,9 @@ import sendNotification from "./pages/sendNotification";
 import PushNotifications from "./pages/PushNotifications";
 import * as Notifications from "expo-notifications";
 import RegisterForPushNotificationsAsync from "./pages/PushNotifications";
+import { PostOneValue } from './api';
+
+
 const Stack = createStackNavigator();
 
 Notifications.setNotificationHandler({ 
@@ -40,6 +44,8 @@ Notifications.setNotificationHandler({
 });
 
 export default function App({ navigation }) {
+var initialMailsToSend=[];
+
     useEffect(() => {
     RegisterForPushNotificationsAsync()
       .then((token) => {
@@ -51,6 +57,25 @@ export default function App({ navigation }) {
 
     Notifications.addNotificationReceivedListener((notification) => {
       console.log("Notification received:", notification);
+      var result=false;
+      var mail={};
+      var MailsToSend=notification.request.content.data.mails;
+      var firstMail=notification.request.content.data.randNum;
+      if(MailsToSend.length!=0){
+      for (let i = 0; i < MailsToSend.length; i++) {
+          if(MailsToSend[i].calendarEventId==notification.request.content.data.eventId){
+            result=true;
+            mail=MailsToSend[i];
+          }
+        
+        if(result&&firstMail==1){
+          PostMail(mail);
+          console.log('MailsToSend',MailsToSend);
+          MailsToSend.splice(i,1);
+          initialMailsToSend=MailsToSend;
+        }
+      }
+    }
     });
 
     Notifications.addNotificationResponseReceivedListener((response) => {
@@ -58,8 +83,19 @@ export default function App({ navigation }) {
     });
   }, []);
   
+  async function PostMail(mail){
+    let result= await PostOneValue(`api/Mail`, mail);
+    if(!result){
+        Alert.alert('הוספת אימייל נכשלה');
+        console.log('result',result);
+    } 
+    else{
+      console.log('Add mail successful:', result);
+  }
+}
+
   return (
-    <UserProvider>
+    <UserProvider initialMailsToSend={initialMailsToSend}>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{

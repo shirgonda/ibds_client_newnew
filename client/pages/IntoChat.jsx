@@ -28,12 +28,12 @@ export default function Chat({ navigation, route }) {
   const [ShowUploadedImage, setShowUploadedImage] = useState('');
   let chatInterval= null;
 
-  // useEffect(() => {
-  //   chatInterval=setInterval(()=>{LoadOldChats()},1000*100)
-  //   return ()=>{
-  //       clearInterval(chatInterval);
-  //   }
-  // }, []);
+  useEffect(() => {
+    chatInterval=setInterval(()=>{LoadOldChats()},1000*100)//לשנות ל3
+    return ()=>{
+        clearInterval(chatInterval);
+    }
+  }, []);
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: true });
@@ -69,35 +69,24 @@ export default function Chat({ navigation, route }) {
   };
 
   function LoadReadMasegge(chats){
-    console.log('LoadReadMaseggeeeeeeeeee');
-    
     let existsInArr=false;
-    let newArr=[...lastMasseges];
-    
     for (let i = 0; i < lastMasseges.length; i++) {
-      console.log('lastMasseges[]',lastMasseges[i]);
       if(lastMasseges[i].recipientId==id2){
         if(lastMasseges[i].chatId==chats[chats.length-1].chatId){
           existsInArr=true; 
         }
         else{
-          newArr.splice(lastMasseges[i]);
+          lastMasseges.splice(i,1);
           existsInArr=false;
-          console.log('newArr------',newArr);
         }    
       } 
-      else{existsInArr=false;} 
+      else{
+        existsInArr=false
+      } 
     } 
-    console.log('existsInArr',existsInArr);
     if(!existsInArr){ 
-      newArr=[...newArr,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}];
-      console.log('newArr',newArr);
-      setlastMasseges(newArr);
-      //setlastMasseges([...lastMasseges,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}]);
+      setlastMasseges([...lastMasseges,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}]);
     }
-    console.log('lastMasseges',lastMasseges);
-
-
     // let result=false;
     // for (let i = 0; i <= lastMasseges.length; i++) {
     //   if(lastMasseges[i]==id2){

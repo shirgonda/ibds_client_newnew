@@ -43,7 +43,7 @@ export default function MoreInfo({ navigation }) {
             <Card.Content>
               <Text style={styles.cardHeader}>{info.header}</Text>
               <View style={styles.cardBody}>
-                <Text style={styles.cardBodyText} numberOfLines={5}>{info.contenct}</Text>
+                <Text style={styles.cardBodyText}>{info.contenct}</Text>
               </View>
             </Card.Content>
             <Card.Actions>

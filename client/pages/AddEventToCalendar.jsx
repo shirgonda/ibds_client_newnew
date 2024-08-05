@@ -19,10 +19,9 @@ export default function AddEventToCalendar({navigation, route}) {
     const [repeatDay, setrepeatDay] = useState('');
     const [repeatMonth, setrepeatMonth] = useState('');
     const [repeatYear, setrepeatYear] = useState('');
-    const { CurrentUser } = useUser();
+    const { imagePaths,CurrentUser,MailsToSend, setMailsToSend } = useUser();
     const { CurrentDayShow, CurrentMonthShow, CurrentYearShow, chosenDate, alert } = route.params;
     const [startDate, setStartDate] = useState(new Date(CurrentYearShow, CurrentMonthShow-1, CurrentDayShow+1));
-    const { imagePaths } = useUser();
     const [alerts, setalerts] = useState([]);
     const [btnSaveShow, setbtnSaveShow] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
@@ -32,6 +31,9 @@ export default function AddEventToCalendar({navigation, route}) {
     const [patentEvent, setpatentEvent] = useState('');
     const [ParentPosted, setParentPosted] = useState(false);
     const [addRepeatEventsDone, setaddRepeatEventsDone] = useState(false);
+    var mailsToPost=[...MailsToSend];
+    var randNum=0;
+    console.log('MailsToSend00000000000000000000',MailsToSend)
 
    const handleUpdateAlert = () => {
     settrigger(!trigger); 
@@ -43,16 +45,19 @@ export default function AddEventToCalendar({navigation, route}) {
       }
   }, [alert]);
 
-    async function scheduleAndCancel(title, trigger,alert,event) {
+    async function scheduleAndCancel(title, trigger,alert) {
+      console.log('mailsToPost0000',mailsToPost);
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
           title: title,
+          data: { eventId: alert.eventId,mails:mailsToPost,randNum:randNum+=1 },
         },
         trigger: { date: trigger, repeats: false },
       });
       const updatedAlert={...alert,identifier:identifier}
+      mailsToPost=[];
       updatedAlerts(updatedAlert);
-      PostMail(event);
+      //MailsToSend.splice(-1,1);
     }
 
     async function PostAlerts(event){
@@ -72,8 +77,9 @@ export default function AddEventToCalendar({navigation, route}) {
         else{
           console.log('Add alert successful:', result);
           const targetDate = new Date(result.alertTime);
-          //await scheduleAndCancel(result.aname,30,alert,event);
-          await scheduleAndCancel(result.aname,targetDate,result,event); //לבדוק עם האנדרואיד
+          randNum=0;
+          await scheduleAndCancel(result.aname,targetDate,result); 
+         
         }
       }
     }
@@ -121,40 +127,64 @@ export default function AddEventToCalendar({navigation, route}) {
           updateEvent(updatedEvent);
         }
         //PostMail(result);
+        sendMail(result);
         PostAlerts(result);
         console.log('Add event successful:', result);   
       } 
     }
 
-    async function PostMail(event){
-       const convertedDate=new Date(event.year,event.month-1,event.day+1)
-       var startTime=event.startTime.split('T')[1].split(':');
-       //const triggerTime = new Date(startTime.getTime() - 2 * 60 * 60 * 1000);
-       var mail={
-        userId:CurrentUser.id,
-        mailId:0,
-        mailFromCalander:true,
-        picture:'',
-        sendDate:convertedDate,
-        username:'',
-        forumSubject:'',
-        forumContent:'',
-        forumQustionId:0,
-        calendarEventId:event.eventId,
-        calendaerEventName:event.name,
-        calenderEventStartTime:`${startTime[0]}:${startTime[1]}`,
-        calendarEventLocation:event.location
-      }
-      console.log('mail',mail)
-      let result= await PostOneValue(`api/Mail`, mail);
-      if(!result){
-          Alert.alert('הוספת אימייל נכשלה');
-          console.log('result',result);
-      } 
-      else{
-        console.log('Add mail successful:', result);
+    function sendMail(event){
+      var convertedDate=new Date(event.year,event.month-1,event.day+1).toISOString();
+      var startTime=event.startTime.split('T')[1].split(':');
+      var mail={
+       userId:CurrentUser.id,
+       mailId:0,
+       mailFromCalander:true,
+       picture:'',
+       sendDate:"2024-08-05T18:13:00.593",///convertedDateלשנות ל!!!!!!!!!!!!!!!!!!!!
+       username:'',
+       forumSubject:'',
+       forumContent:'',
+       forumQustionId:0,
+       calendarEventId:event.eventId,
+       calendaerEventName:event.name,
+       calenderEventStartTime:`${startTime[0]}:${startTime[1]}`,
+       calendarEventLocation:event.location
+     }
+     setMailsToSend([...MailsToSend,mail]);
+     mailsToPost=[...MailsToSend,mail];
     }
-  }
+
+  //   async function PostMail(event){
+  //     console.log('PostMailllllllllllll'); 
+  //      const convertedDate=new Date(event.year,event.month-1,event.day+1)
+  //      var startTime=event.startTime.split('T')[1].split(':');
+  //      //const triggerTime = new Date(startTime.getTime() - 2 * 60 * 60 * 1000);
+  //      var mail={
+  //       userId:CurrentUser.id,
+  //       mailId:0,
+  //       mailFromCalander:true,
+  //       picture:'',
+  //       sendDate:convertedDate,
+  //       username:'',
+  //       forumSubject:'',
+  //       forumContent:'',
+  //       forumQustionId:0,
+  //       calendarEventId:event.eventId,
+  //       calendaerEventName:event.name,
+  //       calenderEventStartTime:`${startTime[0]}:${startTime[1]}`,
+  //       calendarEventLocation:event.location
+  //     }
+  //     console.log('mail',mail)
+  //     let result= await PostOneValue(`api/Mail`, mail);
+  //     if(!result){
+  //         Alert.alert('הוספת אימייל נכשלה');
+  //         console.log('result',result);
+  //     } 
+  //     else{
+  //       console.log('Add mail successful:', result);
+  //   }
+  // }
     
     function createDaysArr(){
       const DayData = [];
