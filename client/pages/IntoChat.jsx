@@ -29,7 +29,7 @@ export default function Chat({ navigation, route }) {
   let chatInterval= null;
 
   useEffect(() => {
-    chatInterval=setInterval(()=>{LoadOldChats()},1000*100)//לשנות ל3
+    chatInterval=setInterval(()=>{LoadOldChats()},1000*300)//לשנות ל3
     return ()=>{
         clearInterval(chatInterval);
     }

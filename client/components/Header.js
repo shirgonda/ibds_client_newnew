@@ -6,6 +6,8 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
    startIcon=false, //מציין שהאייקון נמצא לפני הטקסט של הכותרת
    endIcon=false, //מציין שהאייקון נמצא אחרי הטקסט של הכותרת
    label, //טקסט הכותרת
+   marginTop,
+   fontSize,
    icon,
    marginRight,
    height,
@@ -65,7 +67,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
           </View>}
 
             <View style={styles.headerContent}>
-                <Text style={[styles.headerText,marginRight?{marginRight:marginRight}:{marginRight:15}]}>{label}</Text>    
+                <Text style={[styles.headerText,marginRight?{marginRight:marginRight}:{marginRight:15},marginTop?{marginTop:marginTop}:{marginTop:0},fontSize?{fontSize:fontSize}:{fontSize:27}]}>{label}</Text>    
             </View> 
 
             {startIcon && <Image style={[
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
     },
       headerText: {
         textAlign: 'right',
-        fontSize: 27,
+        //fontSize: 27,
         fontWeight: 'bold',
         color:'#50436E',
       },

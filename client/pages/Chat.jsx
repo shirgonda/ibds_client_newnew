@@ -16,7 +16,7 @@ export default function Chat({ navigation }) {
   let chatInterval= null;
 
   useEffect(() => {
-    chatInterval=setInterval(()=>{LoadChats()},1000*100)//לשנות ל5
+    chatInterval=setInterval(()=>{LoadChats()},1000*300)//לשנות ל5
     return ()=>{
         clearInterval(chatInterval);
     }

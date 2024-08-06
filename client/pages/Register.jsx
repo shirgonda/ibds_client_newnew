@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { StyleSheet, View, Text, Alert, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform } from 'react-native';
 import AppButton from '../components/buttons';
 import AppInput from '../components/input';
@@ -23,10 +23,14 @@ export default function Register({navigation}) {
     const [month, setmonth] = useState("");
     const [password, setpassword] = useState("");
     const [username, setusername] = useState("");
-    const { setCurrentUser, imagePaths } = useUser();
+    const { setCurrentUser, imagePaths,setvisitor } = useUser();
     const [profilePicture, setprofilePicture] = useState(imagePaths['userImage']); 
     const [PictureToServer, setPictureToServer] = useState("");
     var sucessRegister=false;
+
+    useEffect(() => {
+        setvisitor(true);
+      }, []);
 
     async function addUser(user){
         let result= await Post('api/Users', user,PictureToServer);
@@ -37,6 +41,7 @@ export default function Register({navigation}) {
         else {
             sucessRegister=true;
             setCurrentUser(result);
+            setvisitor(false);
             console.log('Registration successful:', result);
         }
         console.log('result',result);
@@ -327,11 +332,12 @@ export default function Register({navigation}) {
                     />
                     <RadioButton
                         key={1}
-                        label='מאשר/ת את התקנון ותנאי השימוש'
+                        label={<View style={styles.twoInRow}><Text>מאשר/ת את</Text><TouchableOpacity onPress={()=>navigation.navigate('PrivacyAndTerms',{previousRouteName:'register'})}><Text style={{ color: '#50436E', textDecorationLine: 'underline' }}> התקנון ותנאי השימוש</Text></TouchableOpacity></View>}
                         value='ok'
                         selectedValue={SelectedRadioButton}
                         onSelect={() => handleCheckRadioBtn('ok')}
                     />
+
                     <AppButton marginTop={35} marginBottom={110} label='הרשמה' onPressHandler={handleSubmit} />
             </View>
         )}

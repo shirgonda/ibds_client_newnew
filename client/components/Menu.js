@@ -37,7 +37,7 @@ const AppMenu = ({ navigation,toggleMenu,settoggleMenu}) => {
                        //שינוי העיצוב של השדה בעל שם הדף המוצג
                         style={(isCurrentPage(item.name[0])||isCurrentPage(item.name[1])) ? styles.currentPageBtn : styles.menuItem}
                         onPress={() => { settoggleMenu(false);
-                        {isCurrentPage(item.name[1]) ? navigation.navigate(item.name[0]):navigation.navigate(item.name[0])}
+                        {isCurrentPage(item.name[1]) ? navigation.navigate(item.name[0]):navigation.navigate(item.name[0],{previousRouteName:''})}
                         }}>
                         <Text style={(isCurrentPage(item.name[0]) ||isCurrentPage(item.name[1])) ? styles.currentPageMenuText : styles.menuText}>
                             {item.label}

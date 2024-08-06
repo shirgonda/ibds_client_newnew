@@ -202,7 +202,7 @@ const setlastMails = async (LmailData) => {
       NumOfVisitors, setNumOfVisitors,
       currentSubject, setcurrentSubject,
       currentFolder, setcurrentFolder,
-      visitor,
+      visitor,setvisitor,
       subjects,
       imagePaths,
       lastMasseges,setlastMasseges,

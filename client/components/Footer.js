@@ -17,7 +17,7 @@ const AppFooter = ({
   let Interval= null;
 
   useEffect(() => {
-    Interval=setInterval(()=>{LoadChats(),LoadMails()},1000*600)/// לשנות ל3 שניות במקום 60
+    Interval=setInterval(()=>{LoadChats(),LoadMails()},1000*300)/// לשנות ל3 שניות במקום 60
     return ()=>{
         clearInterval(Interval);
     }

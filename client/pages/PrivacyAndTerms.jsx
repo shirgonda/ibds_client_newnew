@@ -1,12 +1,16 @@
 import React from 'react';
 import { StyleSheet, View, Text,ScrollView } from 'react-native';
 import AppFooter from '../components/Footer';
+import AppHeader from '../components/Header';
 
-export default function Mail({navigation}) {
+export default function PrivacyAndTerms({navigation,route}) {
+  const { previousRouteName } = route.params;
+
   return(
     <View style={styles.container}>
+        <AppHeader navigation={navigation} marginTop={10} fontSize={22} label="IBD's - מדיניות פרטיות ותנאי שימוש " backArrow={previousRouteName=='register'?true:false}/>
         <ScrollView contentContainerStyle={styles.ScrollViewcontainer} showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>IBD's - מדיניות פרטיות ותנאי שימוש {"\n"}{"\n"}</Text>
+        {/* <Text style={styles.header}>IBD's - מדיניות פרטיות ותנאי שימוש {"\n"}{"\n"}</Text> */}
         <Text style={styles.label}>
         אנו ב-IBD's מכבדים את פרטיות המשתמשים שלנו ומחויבים להגן על המידע האישי שאתם משתפים איתנו. כמו כן, אנו מבקשים מכל המשתמשים לעמוד בתנאי השימוש באפליקציה שלנו.{"\n"}{"\n"} להלן פירוט מדיניות הפרטיות ותנאי השימוש שלנו:
         {"\n"}{"\n"}
@@ -54,9 +58,10 @@ export default function Mail({navigation}) {
 
 const styles = StyleSheet.create({
     container:{
-        flexGrow: 1,
-        position:'relative',
-        backgroundColor:'white',
+      flexGrow: 1,
+      position:'relative',
+      backgroundColor:'white',
+      height:'100%', 
     },
     ScrollViewcontainer:{
       position: 'relative',
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       flexGrow: 1,
       backgroundColor:'white',
-      marginTop:90,
+      marginTop:60,
       paddingRight:5,
       paddingLeft:30,
       paddingBottom:300,
