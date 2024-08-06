@@ -93,6 +93,7 @@ export default function Forum1({ navigation,route }) {
 
       async function LoadQuestions() {
         let result = await Get(`api/ForumQuestions/topic/${currentSubject.label}`, currentSubject.label);
+        console.log('result0000000000000', result);
         if (!result) {
           Alert.alert('טעינת שאלות נכשלה');
         } else {
@@ -186,17 +187,17 @@ export default function Forum1({ navigation,route }) {
           console.log('Add Answer successful:', result);  
           LoadAnswers(currentQuestion);
           LoadQuestions();
-          if(currentQuestion.userId==CurrentUser.id){
+          //if(currentQuestion.userId==CurrentUser.id){
             PostMail(newA);
-          }
+          //}
           
       }
     }
 
     async function PostMail(newA){
       var mail={
-        userId:CurrentUser.id,
-        senderUserId:15,
+        userId:currentQuestion.userId,
+        senderUserId:CurrentUser.id,
         mailFromCalander:false,
         mailId:0,
         picture:newA.profilePicture,
@@ -210,6 +211,7 @@ export default function Forum1({ navigation,route }) {
         calenderEventStartTime:'',
         calendarEventLocation:''
       }
+      console.log('mail',mail);
       let result= await PostOneValue(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
@@ -329,7 +331,7 @@ const openURL = (url) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // התאמת התנהגות המקלדת על בסיס הפלטפורמה
             >
             <AppHeader navigation={navigation} label="פורום" startIcon={true} icon={imagePaths['forumFill']} />
-            <ForumHeader navigation={navigation} currentSubject={currentSubject} subjects={subjects}/>
+            <ForumHeader navigation={navigation}/>
             <Button style={styles.addQBtn} onPress={()=> visitor?Alert.alert('נדרש להירשם למערכת על מנת לפרסם שאלה'):navigation.navigate('PublishQuestion')}>
             <View style={styles.addQBtnItems}>
                 <Text style={styles.addQBtnText}> פרסם שאלה</Text>
@@ -391,8 +393,8 @@ const openURL = (url) => {
                             onChangeText={(text) => setAnswerDescription(text)}
                           />
                           <View style={styles.twoInRowButtons}>
-                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerPic(''),setAnswerPicAdded(false),setAnswerPicToShow('')}} />
                             <AppButton width={100} label='שמירה' onPressHandler={() => saveAnswer()} />
+                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setaddAnswer(false),setAnswerDescription(''),setAnswerPic(''),setAnswerPicAdded(false),setAnswerPicToShow('')}} />
                           </View>
                          </View>
                         </View>:null}

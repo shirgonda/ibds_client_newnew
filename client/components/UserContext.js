@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserContext = createContext(null); //state מאפשר לקומפוננטות והדפים לשתף את אותו 
 
-export const UserProvider = ({ children,initialMailsToSend }) => { //(children) app.js ב UserProvider הענקת גישה לדפים העטופים ב
+export const UserProvider = ({ children }) => { //(children) app.js ב UserProvider הענקת גישה לדפים העטופים ב
   const [CurrentUser, setCurrentUserState] = useState('');
   const [NumOfVisitors, setNumOfVisitorsState] = useState([]);
   const [visitor, setvisitor] = useState(false);
@@ -15,7 +15,6 @@ export const UserProvider = ({ children,initialMailsToSend }) => { //(children) 
   const [numOfNotesChat, setnumOfNotesChat] = useState(0);
   const [numOfNotesMail, setnumOfNotesMail] = useState(0);
   const [lastMails,setlastMailsState] = useState([]);
-  const [MailsToSend, setMailsToSendState] = useState([]);
   const path="https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images"
 
   const imagePaths={ //נתיבי התמונות שבשרת
@@ -90,12 +89,6 @@ export const UserProvider = ({ children,initialMailsToSend }) => { //(children) 
     {label:'מחלות מעי דלקתיות',img:['forumDeases','ForumDeasesWhite'],height:55,width:42,SmallHeight:50,SmallWidth:37}
   ];
 
-  useEffect(() => {
-    console.log('initialMailsToSend',initialMailsToSend);
-    if(initialMailsToSend!=[]){
-      setMailsToSend(initialMailsToSend);
-    }
-  }, [initialMailsToSend]);
 
 //--------------------- clear local storage ---------------------// הפעלה ידנית לצורך בדיקות בזמן הפיתוח
   // const clearLocalStorage = async () => {
@@ -139,12 +132,6 @@ export const UserProvider = ({ children,initialMailsToSend }) => { //(children) 
         console.log('get lastMails:', lastMailsData);
         if (lastMailsData) {
           setlastMails(JSON.parse(lastMailsData)); 
-        }
-
-        const MailsToSendData = await AsyncStorage.getItem('MailsToSend'); 
-        console.log('get MailsToSend:', MailsToSendData);
-        if (MailsToSendData) {
-          setMailsToSend(JSON.parse(MailsToSendData)); 
         }
       } catch (error) {
         console.error('Error retrieving data from AsyncStorage:', error);
@@ -207,30 +194,19 @@ const setlastMails = async (LmailData) => {
   }
 };
 
-const setMailsToSend = async (SmailData) => {
-  try {
-    await AsyncStorage.setItem('MailsToSend', JSON.stringify(SmailData)); 
-    setMailsToSendState(SmailData);
-    console.log('set MailsToSend:', JSON.stringify(SmailData));
-  } catch (error) {
-    console.error('Error saving MailsToSend to AsyncStorage:', error);
-  }
-};
-
   return (
     <UserContext.Provider value={{ //הערכים המסופקים לילדים
       CurrentUser, setCurrentUser,
-      MailsToSend, setMailsToSend,
       numOfNotesChat, setnumOfNotesChat,
       numOfNotesMail, setnumOfNotesMail,
       NumOfVisitors, setNumOfVisitors,
       currentSubject, setcurrentSubject,
       currentFolder, setcurrentFolder,
       visitor,
+      subjects,
       imagePaths,
       lastMasseges,setlastMasseges,
-      lastMails,setlastMails,
-      subjects
+      lastMails,setlastMails
        }}>
       {children} 
     </UserContext.Provider>

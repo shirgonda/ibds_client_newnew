@@ -142,8 +142,8 @@ export default function PublishQuestion({ navigation }) {
                             {attachmentAdded?<Image style={styles.pic} source={attachmentToShow}></Image>:null}
                             {attachmentAdded?<TouchableOpacity onPress={()=>[setattachmentAdded(false),setattachment(''),setattachmentToShow('')]}><Text style={styles.deletBtnText}>מחיקת תמונה</Text></TouchableOpacity>:null}
                           <View style={styles.twoInRowButtons}>
-                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setattachment(''),setattachmentAdded(false),navigation.navigate('Forum1',{subjects})}} />
                             <AppButton width={100} label='שמירה' onPressHandler={() => saveQuestion()} />
+                            <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => {setattachment(''),setattachmentAdded(false),navigation.navigate('Forum1',{subjects})}} /> 
                           </View>
                     </View>
             <AppFooter navigation={navigation} forumFillIcon={true} />

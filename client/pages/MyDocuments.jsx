@@ -319,8 +319,8 @@ export default function MyDocuments({ navigation }) {
         )}
       </ScrollView>}
       {((FolderExist && folders.length>0 && !newFolderSaved) ||changeFolderName) &&<View style={styles.twoInRowButtons}>
-        <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => [spliceNewFolder(folders),setfolderName('שם התיקייה'),LoadFolders()]} />
         <AppButton width={100} label='שמירה' onPressHandler={() => [changeFolderName ? updateFolder() : saveFolder(),setOldFolderName(folderName),setfolderName('שם התיקייה')]} />
+        <AppButton width={100} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => [spliceNewFolder(folders),setfolderName('שם התיקייה'),LoadFolders()]} />
       </View>}
       <AppFooter navigation={navigation} />
     </View>

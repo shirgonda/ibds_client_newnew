@@ -203,8 +203,8 @@ async function AddChildAlerts(){
             )}
           </View>
         <View style={styles.twoInRow}>
-          <AppButton width={100} bottom={90} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => navigation.navigate(previousRouteName,{CurrentDayShow, CurrentMonthShow, CurrentYearShow})}></AppButton>
           <AppButton width={100} bottom={90} label='שמירה' onPressHandler={() => {witchAlertsToAdd()}}></AppButton>
+          <AppButton width={100} bottom={90} borderColor='#9F0405' backgroundColor='#9F0405' label='ביטול' onPressHandler={() => navigation.navigate(previousRouteName,{CurrentDayShow, CurrentMonthShow, CurrentYearShow})}></AppButton>
         </View>              
       </View>
       <AppFooter navigation={navigation} calendarFillIcon={true}/>

@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import UserAvatar from './avatar';
-import { useUser } from '../components/UserContext';
+import { useUser } from './UserContext';
 
-const ForumHeader = ({navigation,subjects}) => {
-    const { imagePaths,currentSubject, setcurrentSubject } = useUser();
+const ForumHeader = ({navigation}) => {
+    const { imagePaths,currentSubject, setcurrentSubject,subjects } = useUser();
+    
     return (
         <View style={styles.icon} >
             {/* הגדרה של הגלילה לאופקית */}

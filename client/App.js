@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { StyleSheet,Alert } from "react-native";
-//import { useUser } from './components/UserContext';
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 //import ResatPassword from "./pages/ResatPassword";
@@ -35,7 +34,7 @@ import PushNotifications from "./pages/PushNotifications";
 import * as Notifications from "expo-notifications";
 import RegisterForPushNotificationsAsync from "./pages/PushNotifications";
 import { PostOneValue } from './api';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -44,7 +43,7 @@ Notifications.setNotificationHandler({
 });
 
 export default function App({ navigation }) {
-var initialMailsToSend=[];
+var mailsArr=[];
 
     useEffect(() => {
     RegisterForPushNotificationsAsync()
@@ -55,35 +54,41 @@ var initialMailsToSend=[];
         console.error("Error getting token:", error);
       });
 
-    Notifications.addNotificationReceivedListener((notification) => {
+    Notifications.addNotificationReceivedListener(async(notification) => {
       console.log("Notification received:", notification);
-      var result=false;
-      var mail={};
       var MailsToSend=notification.request.content.data.mails;
-      var firstMail=notification.request.content.data.randNum;
-      if(MailsToSend.length!=0){
-      for (let i = 0; i < MailsToSend.length; i++) {
-          if(MailsToSend[i].calendarEventId==notification.request.content.data.eventId){
-            result=true;
-            mail=MailsToSend[i];
-          }
-        
-        if(result&&firstMail==1){
-          PostMail(mail);
-          console.log('MailsToSend',MailsToSend);
-          MailsToSend.splice(i,1);
-          initialMailsToSend=MailsToSend;
-        }
+      var firstMail=notification.request.content.data.randNum+1;
+      if(firstMail==2){
+        var notAddToArray=false;
+    mailsArr.forEach((m) => {
+      if(m.mailid==MailsToSend.calendarEventId){
+        notAddToArray=true;
       }
-    }
+    });
+  if(!notAddToArray){
+        // await PostMail(MailsToSend);
+        PostMail(MailsToSend);
+  }
+      }
     });
 
     Notifications.addNotificationResponseReceivedListener((response) => {
       console.log("Notification response received:", response);
-    });
+    });  
   }, []);
-  
+
+
   async function PostMail(mail){
+  //   var notAddToArray=false;
+  //   mailsArr.forEach((m) => {
+  //     if(m.mailid==mail.calendarEventId){
+  //       notAddToArray=true;
+  //     }
+  //   });
+  // if(!notAddToArray){
+
+
+    console.log('PostMail111111111111',mail);
     let result= await PostOneValue(`api/Mail`, mail);
     if(!result){
         Alert.alert('הוספת אימייל נכשלה');
@@ -91,11 +96,15 @@ var initialMailsToSend=[];
     } 
     else{
       console.log('Add mail successful:', result);
-  }
+      mailsArr.push(mail);
+    }
+    mailsArr.push(mail);
+ // }
 }
 
   return (
-    <UserProvider initialMailsToSend={initialMailsToSend}>
+    // <UserProvider initialMailsToSend={initialMailsToSend}>
+    <UserProvider>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
