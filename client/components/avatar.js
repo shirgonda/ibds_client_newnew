@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { useUser } from '../components/UserContext';
 
 const UserAvatar=({
     source,
@@ -14,7 +13,6 @@ const UserAvatar=({
     marginTopImg=0,
     backgroundColor
 })=>{
-    const {imagePaths } = useUser();
       
     return(
     <View style={[styles.container, 
@@ -42,6 +40,6 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        overflow: 'hidden',
-      },
+        overflow: 'hidden'
+    }
 })

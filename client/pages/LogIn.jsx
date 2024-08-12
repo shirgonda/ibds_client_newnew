@@ -103,37 +103,37 @@ export default function Login({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flexGrow: 1,
-        position:'relative',
-        alignItems:'center',
-        backgroundColor:'white',
-    },
-    headerText:{
-        fontWeight:'bold',
-        fontSize:25,
-        textAlign:'center',
-        top:10,
-        marginBottom:32,
-    },
-      registerORvisitor:{
-        flexDirection: 'row',
-        alignItems:'center',
-        marginTop:30,
-      },
-      LowerHeaderText:{
-        fontWeight:'bold',
-        fontSize:19,
-      },
-      OrLine:{
-        marginTop:25,
-        flexDirection: 'row',
-      },
-      Line:{
-        color:'#E6E4EF',
-        fontWeight:'bold',
-      },
-      Or:{
-        top:5,
-      }
+  container:{
+    flexGrow: 1,
+    position:'relative',
+    alignItems:'center',
+    backgroundColor:'white'
+  },
+  headerText:{
+    fontWeight:'bold',
+    fontSize:25,
+    textAlign:'center',
+    top:10,
+    marginBottom:32
+  },
+  registerORvisitor:{
+    flexDirection: 'row',
+    alignItems:'center',
+    marginTop:30
+  },
+  LowerHeaderText:{
+    fontWeight:'bold',
+    fontSize:19
+  },
+  OrLine:{
+    marginTop:25,
+    flexDirection: 'row'
+  },
+  Line:{
+    color:'#E6E4EF',
+    fontWeight:'bold'
+  },
+  Or:{
+    top:5
+  }
 })

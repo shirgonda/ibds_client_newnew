@@ -1,4 +1,4 @@
-import React,{ useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import UserAvatar from '../components/avatar';
 import AppFooter from '../components/Footer';
@@ -9,11 +9,11 @@ export default function ForumSubjects({ navigation }) {
   const { imagePaths, setcurrentSubject,subjects } = useUser();
 var forumQustionId=0;
 
-  const insertSubjects = useCallback(() => { //הוספת קוביות הימים
+  const insertSubjects = useCallback(() => { //הוספת האווטרים של הנושאים
     const rows = [];
     let items = [];
 
-    for (let i = 0; i < subjects.length; i++) { //הדפסת ריבועי הימים כמספר הימים בחודש המוצג
+    for (let i = 0; i < subjects.length; i++) { //הדפסת 3 אווטרים בשורה
       if (items.length === 3) {
         rows.push(items);
         items = [];
@@ -54,19 +54,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   label: {
     top: 200,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   icon: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   avatarContainer: {
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 10
   },
   avatarText: {
     marginTop: 5,
@@ -74,4 +74,3 @@ const styles = StyleSheet.create({
     color:'#50436E'
   }
 });
-

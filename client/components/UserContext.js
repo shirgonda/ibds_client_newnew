@@ -17,6 +17,7 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
   const [lastMails,setlastMailsState] = useState([]);
   const path="https://proj.ruppin.ac.il/cgroup57/test2/tar1/Images"
 
+
   const imagePaths={ //נתיבי התמונות שבשרת
     chat: { uri: `${path}/chat.png` },
     chatFill: { uri: `${path}/chatFill.png` },
@@ -101,9 +102,6 @@ export const UserProvider = ({ children }) => { //(children) app.js ב UserProvi
   // };
   // clearLocalStorage();
 
-  useEffect(() => {
-    setvisitor(false);
-  }, []);
 
   useEffect(() => { //הרצה כאשר הקומפוננטה מופעלת לראשונה
     const fetchData = async () => {
@@ -176,7 +174,7 @@ const setcurrentFolder = async (FolderData) => {
 
 const setlastMasseges = async (LmData) => {
   try {
-    await AsyncStorage.setItem('lastMasseges', JSON.stringify(LmData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
+    await AsyncStorage.setItem('lastMasseges', JSON.stringify(LmData)); 
     setlastMassegesState(LmData);
     console.log('set lastMasseges:', JSON.stringify(LmData));
   } catch (error) {
@@ -186,7 +184,7 @@ const setlastMasseges = async (LmData) => {
 
 const setlastMails = async (LmailData) => {
   try {
-    await AsyncStorage.setItem('lastMails', JSON.stringify(LmailData)); //שמירת נתוני התיקייה באחסון המקומי, ממתין לסיום השמירה לפני שממשיך
+    await AsyncStorage.setItem('lastMails', JSON.stringify(LmailData)); 
     setlastMailsState(LmailData);
     console.log('set lastMails:', JSON.stringify(LmailData));
   } catch (error) {

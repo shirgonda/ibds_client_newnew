@@ -84,7 +84,6 @@ export default function PersonalArea({ navigation }) {
     }
     else {
         setCurrentUser('');
-        console.log('alerts',alerts)
         console.log('delete successful:', result);
         navigation.navigate('login');
     }
@@ -384,41 +383,41 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     position: 'relative',
     backgroundColor: 'white', 
-    height:'100%', 
+    height:'100%'
   },
   label:{
     top:300,
     width:170,
     textAlign:'center',
     fontSize:16,
-    color:'#50436E',
+    color:'#50436E'
   },
   inputLabel6: {
     textAlign: 'right',
-    fontWeight: 'bold',
-},
-inputText: {
-  borderColor:'white',
-  borderBottomWidth: 2,
-  borderBottomColor: '#E6E4EF',
-  borderRadius:0, 
-  paddingLeft:0,
-  marginRight:25,
-  width:'100%',
-  textAlign:'right',
-  marginTop:10,
-},
+    fontWeight: 'bold'
+  },
+  inputText: {
+    borderColor:'white',
+    borderBottomWidth: 2,
+    borderBottomColor: '#E6E4EF',
+    borderRadius:0, 
+    paddingLeft:0,
+    marginRight:25,
+    width:'100%',
+    textAlign:'right',
+    marginTop:10
+  },
   ScrollViewcontainer:{
     alignItems: 'center',
     direction: 'rtl',
-   height:'115%', 
+    height:'115%'
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   twoInRow: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 10
   },
   editBtn: {
     left:220
@@ -429,43 +428,43 @@ inputText: {
     fontSize: 15,
     borderTopWidth: 2,
     borderTopColor: '#E6E4EF',
-    textAlign: 'right',
+    textAlign: 'right'
   },
   inputLabel: {
     fontWeight: 'bold',
     color: '#413459',
     fontSize: 18,
     position: 'absolute',
-    top: 10,
+    top: 10
   },
   specialInput: {
-    marginTop: 40,
+    marginTop: 40
   },
   lowerBtns: {
     alignItems: 'right',
     width: '100%',
     marginTop:10,
-    position:'relative',
+    position:'relative'
   },
   deletBtn: {
-    color: '#9F0405',
+    color: '#9F0405'
   },
   SelectListBoxs:{
     flexDirection: 'row',
-    marginTop:5,
+    marginTop:5
 },
-ArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:25,
-  top:9,
-},
-DateArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:15,
-  top:9,
-},
+  ArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:25,
+    top:9
+  },
+  DateArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:15,
+    top:9
+  }
 });

@@ -1,5 +1,5 @@
-import React,{useState,useCallback} from 'react';
-import { StyleSheet, View, Text,ScrollView } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
@@ -14,7 +14,7 @@ export default function MyFriends({navigation}) {
   const [friends, setfriends] = useState([]);
   var pageheight=(friends.length / 3) * 200 +300;
 
-  useFocusEffect( //טעינת ההתראות כאשר חוזרים לדף
+  useFocusEffect(
     useCallback(() => {
       LoadFriends();
     }, [imagePaths])
@@ -93,37 +93,37 @@ export default function MyFriends({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flexGrow: 1,
-        position:'relative',
-        backgroundColor:'white',
-    },
-    label:{
-      top: 300,
-        textAlign: 'center',
-        fontSize: 16,
-        color: '#50436E',
-    },
-    scrollViewContent: {
-      flexGrow: 1,
-      paddingHorizontal: 20,
-    },
-      FriendsListWrapper: {
-        alignItems: 'center',
-        marginLeft: 30,
-      },
-      friendsWrapperContainer: {
-        width: '100%',
-      },
-      friendLabel: {
-        textAlign: 'center',
-        width: 95,
-        marginTop: 10,
-        color: '#50436E',
-      },
-      friendsContainer: {
-        flexDirection: 'row-reverse',
-        justifyContent: 'flex-start',
-        padding: 10,
-      },
+  container:{
+    flexGrow: 1,
+    position:'relative',
+    backgroundColor:'white'
+  },
+  label:{
+    top: 300,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E'
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20
+  },
+  FriendsListWrapper: {
+    alignItems: 'center',
+    marginLeft: 30
+  },
+  friendsWrapperContainer: {
+    width: '100%'
+  },
+  friendLabel: {
+    textAlign: 'center',
+    width: 95,
+    marginTop: 10,
+    color: '#50436E'
+  },
+  friendsContainer: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-start',
+    padding: 10
+  }
 });

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Text, ScrollView, Alert,Linking } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Alert, Linking } from 'react-native';
 import { Card } from 'react-native-paper';
 import AppButton from '../components/buttons';
 import AppFooter from '../components/Footer';
@@ -62,44 +62,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   scrollView: {
     flex: 1,
-    width: '100%',
+    width: '100%'
   },
   scrollViewContent: {
     alignItems: 'center',
-    paddingBottom: 100,
+    paddingBottom: 100
   },
   card: {
     width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 20
   },
   cardImage: {
-    width: 385,
+    width: 385
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(72,57,98,0.3)',
     height: 195,
-    borderRadius: 10,
+    borderRadius: 10
   },
   cardHeader: {
     marginTop: 10,
     fontSize: 25,
     color: '#50436E',
     fontWeight: 'bold',
-    textAlign: 'right',
+    textAlign: 'right'
   },
   cardBody: {
-     marginTop: 30,
+     marginTop: 30
   },
   cardBodyText: {
     fontSize: 16,
     color: '#50436E',
-    textAlign: 'right',
-  },
+    textAlign: 'right'
+  }
 });

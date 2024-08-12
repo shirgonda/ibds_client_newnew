@@ -21,7 +21,7 @@ export default function Calendar({ navigation }) {
   const monthNames = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
   const chosenDate = CurrentDayShow + ' ' + monthNames[CurrentMonthShow - 1] + ' ' + CurrentYearShow;
 
-  useFocusEffect( //טעינת ההתראות כאשר חוזרים לדף
+  useFocusEffect( //טעינת האירועים כאשר חוזרים לדף
     useCallback(() => {
       LoadEvents();
     }, [CurrentDayShow, CurrentMonthShow, CurrentYearShow])
@@ -148,9 +148,9 @@ export default function Calendar({ navigation }) {
               <View style={styles.singleEvent}>
                 <View style={styles.singleEventRow1}>
                   <Image style={styles.locationIcon} source={imagePaths['location']} />
-                  <Text style={styles.eventHeader}>{event.name}</Text>
+                  <Text style={styles.eventHeader} numberOfLines={1} ellipsizeMode="tail">{event.name}</Text>
                 </View>
-                <Text style={styles.eventText}>{event.location}</Text>
+                <Text style={styles.eventText} numberOfLines={1} ellipsizeMode="tail">{event.location}</Text>
                 <Text style={styles.eventButtomLine}>__________________________________________________</Text>
               </View>
             </TouchableOpacity>
@@ -167,31 +167,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   Showevents: {
     direction: 'rtl',
-    width: '89%',
+    width: '89%'
   },
   MonthBoxs: {
     direction: 'rtl',
-    width: '89%',
+    width: '89%'
   },
   weekDaysText: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   weekday: {
     margin: 23,
     marginBottom: 10,
-    color: '#50436E',
+    color: '#50436E'
   },
   today: {
     color: 'white',
     textAlign: 'center',
     backgroundColor: '#A7A4ED',
     height: 15,
-    width: 15,
+    width: 15
   },
   dayBox: {
     backgroundColor: '#664E9F',
@@ -199,11 +199,11 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 8,
     margin: 7,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   emptydayBox: {
     width: 40,
-    margin: 7,
+    margin: 7
   },
   currentDayBox: {
     backgroundColor: '#A7A4ED',
@@ -211,83 +211,85 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 8,
     margin: 7,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   selectedDayBox: {
     backgroundColor: '#E6E4EF',
     height: 30,
     width: 40,
     borderRadius: 8,
-    margin: 7,
+    margin: 7
   },
   dayBoxText: {
     color: 'white',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   eventSign: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
     marginTop: -3,
-    marginLeft: 2,
+    marginLeft: 2
   },
   monthView: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   monthView5: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   MonthBoxsHeader: {
     flexDirection: 'row',
     marginTop: 50,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   monthHeader: {
     color: '#50436E',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 22,
+    fontSize: 22
   },
   ArrowIcons: {
     height: 17,
     width: 10,
     marginTop: 5,
     marginLeft: 150,
-    marginRight: 150,
+    marginRight: 150
   },
   lowerheader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 45,
+    marginTop: 45
   },
   monthLowerHeader: {
     color: '#50436E',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 16
   },
   plusMImage: {
     height: 16,
     width: 16,
-    marginTop: 2,
+    marginTop: 2
   },
   eventsList: {
-    height: '30%',
+    height: '30%'
   },
   singleEvent: {
     height: 46,
-    marginTop: 15,
+    marginTop: 15
   },
   singleEventRow1: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   locationIcon: {
     height: 32.71,
-    width: 23.59,
+    width: 23.59
   },
   eventHeader: {
     color: "#50436E",
     fontSize: 17,
     marginLeft: 10,
+    width:300,
+    textAlign:'left'
   },
   eventText: {
     color: "#50436E",
@@ -295,11 +297,12 @@ const styles = StyleSheet.create({
     marginTop: -10,
     left: '10%',
     textAlign: 'left',
+    width:300
   },
   eventButtomLine: {
     color: '#E6E4EF',
     marginTop: 30,
     position: 'absolute',
-    width: '100%',
+    width: '100%'
   }
 });

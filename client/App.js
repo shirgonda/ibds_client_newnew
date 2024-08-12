@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
-import { StyleSheet,Alert } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet,Alert,LogBox } from "react-native";
 import Home from "./pages/Home";
 import LogIn from "./pages/LogIn";
 //import ResatPassword from "./pages/ResatPassword";
@@ -34,8 +34,8 @@ import PushNotifications from "./pages/PushNotifications";
 import * as Notifications from "expo-notifications";
 import RegisterForPushNotificationsAsync from "./pages/PushNotifications";
 import { PostOneValue } from './api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
+LogBox.ignoreAllLogs();
 const Stack = createStackNavigator();
 
 Notifications.setNotificationHandler({ 
@@ -60,15 +60,14 @@ var mailsArr=[];
       var firstMail=notification.request.content.data.randNum+1;
       if(firstMail==2){
         var notAddToArray=false;
-    mailsArr.forEach((m) => {
-      if(m.mailid==MailsToSend.calendarEventId){
-        notAddToArray=true;
-      }
-    });
-  if(!notAddToArray){
-        // await PostMail(MailsToSend);
-        PostMail(MailsToSend);
-  }
+        mailsArr.forEach((m) => {
+           if(m.mailid==MailsToSend.calendarEventId){
+            notAddToArray=true;
+          }
+        });
+        if(!notAddToArray){
+          PostMail(MailsToSend);
+        }
       }
     });
 
@@ -79,16 +78,6 @@ var mailsArr=[];
 
 
   async function PostMail(mail){
-  //   var notAddToArray=false;
-  //   mailsArr.forEach((m) => {
-  //     if(m.mailid==mail.calendarEventId){
-  //       notAddToArray=true;
-  //     }
-  //   });
-  // if(!notAddToArray){
-
-
-    console.log('PostMail111111111111',mail);
     let result= await PostOneValue(`api/Mail`, mail);
     if(!result){
         Alert.alert('הוספת אימייל נכשלה');
@@ -99,11 +88,9 @@ var mailsArr=[];
       mailsArr.push(mail);
     }
     mailsArr.push(mail);
- // }
 }
 
   return (
-    // <UserProvider initialMailsToSend={initialMailsToSend}>
     <UserProvider>
       <NavigationContainer>
         <Stack.Navigator
@@ -183,9 +170,21 @@ var mailsArr=[];
             component={MoreInfo}
             options={{ title: " " }}
           />
-          <Stack.Screen name="Chat" component={Chat} options={{ title: " " }} />
-          <Stack.Screen name="IntoChat" component={IntoChat} options={{ title: " " }} />
-          <Stack.Screen name="Mail" component={Mail} options={{ title: " " }} />
+          <Stack.Screen 
+            name="Chat" 
+            component={Chat} 
+            options={{ title: " " }} 
+          />
+          <Stack.Screen 
+            name="IntoChat" 
+            component={IntoChat} 
+            options={{ title: " " }} 
+          />
+          <Stack.Screen 
+            name="Mail" 
+            component={Mail} 
+            options={{ title: " " }} 
+          />
           <Stack.Screen
             name="Forum1"
             component={Forum1}

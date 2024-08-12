@@ -20,8 +20,7 @@ const AppHeader=({ //הכותרת הראשית של דפי האפליקציה
    showNewFolder,
    addFile,
    fromChatPage,
-   openFriendsModel,
-   setModalVisible
+   openFriendsModel
 })=>{
   const { visitor, imagePaths } = useUser(); //UserContext מספק גישה לנתיבי התמונות שבקומפוננטה
 
@@ -90,46 +89,45 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position:'fixed',
         backgroundColor:'white',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     goback:{
       height:17,
       width:10,
       marginLeft: 15,
-      marginTop:10,
+      marginTop:10
     },
     header:{
         flexDirection: 'row',
         padding:10, 
         alignItems: 'center',
-        marginTop: 40, 
+        marginTop: 40
     },
       headerContent: {
-        flex: 1,
+        flex: 1
     },
       headerText: {
         textAlign: 'right',
-        //fontSize: 27,
         fontWeight: 'bold',
-        color:'#50436E',
+        color:'#50436E'
       },
       headerIcon: {
-        right:6,
+        right:6
       },
       documentHeaderIcon:{
         height:33,
-        width:35,
+        width:35
       },
       folderHeaderIcon:{
         height:25,
         width:38,
-        marginRight:10,
+        marginRight:10
       },
       chatHeaderIcon:{
         height:20,
         width:20,
         marginLeft:20,
-        marginTop:5,
+        marginTop:5
       },
       headerButtomLine:{
         fontSize:15,
@@ -137,9 +135,9 @@ const styles = StyleSheet.create({
         marginTop:'18.5%',
         textAlign:'center',
         position:'absolute',
-        width:'100%',
+        width:'100%'
       },
       twoInRow:{
-        flexDirection:'row',
-      },
+        flexDirection:'row'
+      }
 })

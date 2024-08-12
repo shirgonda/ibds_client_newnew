@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Delete,Get } from '../api';
@@ -109,15 +109,15 @@ const styles = StyleSheet.create({
         right:45,
         top:75,
         width:'65%',
-        zIndex: 10,
+        zIndex: 10
     },
     button: {
         padding: 1,
         borderRadius: 5,
-        width:'100%',
+        width:'100%'
     },
     buttonText: {
         color: '#654E9E',
-        textAlign:'center',
+        textAlign:'center'
     },
 });

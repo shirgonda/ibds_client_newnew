@@ -16,7 +16,7 @@ export default function Chat({ navigation }) {
   let chatInterval= null;
 
   useEffect(() => {
-    chatInterval=setInterval(()=>{LoadChats()},1000*300)//לשנות ל5
+    chatInterval=setInterval(()=>{LoadChats()},1000*300)//טעינה מחדש כל כמות שניות מוגדרת
     return ()=>{
         clearInterval(chatInterval);
     }
@@ -57,7 +57,6 @@ export default function Chat({ navigation }) {
 
   const openFriendsModel = () => {
     setModalVisible(true);
-    console.log('modalVisible', modalVisible)
     LoadFriends();
   };
 
@@ -163,13 +162,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   label:{
     top: 300,
       textAlign: 'center',
       fontSize: 16,
-      color: '#50436E',
+      color: '#50436E'
   },
   modalLabel:{
     height: 100,
@@ -177,30 +176,30 @@ const styles = StyleSheet.create({
     top:100,
     textAlign: 'center',
     fontSize: 16,
-    color: '#50436E',
+    color: '#50436E'
   },
   scrollViewWrapper1: {
-    height: 750,
+    height: 750
   },
   chatsList: {
-    direction: 'rtl',
+    direction: 'rtl'
   },
   singleChat: {
     height: 46,
     marginTop: 30,
-    width: '85%',
+    width: '85%'
   },
   singleChatRow1: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   UserIcon: {
     height: 32.71,
-    width: 23.59,
+    width: 23.59
   },
   ChatHeader: {
     color: "#50436E",
     fontSize: 17,
-    marginLeft: 10,
+    marginLeft: 10
   },
   ChatText: {
     color: "#776F89",
@@ -208,52 +207,51 @@ const styles = StyleSheet.create({
     marginTop: -20,
     left: '20.5%',
     textAlign: 'left',
-    width: 270,
+    width: 270
   },
   ChatButtomLine: {
     color: '#E6E4EF',
-    width: '120%',
+    width: '120%'
   },
   towInRow: {
     flexDirection: 'row',
     marginTop: 10,
-    width: '85%',
+    width: '85%'
   },
   ChatDate: {
     position: 'absolute',
     textAlign: 'left',
     right: -45,
     fontSize: 13,
-    color: "#776F89",
+    color: "#776F89"
   },
-
   scrollViewWrapper: {
-    height: 300,
+    height: 300
   },
   Modalcontainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   singleRow: {
     height: 100,
-    width: 300,
+    width: 300
   },
   ModalHeader: {
     color: "#50436E",
     fontSize: 17,
     marginLeft: 10,
-    marginTop: 8,
+    marginTop: 8
   },
   ModalButtomLine: {
     color: '#E6E4EF',
-    width: '102%',
+    width: '102%'
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 22
   },
   modalView: {
     margin: 20,
@@ -264,11 +262,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 5
   },
   ModalButton: {
     backgroundColor: '#6D5D9B',
@@ -276,10 +274,10 @@ const styles = StyleSheet.create({
     width: 100,
     padding: 10,
     elevation: 2,
-    marginTop: 10,
+    marginTop: 10
   },
   buttonText: {
     color: 'white',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });

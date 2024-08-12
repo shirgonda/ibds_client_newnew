@@ -45,9 +45,7 @@ export default function AddEventToCalendar({navigation, route}) {
   }, [alert]);
 
     async function scheduleAndCancel(title, trigger,alert) {
-      console.log('mailsToPost000000000000',mailsToPost);
       randNum=0;
-      console.log('randNum000000000000',randNum);
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
           title: title,
@@ -133,7 +131,6 @@ export default function AddEventToCalendar({navigation, route}) {
     }
 
     function sendMail(event){
-      //var convertedDate=new Date(event.year,event.month-1,event.day+1).toISOString();
       var startTime=event.startTime.split('T')[1].split(':');
       var mail={
        userId:CurrentUser.id,
@@ -445,7 +442,7 @@ function loadRepeatEvents(event) {
                     <View style={styles.singlealert}>
                     <View style={styles.singlealertRow1}>
                     <Image style={styles.bellIcon} source={imagePaths['bell']} /> 
-                    <Text style={styles.alertHeader}>{alert.aname}</Text>
+                    <Text style={styles.alertHeader} numberOfLines={1} ellipsizeMode="tail">{alert.aname}</Text>
                     <View style={styles.alertLeftItems}>
                     <Text style={styles.alertTime}>{alert.arepeat}</Text>
                     <Image style={styles.alertArrowIcon} source={imagePaths['leftArrow']} />    
@@ -476,215 +473,217 @@ function loadRepeatEvents(event) {
 }
 
 const styles = StyleSheet.create({
-    container:{
-      alignItems: 'center',
-      flexGrow: 1,
-      position:'relative',
-      backgroundColor:'white',
+  container:{
+    alignItems: 'center',
+    flexGrow: 1,
+    position:'relative',
+    backgroundColor:'white'
   },
-      scrollView: {
-        flex: 1,
-        width: '100%',
-    },
-    scrollViewContent: {
-        alignItems: 'center',
-        paddingBottom:100,
-    },
-      inputContainer:{
-        width:'85%',
-        direction:'rtl',
-        marginTop:20,
-      },
-      monthLowerHeader:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop:45,
-      },
-      monthLowerHeaderText:{
-        color:'#50436E',
-        fontWeight: 'bold',
-        fontSize:16,
-      },
-      twoInRow:{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop:60,
-      },
-    AlertinputRow:{
-      flexDirection: 'row',      
-    },
-    input: {
-        width: 330,
-        height: 40,
-        marginTop:18,
-        borderBottomWidth: 2,
-        borderBottomColor: '#E6E4EF',
-        textAlign:'right',
-    },
-    inputLabel:{
-      color:'#50436E',
-      fontSize:18,
-      width:'100%',
+  scrollView: {
+    flex: 1,
+    width: '100%'
+  },
+  scrollViewContent: {
+    alignItems: 'center',
+    paddingBottom:100
+  },
+  inputContainer:{
+    width:'85%',
+    direction:'rtl',
+    marginTop:20
+  },
+  monthLowerHeader:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop:45
+  },
+  monthLowerHeaderText:{
+    color:'#50436E',
+    fontWeight: 'bold',
+    fontSize:16
+  },
+  twoInRow:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop:60
+  },
+  AlertinputRow:{
+    flexDirection: 'row'    
+  },
+  input: {
+    width: 330,
+    height: 40,
+    marginTop:18,
+    borderBottomWidth: 2,
+    borderBottomColor: '#E6E4EF',
+    textAlign:'right'
+  },
+  inputLabel:{
+    color:'#50436E',
+    fontSize:18,
+    width:'100%'
   },
   inputListLabel: {
     color: '#50436E', 
+    fontSize: 18
+  },
+  RepeatinputListLabel:{
+    color: '#50436E', 
     fontSize: 18,
-},
-RepeatinputListLabel:{
-  color: '#50436E', 
-  fontSize: 18,
-  marginTop:10,
-},
-addAlertBtns:{
+    marginTop:10
+  },
+  addAlertBtns:{
     flexDirection: 'row',
     justifyContent: 'right',
     alignItems: 'center',
-    position:'relative',
+    position:'relative'
   },
   PlusIcon:{
     height:8,
     width:8,
-    left:3,
+    left:3
   },
   alertsList:{
     maxHeight:'19.5%',
-    marginTop:10,
+    marginTop:10
   },
   inputResultLabel:{
     fontSize:15,
     position:'absolute',
     right:55,
-    top:6,
+    top:6
   },
   singlealert:{
     height:46,
-    marginTop:15,
+    marginTop:15
   },
   singlealertRow1:{
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   bellIcon:{
     height:20,
-    width:17,
+    width:17
   },
   alertLeftItems:{
     flexDirection: 'row',
     position:'absolute',
-    right:28,
+    right:28
   },
   alertHeader:{
     color:"#50436E",
     fontSize:18,
     marginLeft:10,
+    width:220,
+    textAlign:'left'
   },
   alertTime:{
     color:"#50436E",
     fontSize:14,
-    marginRight:15,
+    marginRight:15
   },
   alertArrowIcon:{
     height:12,
-    width:7,
+    width:7
   },
-inputListLabel: {
+  inputListLabel: {
     color: '#50436E', 
     fontSize: 18,
-    textAlign:'left',
-},
-twoInRowTime:{
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  marginTop:20,
-},
-TimeInputResult:{
-  position:'absolute',
-  color: '#50436E', 
-  fontSize: 14,
-  right:55,
-  top:6,
-},
-FalseTimeResult:{
-  position:'absolute',
-  color: '#9F0405', 
-  fontSize: 14,
-  right:55,
-  top:6,
-},
-newDateResult:{
-  position:'absolute',
-  color: '#9F0405', 
-  fontSize: 14,
-  right:110,
-  top:6,
-  opacity:0.6,
-},
-TimeButtomLine:{
+    textAlign:'left'
+  },
+  twoInRowTime:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop:20
+  },
+  TimeInputResult:{
+    position:'absolute',
+    color: '#50436E', 
+    fontSize: 14,
+    right:55,
+    top:6
+  },
+  FalseTimeResult:{
+    position:'absolute',
+    color: '#9F0405', 
+    fontSize: 14,
+    right:55,
+    top:6
+  },
+  newDateResult:{
+    position:'absolute',
+    color: '#9F0405', 
+    fontSize: 14,
+    right:110,
+    top:6,
+    opacity:0.6
+  },
+  TimeButtomLine:{
+      color:'#E6E4EF',
+      marginTop:20,
+      fontWeight:'bold'
+  },
+  alertButtomLine:{
     color:'#E6E4EF',
-    marginTop:20,
-    fontWeight:'bold',
-},
-alertButtomLine:{
-  color:'#E6E4EF',
-  fontWeight:'bold',
-},
-TimeContainer1:{
-  position: 'relative',
-},
-TimeArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:25,
-  top:9,
-},
-ArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:4,
-  top:3,
-},
-TimeinputListLabel:{
+    fontWeight:'bold'
+  },
+  TimeContainer1:{
+    position: 'relative'
+  },
+  TimeArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:25,
+    top:9
+  },
+  ArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:4,
+    top:3
+  },
+  TimeinputListLabel:{
     textAlign:'left',
     width:'100%',
     color: '#50436E',
     position: 'absolute',
     fontSize: 18,
     left: 3,
-    top:3,
-},
-    optionsList: {
-      borderWidth: 1,
-      borderColor: '#E6E4EF',
-      borderRadius: 5,
-      maxHeight: 150, 
-      padding: 5,
-    },
-    option: {
-      paddingVertical: 5,
-    },
-    optionText: {
-      color: '#50436E',
-      fontSize: 14.5,
-      textAlign:'left',
-      paddingLeft:5,
-    },
-    SelectListBoxs:{
-      flexDirection: 'row',
-      marginTop:5,
-      width:330,
+    top:3
+  },
+  optionsList: {
+    borderWidth: 1,
+    borderColor: '#E6E4EF',
+    borderRadius: 5,
+    maxHeight: 150, 
+    padding: 5
+  },
+  option: {
+    paddingVertical: 5
+  },
+  optionText: {
+    color: '#50436E',
+    fontSize: 14.5,
+    textAlign:'left',
+    paddingLeft:5
+  },
+  SelectListBoxs:{
+    flexDirection: 'row',
+    marginTop:5,
+    width:330
   },
   SelectListDate:{
     marginTop:20,
     color: '#50436E',
-    fontSize: 15,
+    fontSize: 15
   },
-    DateArrowIcon:{
-      height:13,
-      width:10,
-      position: 'absolute',
-      right:15,
-      top:9,
-    }
+  DateArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:15,
+    top:9
+  }
 });

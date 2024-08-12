@@ -24,8 +24,6 @@ export default function EditAlert({navigation, route}) {
   useEffect(()=>{
     oldAlertName=alert.aname;
     oldAlertRepeat=alert.arepeat;
-    console.log('oldAlertName',oldAlertName);
-    console.log('oldAlertRepeat',oldAlertRepeat);
   },[currentInputIndex])
 
   async function LoadEvents() {
@@ -64,9 +62,9 @@ export default function EditAlert({navigation, route}) {
 
   function updateChildEvents(action){
     for (let i = 0; i < events.length; i++) {
-      if(currentEvent.parentEvent==events[i].eventId){//האבא
+      if(currentEvent.parentEvent==events[i].eventId){//אירוע האבא
         for (let j = 0; j < events.length; j++) {
-          if(events[j].parentEvent==events[i].eventId){//הילדים
+          if(events[j].parentEvent==events[i].eventId){//אירועי הילדים
             for (let x = 0; x < alerts.length; x++) {
               if(events[j].eventId==alerts[x].eventId){ //ההתראות של האבא והילדים
                 if(action=='delete'){
@@ -289,19 +287,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position:'relative',
-    backgroundColor:'white',
+    backgroundColor:'white'
   },
   inputContainer:{
     width:'77%',
     direction:'rtl',
-    marginTop:20,
+    marginTop:20
   },
   twoInRow:{
     flexDirection: 'row',
-    marginTop:10,
+    marginTop:10
   },
   editBtn:{
-    left:273,
+    left:273
   },
   input: {
     width: 330,
@@ -309,78 +307,78 @@ const styles = StyleSheet.create({
     fontSize: 15,
     borderTopWidth: 2,
     borderTopColor: '#E6E4EF',
-    textAlign:'right',
+    textAlign:'right'
   },
   inputLabel:{
     fontWeight:'bold',
     color:'#413459',
     fontSize:18,
     position:'absolute',
-    top:10,
+    top:10
   },
   lowerBtns:{
     direction:'rtl',
     alignItems: 'right',
     marginTop:45,
-    width:'77%',
+    width:'77%'
   },
   deletBtn:{
-    color:'#9F0405',
+    color:'#9F0405'
   },
   optionsList: {
     borderWidth: 1,
     borderColor: '#E6E4EF',
     borderRadius: 5,
     maxHeight: 150, 
-    padding: 5,
+    padding: 5
   },
   option: {
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   optionText: {
     color: '#50436E',
     fontSize: 14.5,
     textAlign:'left',
-    paddingLeft:5,
+    paddingLeft:5
   },
   twoInRowTime:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop:20,
+    marginTop:20
   },
   TimeInputResult:{
     textAlign:'left',
-      width:'100%',
-      color: '#50436E',
-      position: 'absolute',
-      fontSize: 15,
-      left: 3,
-      top:3,
+    width:'100%',
+    color: '#50436E',
+    position: 'absolute',
+    fontSize: 15,
+    left: 3,
+    top:3
   },
   TimeButtomLine:{
-      color:'#E6E4EF',
-      marginTop:20,
-      fontWeight:'bold',
+    color:'#E6E4EF',
+    marginTop:20,
+    fontWeight:'bold'
   },
   TimeContainer1:{
     position: 'relative',
-    direction:'rtl',
+    direction:'rtl'
   },
   TimeArrowIcon:{
     height:13,
     width:10,
     position: 'absolute',
     right:25,
-    top:9,
+    top:9
   },
   TimeinputListLabel:{
-      textAlign:'left',
-      width:'100%',
-      color: '#50436E',
-      position: 'absolute',
-      fontSize: 18,
-      left: 3,
-      top:3,
+    textAlign:'left',
+    width:'100%',
+    color: '#50436E',
+    position: 'absolute',
+    fontSize: 18,
+    left: 3,
+    top:3
   }
 });

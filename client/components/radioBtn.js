@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         direction:'rtl',
         marginRight:95,
-        marginTop:5,
+        marginTop:5
     },
     outerCircle: {
         height: 14,
@@ -34,16 +34,16 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 7,
+        marginRight: 7
     },
     innerCircle: {
         height: 8,
         width: 8,
         borderRadius: 6,
-        backgroundColor: 'black',
+        backgroundColor: 'black'
     },
     selectedOuterCircle: {
-        borderColor: 'black',
+        borderColor: 'black'
     }
 });
 

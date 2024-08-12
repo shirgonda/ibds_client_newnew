@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         height: 18,
         width: 18,
         left:1,
-        marginTop: 0,
+        marginTop: 0
     },
     editPancilDiv:{
         backgroundColor: '#50436E',
@@ -111,6 +111,6 @@ const styles = StyleSheet.create({
         left:50,
         alignItems:'center',
         justifyContent: 'center',
-        marginTop: -10,
+        marginTop: -10
     }
 })

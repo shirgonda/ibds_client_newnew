@@ -32,7 +32,6 @@ export default function RightsList({navigation,route}) { //שליחת המערך
       setrightsHeight(height);
       console.log('Rights successful:', result);
     }     
-    console.log('result',result);
   }
   
     return(
@@ -64,36 +63,36 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexGrow: 1,
     backgroundColor:'white', 
-    height:'100%',
-},
+    height:'100%'
+  },
   ScrollViewcontainer:{
     width:'90%',
     position: 'relative',
     flexGrow: 1,
     backgroundColor:'white',
     marginTop:20,
-    paddingLeft:50,  
-},
-card:{
-  width:'100%',
-  marginTop:30,
-},
-cardHeader:{
-  marginTop:10,
-  fontSize:18,
-  color:'#50436E',
-  fontWeight:'bold',
-  textAlign:'right',
-},
-cardBodyText:{
-  fontSize:16,
-  color:'#50436E',
-  textAlign:'right',
-},
-loadingIndicator: {
-  positiion:'absolute',
-  top:'40%',
-  justifyContent: 'center',
-  alignItems: 'center',
-}
+    paddingLeft:50, 
+  },
+  card:{
+    width:'100%',
+    marginTop:30
+  },
+  cardHeader:{
+    marginTop:10,
+    fontSize:18,
+    color:'#50436E',
+    fontWeight:'bold',
+    textAlign:'right'
+  },
+  cardBodyText:{
+    fontSize:16,
+    color:'#50436E',
+    textAlign:'right'
+  },
+  loadingIndicator: {
+    positiion:'absolute',
+    top:'40%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

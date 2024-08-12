@@ -71,15 +71,15 @@ const styles = StyleSheet.create({
         position:'absolute',
         right:45,
         top:75,
-        zIndex: 10,
+        zIndex: 10
     },
     button: {
         padding: 5,
         borderRadius: 5,
-        width:'100%',
+        width:'100%'
     },
     buttonText: {
         color: '#654E9E',
-        textAlign:'center',
-    },
+        textAlign:'center'
+    }
 });

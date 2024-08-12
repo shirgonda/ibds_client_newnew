@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image,Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import AppMenu from './Menu';
 import { useUser } from '../components/UserContext';
 import { Get } from '../api';
@@ -17,7 +17,7 @@ const AppFooter = ({
   let Interval= null;
 
   useEffect(() => {
-    Interval=setInterval(()=>{LoadChats(),LoadMails()},1000*300)/// לשנות ל3 שניות במקום 60
+    Interval=setInterval(()=>{LoadChats(),LoadMails()},1000*200)//טעינה מחדש כל כמות שניות מוגדרת
     return ()=>{
         clearInterval(Interval);
     }
@@ -138,50 +138,50 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 26,
     justifyContent: 'center',
-    zIndex: 10,
+    zIndex: 10
   },
   footerIcons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   footercard: {
     bottom: 6,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   footerText: {
     color: '#50436E',
     fontSize: 12,
     top: 5,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   footerIconMail: {
     height: 26,
-    width: 39,
+    width: 39
   },
   footerIconMenu: {
     height: 22,
-    width: 27,
+    width: 27
 
   },
   footerIconCalendar: {
     height: 29,
-    width: 30,
+    width: 30
   },
   footerIconHome: {
     height: 32,
-    width: 36,
+    width: 36
   },
   footerIconForum: {
     height: 33,
-    width: 38,
+    width: 38
   },
   footerIconChat: {
     height: 30,
-    width: 32,
+    width: 32
   },
   twoInRow:{
-    flexDirection:'row',
+    flexDirection:'row'
   },
   redNoteChat:{
     backgroundColor:'#D12C2C',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderRadius:20,
     position:'absolute',
     right:-6,
-    top:-3,
+    top:-3
   },
   redNoteMail:{
     backgroundColor:'#D12C2C',
@@ -199,13 +199,13 @@ const styles = StyleSheet.create({
     borderRadius:20,
     position:'absolute',
     right:-6,
-    top:-6,
+    top:-6
   },
   redNoteText:{
     color:'white',
     textAlign:'center',
     justifyContent:'center',
     alignItems:'center',
-    fontSize:9,
+    fontSize:9
   }
 })

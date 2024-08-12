@@ -14,7 +14,6 @@ import { useFocusEffect } from '@react-navigation/native';
 export default function FolderPage({navigation,route}) {
   const {imagePaths,CurrentUser,currentFolder } = useUser();
   const { setfileModalVisible,setfolderModalVisible } = route.params;
-  const [file, setFile] = useState(null);
   const [filesArr, setfilesArr] = useState([]);
   const [emptyFolder, setemptyFolder] = useState(filesArr.length>0?false:true);
 
@@ -38,8 +37,6 @@ export default function FolderPage({navigation,route}) {
 
 
   async function LoadFiles() {
-    console.log('currentFolder',currentFolder);
-    console.log('file',file);
     let result = await Get(`api/Documents/file/${currentFolder.filesId}`, currentFolder.filesId);
     if (!result) {
       Alert.alert('טעינת קבצים נכשלה');
@@ -61,13 +58,11 @@ export default function FolderPage({navigation,route}) {
 }
 
 async function deleteCurrentFile(file){
-  console.log('file22',file);
   let result= await Delete(`api/Documents/${file.documentId}`, file.documentId);
   if(!result){
       Alert.alert('מחיקה נכשלה');
   }
   else {
-      setFile('');
       LoadFiles();
       console.log('delete successful:', result);
   }
@@ -131,7 +126,6 @@ function deleteFile(file){
 
   const openPDF = async (fileUri) => {
     const url = fileUri; 
-    console.log('Attempting to open URI:', fileUri);
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
@@ -202,7 +196,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   lowerHedear:{
     flexDirection:'row',
@@ -215,24 +209,24 @@ const styles = StyleSheet.create({
     fontSize:20,
     color:'#50436E',
     textAlign:'right',
-    width:'80%',
+    width:'80%'
   },
   lowerHedearImg:{
     height:55,
     width:59,
-    marginLeft:50,
+    marginLeft:50
   },
   lowerHedearLine:{
     fontSize:15,
     color:'#E6E4EF',
     textAlign:'right',
     position:'relative',
-    width:'90%',
+    width:'90%'
   },
   emptyFolderText:{
     top:100,
     textAlign:'center',
-    color:'#50436E',
+    color:'#50436E'
   },
   file:{
     textAlign:'center',
@@ -240,29 +234,28 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center'
   },
-
   singleFile: {
     height: 46,
     marginTop: 15,
     direction:'rtl',
     right:15,
     marginBottom:10,
-    width:'100%', 
+    width:'100%'
   },
   singleFileRow: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   FileIcon: {
     height: 50,
     width: 45,
-    marginLeft:30,
+    marginLeft:30
   },
   FileHeader: {
     color: "#50436E",
     fontSize: 17,
     marginLeft: 10,
     width:170,
-    textAlign:'left',
+    textAlign:'left'
   },
   FileText: {
     color: "#50436E",
@@ -270,18 +263,18 @@ const styles = StyleSheet.create({
     marginTop: -25,
     left: '10%',
     textAlign: 'left',
-    marginLeft:45,
+    marginLeft:45
   },
   shareFileIcon:{
     width:16,
     height:21,
     marginLeft:80,
-    marginTop:10,
+    marginTop:10
   },
   deleteFileIcon:{
     width:16,
     height:21,
     marginLeft:20,
-    marginTop:10,
-  },
+    marginTop:10
+  }
 });

@@ -11,8 +11,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { Put, Delete, Get, PostCalendarItem } from '../api';
 
 export default function EditEvent({navigation,route}) {
-  const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,event,chosenDate,previousRouteName} = route.params;
-  console.log('event',event)
+  const { CurrentDayShow, CurrentMonthShow, CurrentYearShow,event,previousRouteName} = route.params;
   const {imagePaths,CurrentUser} = useUser();
   const [events, setEvents] = useState([]);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -40,7 +39,6 @@ export default function EditEvent({navigation,route}) {
   useFocusEffect(
     useCallback(() => {
       LoadAlerts();
-      console.log('alerts',alerts)
     }, [CurrentDayShow, CurrentMonthShow, CurrentYearShow])
   );
 
@@ -125,8 +123,6 @@ export default function EditEvent({navigation,route}) {
     else {
         if(result.parentEvent==0){
           var childEvent={...event,parentEvent:result.eventId}
-          console.log('childEvent',childEvent);
-          console.log('result.eventId',result.eventId);
           loadRepeatEvents(childEvent);
         }
         console.log('Add event successful:', result);
@@ -182,7 +178,6 @@ export default function EditEvent({navigation,route}) {
         const convertedDate=new Date(newEvent.year,newEvent.month-1,newEvent.day+1)
         var updateStartTime = `${convertedDate.toISOString().split('T')[0]}T${StartTime}:00`;
         eventToAdd={...event,startTime:updateStartTime};
-        console.log('eventToAdd',eventToAdd)
         addEvent(eventToAdd);
     }
 }
@@ -391,8 +386,6 @@ const fields = [
       const splitedStartTime=StartTime.split(':');
       const StartTimeHour=parseInt(splitedStartTime[0]);
       const StartTimeMinutes=parseInt(splitedStartTime[1]);
-      console.log('StartTime',StartTime);
-      console.log('endTime',endTime);
       if((EndTimeHour == 0)){
         return true;
       }
@@ -665,30 +658,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position:'relative',
-    backgroundColor:'white',
+    backgroundColor:'white'
   },
   scrollView: {
     flex: 1,
-    width: '100%',
-},
-scrollViewContent: {
-  alignItems: 'center',
-  paddingBottom:100,
-},
+    width: '100%'
+  },
+  scrollViewContent: {
+    alignItems: 'center',
+    paddingBottom:100
+  },
   inputContainer:{
     width:'77%',
-    direction:'rtl',
+    direction:'rtl'
   },
   twoInRow:{
     flexDirection: 'row',
-    marginTop:10,
+    marginTop:10
   },
   editBtn:{
     color:'#50436E',
-    left:273,
+    left:273
   },
   inputs:{
-    marginTop:50,
+    marginTop:50
   },
   input: {
     width: 330,
@@ -696,112 +689,112 @@ scrollViewContent: {
     fontSize: 15,
     borderTopWidth: 2,
     borderTopColor: '#E6E4EF',
-    textAlign:'right',
+    textAlign:'right'
   },
   inputLabel:{
     fontWeight:'bold',
     color:'#413459',
     fontSize:18,
     position:'absolute',
-    top:10,
+    top:10
   },
   SelectListBoxs:{
     flexDirection: 'row',
     marginTop:5,
-    width:330,
-},
-SelectListDate:{
-  fontWeight:'bold',
-  marginTop:15,
-},
+    width:330
+  },
+  SelectListDate:{
+    fontWeight:'bold',
+    marginTop:15
+  },
   AlertLabel:{
     color:'#413459',
     fontSize:18,
     position:'absolute',
     top:10,
-    fontWeight:'bold',
+    fontWeight:'bold'
   },
   specialInput:{
-    marginTop:40,
+    marginTop:40
   },
   lowerBtns:{
     position:'relative',
     direction:'rtl',
     alignItems: 'left',
-    marginTop:45,
+    marginTop:45
   },
   deletBtn:{
-    color:'#9F0405',
+    color:'#9F0405'
   },
   alertsList:{
     direction:'rtl',
     maxHeight:'19.5%',
     position:'relative',
-    top:-30,
+    top:-30
   },
   singlealert:{
     height:46,
-    marginTop:15,
+    marginTop:15
   },
   singlealertRow1:{
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   bellIcon:{
     height:19,
-    width:16,
+    width:16
   },
   alertHeader:{
     color:"#50436E",
     fontSize: 14.5,
-    marginLeft:10,
+    marginLeft:10
   },
   alertLeftItems:{
     flexDirection: 'row',
     position:'absolute',
-    right:10,
+    right:10
   },
   alertTime:{
     color:"#50436E",
     fontSize:12,
-    marginRight:15,
+    marginRight:15
   },
   arrowIcon:{
     height:13,
     width:8,
-    marginTop:3,
+    marginTop:3
   },
   alertButtomLine:{
     color:'#E6E4EF',
     marginTop:15,
     position:'absolute',
-    width:'100%',
+    width:'100%'
   },
   alertText:{
     color:"#50436E",
     fontSize:13,
     left:'10%',
     textAlign:'left',
-    marginTop:3,
+    marginTop:3
   },
   alertArrowIcon:{
     height:12,
-    width:7,
+    width:7
   },
   addAlertBtns:{
     flexDirection: 'row',
     justifyContent: 'right',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   PlusIcon:{
     height:8,
     width:8,
-    left:3,
+    left:3
   },
   twoInRowTime:{
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop:20,
+    marginTop:20
   },
   TimeInputResult:{
     textAlign:'left',
@@ -810,23 +803,23 @@ SelectListDate:{
       position: 'absolute',
       fontSize: 15,
       left: 3,
-      top:3,
+      top:3
   },
   TimeButtomLine:{
-      color:'#E6E4EF',
-      marginTop:20,
-      fontWeight:'bold',
+    color:'#E6E4EF',
+    marginTop:20,
+    fontWeight:'bold'
   },
   TimeContainer1:{
     position: 'relative',
-    direction:'rtl',
+    direction:'rtl'
   },
   TimeArrowIcon:{
     height:13,
     width:10,
     position: 'absolute',
     right:25,
-    top:9,
+    top:9
   },
   TimeinputListLabel:{
       textAlign:'left',
@@ -835,29 +828,29 @@ SelectListDate:{
       position: 'absolute',
       fontSize: 18,
       left: 3,
-      top:3,
+      top:3
   },
   optionsList: {
     borderWidth: 1,
     borderColor: '#E6E4EF',
     borderRadius: 5,
     maxHeight: 150, 
-    padding: 5,
+    padding: 5
   },
   option: {
-    paddingVertical: 5,
+    paddingVertical: 5
   },
   optionText: {
     color: '#50436E',
     fontSize: 14.5,
     textAlign:'left',
-    paddingLeft:5,
+    paddingLeft:5
   },
   DateArrowIcon:{
     height:13,
     width:10,
     position: 'absolute',
     right:15,
-    top:9,
+    top:9
   }
 });

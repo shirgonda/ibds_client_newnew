@@ -12,7 +12,7 @@ import EditFolderModel from '../components/EditFolderModel';
 import FileModel from '../components/FileModel';
 import * as DocumentPicker from 'expo-document-picker';
 import * as Linking from 'expo-linking';
-import { Get,Post,Put } from '../api';
+import { Get, Post, Put } from '../api';
 import * as FileSystem from 'expo-file-system';
 
 export default function MyDocuments({ navigation }) {
@@ -21,7 +21,6 @@ export default function MyDocuments({ navigation }) {
   const [FolderExist, setFolderExist] = useState(false);
   const [newFolderAdded, setnewFolderAdded] = useState(false);
   const [newFolderSaved, setnewFolderSaved] = useState(false);
-  const [FilesExist, setFilesExist] = useState(false);
   const [folderName, setfolderName] = useState('שם התיקייה');
   const [OldFolderName, setOldFolderName] = useState('');
   const [folderModalVisible, setfolderModalVisible] = useState(false);
@@ -118,11 +117,7 @@ export default function MyDocuments({ navigation }) {
     });
   
     if (result.type !== 'cancel' && result.assets && result.assets.length > 0) {
-      setFilesExist(true);
-  
-      var today = new Date();
-      console.log('today', today);
-  
+      var today = new Date(); 
       var fileName = result.assets[0].name.split('.pdf');
       var convertName = fileName[0];
       var documentId = 0;
@@ -133,9 +128,6 @@ export default function MyDocuments({ navigation }) {
         const documentPath = await FileSystem.readAsStringAsync(fileURI, {
           encoding: FileSystem.EncodingType.Base64
         });
-  
-        console.log('documentPath', documentPath);
-  
         var newFile = { 
           userId: CurrentUser.id,
           documentPath, 
@@ -212,10 +204,6 @@ export default function MyDocuments({ navigation }) {
       if (folders == []) {
         setFolderExist(false);
       }
-      console.log('folders', folders);
-      console.log('FolderExist', FolderExist);
-      console.log('newFolderSaved', newFolderSaved);
-      console.log('changeFolderName', changeFolderName);
     }, [folderName])
   );
 
@@ -300,7 +288,7 @@ export default function MyDocuments({ navigation }) {
           <View style={styles.centerContent}>
             <Text style={styles.label}>עדיין לא נפתחו תיקיות או הועלו מסמכים</Text>
             <View style={styles.twoInRowAvatar}>
-              <TouchableOpacity onPress={async () => { await pickPdf(), setFilesExist(true) }}>
+              <TouchableOpacity onPress={async () => await pickPdf()}>
                 <UserAvatar marginRight={60} size={100} iconHeight={60} iconWidth={64} borderRad={0} source={imagePaths['documentPlus']} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => showNewFolder()}>
@@ -330,35 +318,35 @@ export default function MyDocuments({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   scrollViewContent: {
     flexGrow: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   label: {
     marginTop: 180,
     textAlign: 'center',
-    color: '#50436E',
+    color: '#50436E'
   },
   twoInRowAvatar: {
     marginTop: 140,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   folderWrapperContainer: {
-    width: '100%',
+    width: '100%'
   },
   folderContainer: {
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start',
-    padding: 10,
+    padding: 10
   },
   folderLabel: {
     textAlign: 'center',
     width: 95,
     marginTop: 10,
-    color: '#50436E',
+    color: '#50436E'
   },
   inputText: {
     textAlign: 'right',
@@ -366,60 +354,60 @@ const styles = StyleSheet.create({
     width: 95,
     marginTop: 10,
     backgroundColor: '#D8F3F9',
-    height: 17,
+    height: 17
   },
   FilledinputText: {
     textAlign: 'right',
     width: 80,
     marginTop: 10,
-    height: 17,
+    height: 17
   },
   addLabel0: {
     marginTop: 10,
     marginRight:35,
-    color: '#50436E',
+    color: '#50436E'
   },
   addLabel1: {
     marginTop: 10,
     marginLeft:45,
-    color: '#50436E',
+    color: '#50436E'
   },
   twoInRowLabels: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   twoInRowButtons: {
     position: 'absolute',
     bottom: 150,
     flexDirection: 'row-reverse',
     justifyContent: 'space-around',
-    width: '100%',
+    width: '100%'
   },
   FileIcon: {
     height: 66,
     width: 60,
-    marginLeft: 30,
+    marginLeft: 30
   },
   folderWrapper: {
     alignItems: 'center',
     marginLeft: 30,
-    marginTop:10,
+    marginTop:10
   },
   filesWrapperContainer: {
     alignItems: 'flex-end',
-    width: '100%',
+    width: '100%'
   },
   fileLabel: {
     textAlign: 'center',
     width: 110,
     marginTop: 10,
-    color: '#50436E',
+    color: '#50436E'
   },
   singlefile: { 
     marginLeft: 20,
-    marginTop: 55,
+    marginTop: 55
   },
   centerContent: {
-    alignItems: 'center',
-  },
+    alignItems: 'center'
+  }
 });

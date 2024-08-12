@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text,ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 
@@ -10,7 +10,6 @@ export default function PrivacyAndTerms({navigation,route}) {
     <View style={styles.container}>
         <AppHeader navigation={navigation} marginTop={10} fontSize={22} label="IBD's - מדיניות פרטיות ותנאי שימוש " backArrow={previousRouteName=='register'?true:false}/>
         <ScrollView contentContainerStyle={styles.ScrollViewcontainer} showsVerticalScrollIndicator={false}>
-        {/* <Text style={styles.header}>IBD's - מדיניות פרטיות ותנאי שימוש {"\n"}{"\n"}</Text> */}
         <Text style={styles.label}>
         אנו ב-IBD's מכבדים את פרטיות המשתמשים שלנו ומחויבים להגן על המידע האישי שאתם משתפים איתנו. כמו כן, אנו מבקשים מכל המשתמשים לעמוד בתנאי השימוש באפליקציה שלנו.{"\n"}{"\n"} להלן פירוט מדיניות הפרטיות ותנאי השימוש שלנו:
         {"\n"}{"\n"}
@@ -57,47 +56,47 @@ export default function PrivacyAndTerms({navigation,route}) {
 }
 
 const styles = StyleSheet.create({
-    container:{
-      flexGrow: 1,
-      position:'relative',
-      backgroundColor:'white',
-      height:'100%', 
-    },
-    ScrollViewcontainer:{
-      position: 'relative',
-      alignItems: 'center',
-      justifyContent:'center',
-      flexGrow: 1,
-      backgroundColor:'white',
-      marginTop:60,
-      paddingRight:5,
-      paddingLeft:30,
-      paddingBottom:300,
-      width:'95%',
+  container:{
+    flexGrow: 1,
+    position:'relative',
+    backgroundColor:'white',
+    height:'100%'
   },
-    header:{
-      textAlign:'right',
-      color:'#50436E',
-      fontWeight:'bold',
-      fontSize:22,
-      width:'100%',
-    },
-      label:{
-        marginTop:-15,
-        color:'#50436E',
-        textAlign:'right',
-        fontSize:16,
-      },
-      underline:{
-        color:'#50436E',
-        textAlign:'right',
-        fontSize:16,
-        textDecorationLine: 'underline',
-      },
-      bold:{
-        color:'#50436E',
-        textAlign:'right',
-        fontSize:16,
-        fontWeight:'bold',
-      },
+  ScrollViewcontainer:{
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent:'center',
+    flexGrow: 1,
+    backgroundColor:'white',
+    marginTop:60,
+    paddingRight:5,
+    paddingLeft:30,
+    paddingBottom:300,
+    width:'95%'
+  },
+  header:{
+    textAlign:'right',
+    color:'#50436E',
+    fontWeight:'bold',
+    fontSize:22,
+    width:'100%'
+  },
+  label:{
+    marginTop:-15,
+    color:'#50436E',
+    textAlign:'right',
+    fontSize:16
+  },
+  underline:{
+    color:'#50436E',
+    textAlign:'right',
+    fontSize:16,
+    textDecorationLine: 'underline'
+  },
+  bold:{
+    color:'#50436E',
+    textAlign:'right',
+    fontSize:16,
+    fontWeight:'bold'
+  }
 });

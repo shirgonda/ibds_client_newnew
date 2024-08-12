@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput,Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
@@ -17,7 +17,6 @@ export default function PublishQuestion({ navigation }) {
     const [attachmentAdded, setattachmentAdded] = useState(false);
 
     async function PostQuestion(newQ){
-       console.log('newQ',newQ)
         let result= await PostOneValue(`api/ForumQuestions`, newQ);
         if(!result){
             Alert.alert('הוספת שאלה נכשלה');
@@ -94,7 +93,6 @@ export default function PublishQuestion({ navigation }) {
             setattachmentAdded(true);
             setattachmentToShow({ uri: result.assets[0].uri});
             setattachment(result.assets[0].base64);
-            console.log('attachmentToShow',attachmentToShow);
         }
     }
     
@@ -152,88 +150,88 @@ export default function PublishQuestion({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        flexGrow: 1,
-        position: 'relative',
-        backgroundColor: 'white',
-    },
-    icon: {
-        marginTop: 0
-    },
-    avatarContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width:'100%',
-        direction:'rtl',
-        marginLeft: 20,
-        marginBottom:80,
-    },
-    avatarText: {
-        marginTop: 45,
-        fontSize: 18,
-        marginLeft:15,
-        color:'#50436E'
-    },
-    addAnswerContainer:{
-        flexDirection:'column',
-        width: '100%',
-        alignItems:'center',
-        justifyContent:'center',
-      },
-      twoInRowButtons: {
-        marginTop:110,
-        flexDirection: 'row-reverse',
-        justifyContent: 'space-around',
-        width: '100%',
-        height:50,
-      },
-      answerLable:{
-        fontSize:15,
-        color:'#50436E',
-        textAlign:'right',
-        width: '90%',
-        fontWeight:'bold',
-        marginTop:15,
-        marginRight:9,
-      },
-      input: {
-        width:'90%',
-        marginBottom:40,
-        marginTop:20,
-        fontSize: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E6E4EF',
-        textAlign: 'right',
-        color:'#50436E'
-      },
-      inputBox: {
-        width:'90%',
-        height:90,
-        marginBottom:50,
-        marginTop:20,
-        fontSize: 14,
-        borderWidth:1,
-        borderColor: '#E6E4EF',
-        textAlign: 'right',
-        color:'#50436E'
-      },
-      addPicBtn:{
-        width:'90%',
-        direction:'rtl',
-      },
-      pic:{
-        height:150,
-        width:150,
-        marginTop:-30,
-        marginLeft:230,
-        marginBottom:-55,
-      },
-      deletBtnText: {
-        color: '#9F0405',
-        textAlign:'right',
-        fontSize:12,
-        marginTop:11,
-        marginRight:40,
-      },
+  container: {
+    alignItems: 'center',
+    flexGrow: 1,
+    position: 'relative',
+    backgroundColor: 'white'
+  },
+  icon: {
+    marginTop: 0
+  },
+  avatarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width:'100%',
+    direction:'rtl',
+    marginLeft: 20,
+    marginBottom:80
+  },
+  avatarText: {
+    marginTop: 45,
+    fontSize: 18,
+    marginLeft:15,
+    color:'#50436E'
+  },
+  addAnswerContainer:{
+    flexDirection:'column',
+    width: '100%',
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  twoInRowButtons: {
+    marginTop:110,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-around',
+    width: '100%',
+    height:50
+  },
+  answerLable:{
+    fontSize:15,
+    color:'#50436E',
+    textAlign:'right',
+    width: '90%',
+    fontWeight:'bold',
+    marginTop:15,
+    marginRight:9
+  },
+  input: {
+    width:'90%',
+    marginBottom:40,
+    marginTop:20,
+    fontSize: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E4EF',
+    textAlign: 'right',
+    color:'#50436E'
+  },
+  inputBox: {
+    width:'90%',
+    height:90,
+    marginBottom:50,
+    marginTop:20,
+    fontSize: 14,
+    borderWidth:1,
+    borderColor: '#E6E4EF',
+    textAlign: 'right',
+    color:'#50436E'
+  },
+  addPicBtn:{
+    width:'90%',
+    direction:'rtl'
+  },
+  pic:{
+    height:150,
+    width:150,
+    marginTop:-30,
+    marginLeft:230,
+    marginBottom:-55
+  },
+  deletBtnText: {
+    color: '#9F0405',
+    textAlign:'right',
+    fontSize:12,
+    marginTop:11,
+    marginRight:40
+  }
 });

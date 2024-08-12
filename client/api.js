@@ -3,7 +3,6 @@ export async function Get(url){
         let res=await fetch(`${baseURL}/${url}`,{
             method:'GET',
         });
-        console.log('getres',res)
     if(res.status===404){
         return false;
       }
@@ -19,7 +18,6 @@ export async function Post(url, data,picture) {
             },
             body: JSON.stringify(data)
         });
-        console.log('res',res);
         if(res.status===400 || res.status===500){
           return false;
         }
@@ -34,7 +32,6 @@ export async function PostOneValue(url, data) {
           },
           body: JSON.stringify(data)
       });
-      console.log('res',res);
       if(res.status===400 || res.status===500){
         return false;
       }
@@ -79,7 +76,6 @@ export async function Delete(url, data) {
             },
             body: JSON.stringify(data)
         });
-        console.log('response',response);
         if(response.status===404||response.status===500||response.status===400){
             return false;
         }
@@ -94,7 +90,6 @@ export async function LogIn(url, userEmail, userPassword) {
         },
         body: JSON.stringify(userEmail, userPassword)
       });
-      console.log('res',res)
       if(res.status===404 || res.status===403){
         return false;
       }
@@ -114,7 +109,6 @@ export async function QueryChatGPT(url, rights) {
         return false;
       }
       let rawResponse= await res.text();
-      console.log('rawResponse',rawResponse);
       return rawResponse;
     } catch (error) {
       return error;

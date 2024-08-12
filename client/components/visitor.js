@@ -15,20 +15,20 @@ export default Visitor;
 
 const styles = StyleSheet.create({
   container:{
-    alignItems:'center',
+    alignItems:'center'
   },
-    label0: {
-        top: 300,
-        width: 170,
-        textAlign: 'center',
-        fontSize: 16,
-        color: '#50436E',
-      },
-      label1: {
-        top: 310,
-        width: 170,
-        textAlign: 'center',
-        fontSize: 16,
-        color: '#50436E',
-      },
+  label0: {
+    top: 300,
+    width: 170,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E'
+  },
+  label1: {
+    top: 310,
+    width: 170,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E'
+  }
 })

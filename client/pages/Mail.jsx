@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -41,7 +41,6 @@ export default function Mail({ navigation }) {
   }
 
   async function LoadEvent(EventId) {
-    console.log('EventId',EventId)
     let result = await Get(`api/CalendarEvents/event/${EventId}`, EventId);
     if (!result) {
       Alert.alert('טעינת אירוע נכשלה');
@@ -137,38 +136,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     position: 'relative',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   label:{
     top: 300,
-      textAlign: 'center',
-      fontSize: 16,
-      color: '#50436E',
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E'
   },
   scrollViewWrapper: {
-    height: 750,
+    height: 750
   },
   mailsList: {
-    direction: 'rtl',
+    direction: 'rtl'
   },
   singleMail: {
     height: 46,
     marginTop: 30,
-    width: '85%',
+    width: '85%'
   },
   singleMailRow1: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   UserIcon: {
     height: 32.71,
-    width: 23.59,
+    width: 23.59
   },
   MailHeader: {
     color: "#50436E",
     fontSize: 17,
     marginLeft: 10,
     width:230,
-    textAlign:'left',
+    textAlign:'left'
   },
   MailText: {
     color: "#776F89",
@@ -176,16 +175,16 @@ const styles = StyleSheet.create({
     marginTop: -20,
     left: '20.5%',
     textAlign: 'left',
-    width:270,
+    width:270
   },
   MailButtomLine: {
     color: '#E6E4EF',
-    width: '120%',
+    width: '120%'
   },
   towInRow: {
     flexDirection: 'row',
     marginTop: 10,
-    width:'85%',
+    width:'85%'
   },
   MailDate: {
     position:'absolute',
@@ -193,6 +192,6 @@ const styles = StyleSheet.create({
     right:-45,
     fontSize: 12,
     top:3,
-    color: "#776F89",
+    color: "#776F89"
   }
 });

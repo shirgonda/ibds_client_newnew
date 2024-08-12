@@ -213,112 +213,112 @@ async function AddChildAlerts(){
 }
 
 const styles = StyleSheet.create({
-    container:{
-        alignItems: 'center',
-        flexGrow: 1,
-        position: 'relative',
-        backgroundColor: 'white',
-    },
-      inputContainer:{
-        width:'85%',
-        direction:'rtl',
-        marginTop:20,
-      },
-      inputs:{
-        marginTop:20,
-      },
-    input: {
-        width: 330,
-        height: 40,
-        marginTop:18,
-        borderBottomWidth: 2,
-        borderBottomColor: '#E6E4EF',
-        textAlign:'right',
-    },
-    inputLabel:{
-      color:'#50436E',
-      fontSize:18,
-      width:'100%',
+  container:{
+    alignItems: 'center',
+    flexGrow: 1,
+    position: 'relative',
+    backgroundColor: 'white'
+  },
+  inputContainer:{
+    width:'85%',
+    direction:'rtl',
+    marginTop:20
+  },
+  inputs:{
+    marginTop:20
+  },
+  input: {
+    width: 330,
+    height: 40,
+    marginTop:18,
+    borderBottomWidth: 2,
+    borderBottomColor: '#E6E4EF',
+    textAlign:'right'
+  },
+  inputLabel:{
+    color:'#50436E',
+    fontSize:18,
+    width:'100%'
   },
   inputListLabel: {
     color: '#50436E', 
-    fontSize: 18,
-},
-twoInRow:{
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  marginTop:100,
-},
-ArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:25,
-  top:9,
-},
-optionsList: {
-  borderWidth: 1,
-  borderColor: '#E6E4EF',
-  borderRadius: 5,
-  maxHeight: 150, 
-  padding: 5,
-},
-option: {
-  paddingVertical: 5,
-},
-optionText: {
-  color: '#50436E',
-  fontSize: 14.5,
-  textAlign:'left',
-  paddingLeft:5,
-},
-twoInRowTime:{
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-around',
-  marginTop:20,
-},
-TimeInputResult:{
-  position:'absolute',
-  color: '#50436E', 
-  fontSize: 14,
-  right:55,
-  top:6,
-},
-TimeButtomLine:{
+    fontSize: 18
+  },
+  twoInRow:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop:100
+  },
+  ArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:25,
+    top:9
+  },
+  optionsList: {
+    borderWidth: 1,
+    borderColor: '#E6E4EF',
+    borderRadius: 5,
+    maxHeight: 150, 
+    padding: 5
+  },
+  option: {
+    paddingVertical: 5
+  },
+  optionText: {
+    color: '#50436E',
+    fontSize: 14.5,
+    textAlign:'left',
+    paddingLeft:5
+  },
+  twoInRowTime:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop:20
+  },
+  TimeInputResult:{
+    position:'absolute',
+    color: '#50436E', 
+    fontSize: 14,
+    right:55,
+    top:6
+  },
+  TimeButtomLine:{
+      color:'#E6E4EF',
+      marginTop:20,
+      fontWeight:'bold'
+  },
+  alertButtomLine:{
     color:'#E6E4EF',
-    marginTop:20,
-    fontWeight:'bold',
-},
-alertButtomLine:{
-  color:'#E6E4EF',
-  fontWeight:'bold',
-},
-TimeContainer1:{
-  position: 'relative',
-},
-TimeArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:25,
-  top:9,
-},
-ArrowIcon:{
-  height:13,
-  width:10,
-  position: 'absolute',
-  right:4,
-  top:3,
-},
-TimeinputListLabel:{
+    fontWeight:'bold'
+  },
+  TimeContainer1:{
+    position: 'relative'
+  },
+  TimeArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:25,
+    top:9
+  },
+  ArrowIcon:{
+    height:13,
+    width:10,
+    position: 'absolute',
+    right:4,
+    top:3
+  },
+  TimeinputListLabel:{
     textAlign:'left',
     width:'100%',
     color: '#50436E',
     position: 'absolute',
     fontSize: 18,
     left: 3,
-    top:3,
-}
+    top:3
+  }
 });

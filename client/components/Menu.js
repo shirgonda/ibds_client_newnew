@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     container:{  
         bottom:55,
         position: 'absolute',
-        right:3,
+        right:3
     },
     menu: {  
         backgroundColor: '#E6E4EF',
@@ -63,13 +63,13 @@ const styles = StyleSheet.create({
         height:800,
         width:280, 
         direction:'rtl',
-        paddingLeft: 10,
+        paddingLeft: 10
     },
     header:{
         position:'relative',
         fontSize:21,
         color:'#50436E',
-        fontWeight:'bold',
+        fontWeight:'bold'
     },
     headerDiv:{
         marginTop:30,
@@ -77,31 +77,31 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
         marginLeft:10,
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     xIcon:{
         height:15,
         width:15,
-        marginRight:10,
+        marginRight:10
     },
     menuItem: {
         position:'relative',
         padding: 10,
-        alignItems:'right',
+        alignItems:'right'
     },
     menuText: {
         fontSize: 17,
-        color: '#68578F',
+        color: '#68578F'
     },
     currentPageMenuText:{
         fontSize: 17,
-        color: '#F1EFFA',
+        color: '#F1EFFA'
     },
     currentPageBtn:{
         backgroundColor:'#654E9E',
         borderRadius:0,
         position:'relative',
         padding: 10,
-        alignItems:'right',
+        alignItems:'right'
     }
 });

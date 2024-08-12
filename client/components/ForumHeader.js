@@ -3,14 +3,14 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-nati
 import UserAvatar from './avatar';
 import { useUser } from './UserContext';
 
-const ForumHeader = ({navigation}) => {
+const ForumHeader = () => {
     const { imagePaths,currentSubject, setcurrentSubject,subjects } = useUser();
-    
+
     return (
         <View style={styles.icon} >
             {/* הגדרה של הגלילה לאופקית */}
             <ScrollView horizontal={true}>
-            {subjects.map((sub, index) => (
+            {subjects.map((sub) => (
             <TouchableOpacity onPress={() => {setcurrentSubject(sub)}}>
                 <View style={styles.avatarContainer}>
                     <UserAvatar 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     avatarContainer: {
         alignItems: 'center',
         marginRight: 10,
-        marginBottom:15,
+        marginBottom:15
     },
     avatarText: {
         textAlign: 'center',

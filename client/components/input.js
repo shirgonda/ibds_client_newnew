@@ -32,7 +32,7 @@ export default AppInput;
 const styles = StyleSheet.create({
     inputLabel: {
         textAlign: 'right',
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     inputText: {
         height: 35,
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
         marginTop: 3,
         borderWidth: 1,
         padding: 10,
-        borderRadius: 15,
-    },
+        borderRadius: 15
+    }
 });

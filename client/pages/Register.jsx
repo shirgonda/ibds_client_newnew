@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Alert, TouchableOpacity, ScrollView, KeyboardAvoidingView, Image, Platform } from 'react-native';
 import AppButton from '../components/buttons';
 import AppInput from '../components/input';
@@ -44,7 +44,6 @@ export default function Register({navigation}) {
             setvisitor(false);
             console.log('Registration successful:', result);
         }
-        console.log('result',result);
     }
 
     const diseaseData = [
@@ -255,7 +254,7 @@ export default function Register({navigation}) {
                 <SelectList 
                     placeholder='בחר'
                     search={false} 
-                    boxStyles={{borderRadius:15,height:40,width:155,marginLeft:10,borderColor:'black',direction:'rtl'}}
+                    boxStyles={{borderRadius:15,height:42,width:155,marginLeft:10,borderColor:'black',direction:'rtl'}}
                     dropdownTextStyles={{
                         textAlign:'right',
                       }}
@@ -266,7 +265,7 @@ export default function Register({navigation}) {
                 <SelectList 
                     placeholder='בחר'
                     search={false} 
-                    boxStyles={{borderRadius:15,height:40,width:155,marginRight:10,borderColor:'black',direction:'rtl'}}
+                    boxStyles={{borderRadius:15,height:42,width:155,marginRight:10,borderColor:'black',direction:'rtl'}}
                     dropdownTextStyles={{
                         textAlign:'right',
                       }}
@@ -337,7 +336,6 @@ export default function Register({navigation}) {
                         selectedValue={SelectedRadioButton}
                         onSelect={() => handleCheckRadioBtn('ok')}
                     />
-
                     <AppButton marginTop={35} marginBottom={110} label='הרשמה' onPressHandler={handleSubmit} />
             </View>
         )}
@@ -353,47 +351,47 @@ const styles = StyleSheet.create({
         position: 'relative',
         alignItems: 'center',
         flexGrow: 1,
-        backgroundColor:'white', 
+        backgroundColor:'white'
     },
     ScrollViewcontainer:{
         position: 'relative',
         alignItems: 'center',
         flexGrow: 1,
         backgroundColor:'white',
-        marginTop:70,
+        marginTop:70
     },
     PlusIcon: {
         marginTop: -20,
         justifyContent: 'center',
         height: 28,
-        width: 28,
+        width: 28
     },
     headerText: {
         fontWeight: 'bold',
         fontSize: 25,
         textAlign: 'center',
-        marginBottom: 22,
+        marginBottom: 22
     },
     twoInRow:{
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     selectListLabels:{
         flexDirection: 'row',
-        marginTop:4,
+        marginTop:4
     },
     selectListLabel:{
         textAlign:'right',
         fontWeight:'bold',
-        marginLeft:110,
+        marginLeft:110
     },
     selectListLabel2:{
         textAlign:'right',
         fontWeight:'bold',
         marginLeft:200,
-        marginTop:10,
+        marginTop:10
     },
     SelectListBoxs:{
         flexDirection: 'row',
-        marginTop:5,
+        marginTop:5
     }
 });

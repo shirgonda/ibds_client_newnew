@@ -1,5 +1,5 @@
-import React, { useEffect, useState,useCallback } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity,TextInput,Alert,Linking,KeyboardAvoidingView,Platform,Keyboard  } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { StyleSheet, View, Text, Image, ScrollView, TouchableOpacity, TextInput, Alert, Linking, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { Button } from 'react-native-paper';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
@@ -8,11 +8,11 @@ import ForumHeader from '../components/ForumHeader';
 import UserAvatar from '../components/avatar';
 import AppButton from '../components/buttons';
 import * as ImagePicker from 'expo-image-picker';
-import { Get,PostOneValue,Delete } from '../api';
+import { Get, PostOneValue, Delete } from '../api';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function Forum1({ navigation,route }) {
-    const { imagePaths,currentSubject,CurrentUser,visitor,subjects } = useUser();
+    const { imagePaths,currentSubject,CurrentUser,visitor } = useUser();
     const { forumQustionId } = route.params;
     const [questionOpen, setquestionOpen] = useState(false);
     const [questions, setquestions] = useState([]);
@@ -54,7 +54,7 @@ export default function Forum1({ navigation,route }) {
       if(forumQustionId!=0&&questions!=[]){
         for (let i = 0; i < questions.length; i++) {
           if(questions[i].questionId==forumQustionId){
-            var index=questions.length-i-1;
+            var index=i;
             handleQPress(questions[index],index);
         }
       }
@@ -84,7 +84,6 @@ export default function Forum1({ navigation,route }) {
 
       useEffect(()=>{
         LoadAnswers(currentQuestion);
-        console.log('currentQuestion',currentQuestion)
       },[currentQuestion])
 
       useEffect(()=>{
@@ -93,7 +92,6 @@ export default function Forum1({ navigation,route }) {
 
       async function LoadQuestions() {
         let result = await Get(`api/ForumQuestions/topic/${currentSubject.label}`, currentSubject.label);
-        console.log('result0000000000000', result);
         if (!result) {
           Alert.alert('טעינת שאלות נכשלה');
         } else {
@@ -113,7 +111,6 @@ export default function Forum1({ navigation,route }) {
       }
 
       async function deleteQuestion(id){
-        console.log('id',id)
         let result= await Delete(`api/ForumQuestions/${id}`, id);
         if(!result){
             Alert.alert('מחיקה נכשלה');
@@ -177,7 +174,6 @@ export default function Forum1({ navigation,route }) {
       }
      
       async function PostAnswer(newA){
-        console.log('newA',newA);
         let result= await PostOneValue(`api/ForumAnswers`, newA);
         if(!result){
             Alert.alert('הוספת תגובה נכשלה');
@@ -187,10 +183,7 @@ export default function Forum1({ navigation,route }) {
           console.log('Add Answer successful:', result);  
           LoadAnswers(currentQuestion);
           LoadQuestions();
-          //if(currentQuestion.userId==CurrentUser.id){
-            PostMail(newA);
-          //}
-          
+            PostMail(newA);  
       }
     }
 
@@ -211,7 +204,6 @@ export default function Forum1({ navigation,route }) {
         calenderEventStartTime:'',
         calendarEventLocation:''
       }
-      console.log('mail',mail);
       let result= await PostOneValue(`api/Mail`, mail);
       if(!result){
           Alert.alert('הוספת אימייל נכשלה');
@@ -434,246 +426,246 @@ const openURL = (url) => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        flexGrow: 1,
-        position: 'relative',
-        backgroundColor: 'white',
-    },
-    noQ:{
-      top: 200,
-      textAlign: 'center',
-      fontSize: 16,
-      color: '#50436E',
-    },
-    fixHeight:{
-      marginBottom:100
-    },
-    label: {
-        top: 200,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    addQBtn:{
-        backgroundColor:'#473961',
-        color:'white',
-        width:135,
-        position:'absolute',
-        right:25,
-        top:287,
-        height:40,
-        alignItems:'center',
-        justifyContent:'center',
-    },
-    addQBtnItems:{
-        flexDirection:'row', 
-        alignItems:'center',
-        height:'120%'
-    },
-    addQBtnText:{
-        color:'white', 
-        marginLeft:5
-    },
-    addQBtnIcon:{
-        height:27,
-        width:27,
-        marginLeft:5
-    },
-    QuestionWrapper:{
-        width:'90%',
-        direction:'rtl',
-        marginTop:100,
-       flex:1
-    },
-    singleQuestion: {
-        height: 25,
-      },
-      singleQuestionRow1: {
-        flexDirection: 'row',
-      },
-      singleQuestionRow2: {
-        flexDirection: 'row',
-        marginTop:15,
-        marginLeft:12,
-      },
-      senderIcon: {
-        height: 33,
-        width: 24,
-      },
-      questionHeader: {
-        color: "#50436E",
-        fontSize: 17,
-        marginLeft: 10,
-        marginTop:10,
-      },
-      questionDate:{
-        color: "#50436E",
-        fontSize: 12,
-        textAlign:'right',
-        marginTop:-40,
-      },
-      questionNumOfAnswers:{
-        color: "#50436E",
-        fontSize: 12,
-        textAlign:'right',
-        marginTop:-15,
-      },
-      questionText: {
-        color: "#50436E",
-        fontSize: 13,
-        marginTop: 7,
-        textAlign: 'left',
-        marginLeft:65,
-      },
-      questionButtomLine: {
-        color: '#E6E4EF',
-        position: 'absolute',
-        width: '100%',
-      },
-      openQWrapper:{
-        direction:'ltr',
-        marginRight:12,
-        marginTop:60,
-      },
-      openQHedear:{
-        fontSize:18,
-        color:'#50436E',
-        fontWeight:'bold',
-        textAlign:'right'
-      },
-      openQText:{
-        fontSize:16,
-        color:'#50436E',
-        textAlign:'right',
-        marginTop:10,
-      },
-      twoInRowQBtn:{
-        flexDirection:'row',
-        justifyContent:'center',
-        marginTop:20,
-        borderBottomColor:'#E6E4EF',
-        borderBottomWidth:1,
-      },
-      openQBtn:{
-        fontSize:12,
-      },
-      imageContainer: { 
-        alignSelf: 'center', 
-        marginVertical: 10 
-      },
-      singleAnswer:{
-        height: 46,
-        marginTop: 15,
-        marginBottom:15,
-        direction:'rtl',
-      },
-      answerHeader:{
-        color: "#50436E",
-        fontSize: 17,
-        marginLeft: 10,
-        marginTop:15,
-      },
-      answerHeaderText:{
-        fontSize:13,
-        color:'#50436E',
-        textAlign:'right',
-        marginTop:10,
-        marginRight:9,
-        fontWeight:'bold',
-      },
-      answerDate:{
-        color: "#50436E",
-        fontSize: 12,
-        textAlign:'right',
-        marginTop:-37,
-      },
-      answerDescription:{
-        fontSize:13,
-        color:'#50436E',
-        textAlign:'right',
-        marginTop:10,
-        marginRight:9,
-      },
-      addPicBtn:{
-        marginTop:-40,
-        direction:'ltr',
-      },
-      answerPic:{
-        height:100,
-        width:100,
-        marginLeft:15,
-        marginTop:-15,
-      },
-      showAnswerPic:{
-        height:100,
-        width:100,
-        marginLeft:265,
-        marginTop:20,
-      },
-      answerLable:{
-        fontSize:13,
-        color:'#50436E',
-        textAlign:'right',
-        marginTop:20,
-        marginRight:9,
-      },
-      input: {
-        marginBottom:30,
-        marginTop:20,
-        fontSize: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E6E4EF',
-        textAlign: 'right',
-        color:'#50436E'
-      },
-      inputBox: {
-        height:90,
-        marginBottom:30,
-        marginTop:20,
-        fontSize: 14,
-        borderWidth:1,
-        borderColor: '#E6E4EF',
-        textAlign: 'right',
-        color:'#50436E'
-      },
-      addAnswerContainer:{
-        flexDirection:'column',
-      },
-      twoInRowButtons: {
-        marginTop:40,
-        flexDirection: 'row-reverse',
-        justifyContent: 'space-around',
-        width: '100%',
-        height:50,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E6E4EF',
-      },
-      deletBtnText: {
-        color: '#9F0405',
-        textAlign:'right',
-        fontSize:12,
-        marginTop:11,
-        marginRight:40,
-      },
-      deletAnswerBtnText:{
-        color: '#9F0405',
-        textAlign:'right',
-        fontSize:12,
-        marginTop:11,
-        marginBottom:10,
-      },
-      deletePicBtnText:{
-        color: '#9F0405',
-        textAlign:'left',
-        fontSize:12,
-        marginLeft:28,
-        top:-20,
-      },
-      pic:{
-        height:150,
-        width:150,
-        marginTop:30,
-        marginLeft:230,
-        marginBottom:30,
-      }
+  container: {
+    alignItems: 'center',
+    flexGrow: 1,
+    position: 'relative',
+    backgroundColor: 'white'
+  },
+  noQ:{
+    top: 200,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#50436E'
+  },
+  fixHeight:{
+    marginBottom:100
+  },
+  label: {
+    top: 200,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addQBtn:{
+    backgroundColor:'#473961',
+    color:'white',
+    width:135,
+    position:'absolute',
+    right:25,
+    top:287,
+    height:40,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  addQBtnItems:{
+    flexDirection:'row', 
+    alignItems:'center',
+    height:'120%'
+  },
+  addQBtnText:{
+    color:'white', 
+    marginLeft:5
+  },
+  addQBtnIcon:{
+    height:27,
+    width:27,
+    marginLeft:5
+  },
+  QuestionWrapper:{
+    width:'90%',
+    direction:'rtl',
+    marginTop:100,
+    flex:1
+  },
+  singleQuestion: {
+    height: 25
+  },
+  singleQuestionRow1: {
+    flexDirection: 'row'
+  },
+  singleQuestionRow2: {
+    flexDirection: 'row',
+    marginTop:15,
+    marginLeft:12
+  },
+  senderIcon: {
+    height: 33,
+    width: 24
+  },
+  questionHeader: {
+    color: "#50436E",
+    fontSize: 17,
+    marginLeft: 10,
+    marginTop:10
+  },
+  questionDate:{
+    color: "#50436E",
+    fontSize: 12,
+    textAlign:'right',
+    marginTop:-40
+  },
+  questionNumOfAnswers:{
+    color: "#50436E",
+    fontSize: 12,
+    textAlign:'right',
+    marginTop:-15
+  },
+  questionText: {
+    color: "#50436E",
+    fontSize: 13,
+    marginTop: 7,
+    textAlign: 'left',
+    marginLeft:65
+  },
+  questionButtomLine: {
+    color: '#E6E4EF',
+    position: 'absolute',
+    width: '100%'
+  },
+  openQWrapper:{
+    direction:'ltr',
+    marginRight:12,
+    marginTop:60
+  },
+  openQHedear:{
+    fontSize:18,
+    color:'#50436E',
+    fontWeight:'bold',
+    textAlign:'right'
+  },
+  openQText:{
+    fontSize:16,
+    color:'#50436E',
+    textAlign:'right',
+    marginTop:10
+  },
+  twoInRowQBtn:{
+    flexDirection:'row',
+    justifyContent:'center',
+    marginTop:20,
+    borderBottomColor:'#E6E4EF',
+    borderBottomWidth:1
+  },
+  openQBtn:{
+    fontSize:12
+  },
+  imageContainer: { 
+    alignSelf: 'center', 
+    marginVertical: 10 
+  },
+  singleAnswer:{
+    height: 46,
+    marginTop: 15,
+    marginBottom:15,
+    direction:'rtl'
+  },
+  answerHeader:{
+    color: "#50436E",
+    fontSize: 17,
+    marginLeft: 10,
+    marginTop:15
+  },
+  answerHeaderText:{
+    fontSize:13,
+    color:'#50436E',
+    textAlign:'right',
+    marginTop:10,
+    marginRight:9,
+    fontWeight:'bold'
+  },
+  answerDate:{
+    color: "#50436E",
+    fontSize: 12,
+    textAlign:'right',
+    marginTop:-37
+  },
+  answerDescription:{
+    fontSize:13,
+    color:'#50436E',
+    textAlign:'right',
+    marginTop:10,
+    marginRight:9
+  },
+  addPicBtn:{
+    marginTop:-40,
+    direction:'ltr'
+  },
+  answerPic:{
+    height:100,
+    width:100,
+    marginLeft:15,
+    marginTop:-15
+  },
+  showAnswerPic:{
+    height:100,
+    width:100,
+    marginLeft:265,
+    marginTop:20
+  },
+  answerLable:{
+    fontSize:13,
+    color:'#50436E',
+    textAlign:'right',
+    marginTop:20,
+    marginRight:9
+  },
+  input: {
+    marginBottom:30,
+    marginTop:20,
+    fontSize: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E4EF',
+    textAlign: 'right',
+    color:'#50436E'
+  },
+  inputBox: {
+    height:90,
+    marginBottom:30,
+    marginTop:20,
+    fontSize: 14,
+    borderWidth:1,
+    borderColor: '#E6E4EF',
+    textAlign: 'right',
+    color:'#50436E'
+  },
+  addAnswerContainer:{
+    flexDirection:'column'
+  },
+  twoInRowButtons: {
+    marginTop:40,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-around',
+    width: '100%',
+    height:50,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E4EF'
+  },
+  deletBtnText: {
+    color: '#9F0405',
+    textAlign:'right',
+    fontSize:12,
+    marginTop:11,
+    marginRight:40
+  },
+  deletAnswerBtnText:{
+    color: '#9F0405',
+    textAlign:'right',
+    fontSize:12,
+    marginTop:11,
+    marginBottom:10
+  },
+  deletePicBtnText:{
+    color: '#9F0405',
+    textAlign:'left',
+    fontSize:12,
+    marginLeft:28,
+    top:-20
+  },
+  pic:{
+    height:150,
+    width:150,
+    marginTop:30,
+    marginLeft:230,
+    marginBottom:30
+  }
 });

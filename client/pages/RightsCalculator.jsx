@@ -89,7 +89,7 @@ export default function RightsCalculator({navigation}) { //יצירת מערך �
             <SelectList 
               placeholder='בחר'
               search={false} 
-              boxStyles={{borderRadius:15,height:40,width:155,marginRight:215,marginTop:25,borderColor:'black',direction:'rtl'}}
+              boxStyles={{borderRadius:15,height:42,width:155,marginRight:215,marginTop:25,borderColor:'black',direction:'rtl'}}
               dropdownTextStyles={{
                 textAlign:'right',
               }}
@@ -115,27 +115,27 @@ export default function RightsCalculator({navigation}) { //יצירת מערך �
 }
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'relative',
-        flexGrow: 1,
-        backgroundColor:'white', 
-    },
-    ScrollViewcontainer:{
-        position: 'relative',
-        alignItems: 'center',
-        flexGrow: 1,
-        paddingRight:50,
-        backgroundColor:'white',
-        marginTop:30,
-    },
-    CBcontainer:{
-      marginTop:30,
-    },
-    inputLabel:{
-        top:18,
-        marginTop:30,
-        textAlign:'right',
-        fontWeight:'bold',
-        marginBottom:5,
-    }
+  container: {
+    position: 'relative',
+    flexGrow: 1,
+    backgroundColor:'white'
+  },
+  ScrollViewcontainer:{
+    position: 'relative',
+    alignItems: 'center',
+    flexGrow: 1,
+    paddingRight:50,
+    backgroundColor:'white',
+    marginTop:30
+  },
+  CBcontainer:{
+    marginTop:30
+  },
+  inputLabel:{
+    top:18,
+    marginTop:30,
+    textAlign:'right',
+    fontWeight:'bold',
+    marginBottom:5
+  }
 });

@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useCallback,useRef  } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert,KeyboardAvoidingView,Platform,Keyboard,Linking } from 'react-native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert, KeyboardAvoidingView, Platform, Keyboard, Linking } from 'react-native';
 import AppFooter from '../components/Footer';
 import AppHeader from '../components/Header';
 import { useUser } from '../components/UserContext';
@@ -8,9 +8,8 @@ import UserAvatar from '../components/avatar';
 import { TextInput } from 'react-native-gesture-handler';
 import { Get, Post } from '../api';
 import * as ImagePicker from 'expo-image-picker';
-import {useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
-//לשלוח לשרת את השעה של ההודעה האחרונה שהתקבלה והיא תחזיר את ההודעות שאחרי
 export default function Chat({ navigation, route }) {
     const scrollViewRef = useRef();
   const { imagePaths, CurrentUser,lastMasseges,setlastMasseges } = useUser();
@@ -25,11 +24,10 @@ export default function Chat({ navigation, route }) {
   const [inputHeight, setInputHeight] = useState(70);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [uploadImage, setuploadImage] = useState('');
-  const [ShowUploadedImage, setShowUploadedImage] = useState('');
   let chatInterval= null;
 
   useEffect(() => {
-    chatInterval=setInterval(()=>{LoadOldChats()},1000*300)//לשנות ל3
+    chatInterval=setInterval(()=>{LoadOldChats()},1000*200)//טעינה מחדש כל כמות שניות מוגדרת
     return ()=>{
         clearInterval(chatInterval);
     }
@@ -87,15 +85,6 @@ export default function Chat({ navigation, route }) {
     if(!existsInArr){ 
       setlastMasseges([...lastMasseges,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}]);
     }
-    // let result=false;
-    // for (let i = 0; i <= lastMasseges.length; i++) {
-    //   if(lastMasseges[i]==id2){
-    //     result=true;      
-    //   }    
-    // } 
-    // if(!result){ 
-    //   setlastMasseges([...lastMasseges,{recipientId:id2,chatId:chats[chats.length-1].chatId,contenct:chats[chats.length-1].contenct}]);
-    // }
   }
 
   async function LoadOldChats() {
@@ -133,7 +122,6 @@ export default function Chat({ navigation, route }) {
     } else {
       console.log('Add message successful:', result);
       setInputHeight(70);
-      setShowUploadedImage('');
       setattachedFile(false);
       setuploadImage('');   
       setnewMessage('');
@@ -160,7 +148,7 @@ export default function Chat({ navigation, route }) {
       return (   
         <View onLayout={(event) => {
             const { height } = event.nativeEvent.layout; //גובה האובייקט משתנה כאשר גובה אלמנט משתנה
-            setpageheight(pageheight+height+7);      
+            setpageheight(pageheight+height+30);      
         }}>
         <View key={index} style={isCurrentUser ? styles.Lmassege : styles.Rmassege}>
           <UserAvatar size={60} source={userAvatar} />
@@ -237,7 +225,6 @@ const pickImage = async (type) => {
     }   
     if (!result.cancelled) {
         setuploadImage(result.assets[0].base64);
-        setShowUploadedImage({ uri: result.assets[0].uri});
         setattachedFile(true);
     }
 }
@@ -259,7 +246,6 @@ function showDate(date){
           <Image style={styles.PlusIcon} source={imagePaths['emptyPlus']} />
         </TouchableOpacity>
       </View>:null}
-
       {oldMasseges.length>0&&oldMasseges[0].areFriends?<View style={[styles.addToFriendsBtns, styles.shadow]}>
         <Button>התווסף לחברים שלי</Button>
         <TouchableOpacity>
@@ -271,7 +257,7 @@ function showDate(date){
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // התאמת התנהגות המקלדת על בסיס הפלטפורמה
         >
       <View style={styles.chatContainer}>
-        <ScrollView ref={scrollViewRef} contentContainerStyle={[styles.messages,{minHeight:pageheight}]} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
+        <ScrollView ref={scrollViewRef} contentContainerStyle={[styles.messages,{minHeight:pageheight}]} onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })} showsVerticalScrollIndicator={false}>
         {oldMasseges.length>0?<Text style={styles.firstDate}>{showDate(oldMasseges[0].sendDate.split('T')[0])}</Text>:null}
           {printOldMesseges()}
         </ScrollView>

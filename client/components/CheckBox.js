@@ -51,23 +51,23 @@ const CheckboxGroup = ({
 const styles = StyleSheet.create({
   CustomCheckboxContainer:{
     marginTop:20,
-    direction:'ltr',
+    direction:'ltr'
   },
   container: {
     direction:'rtl',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   checkboxContainer: {
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   inputLabel:{
     top:18,
     textAlign:'right',
     fontWeight:'bold',
-    marginBottom:5,
-},
+    marginBottom:5
+  },
   square: {
     width: 15,
     height: 15,
@@ -76,25 +76,18 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: 8
   },
   checked: {
-    backgroundColor: 'black',
+    backgroundColor: 'black'
   },
   checkmark: {
-    color: 'white',
+    color: 'white'
   },
   CBlabel: {
     fontSize: 14,
-    marginLeft: 12,
+    marginLeft: 12
   }
 });
 
 export default CheckboxGroup;
-
-
-
-
-
-
-
