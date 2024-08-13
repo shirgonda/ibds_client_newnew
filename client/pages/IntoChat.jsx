@@ -27,7 +27,7 @@ export default function Chat({ navigation, route }) {
   let chatInterval= null;
 
   useEffect(() => {
-    chatInterval=setInterval(()=>{LoadOldChats()},1000*200)//טעינה מחדש כל כמות שניות מוגדרת
+    chatInterval=setInterval(()=>{LoadOldChats()},1000*100)//טעינה מחדש כל כמות שניות מוגדרת
     return ()=>{
         clearInterval(chatInterval);
     }
